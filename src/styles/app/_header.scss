@@ -12,7 +12,6 @@
 
 
 .header__title {
-  color: black;
   float: left;
   font-size: rem(28px);
   font-weight: 400;
@@ -21,6 +20,7 @@
 }
 
 .header__sub_title {
+  color: #999;
   float: left;
   margin: 4px 0 0 3px;
   font-size: rem(14px);

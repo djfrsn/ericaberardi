@@ -15,17 +15,17 @@ import Tasks from './tasks/tasks';
 export class Root extends Component {
   static propTypes = {
     history: PropTypes.object.isRequired,
-    onEnter: PropTypes.func.isRequired,
+    // onEnter: PropTypes.func.isRequired,
     store: PropTypes.object.isRequired
   };
 
   render() {
-    const { history, onEnter, store } = this.props;
+    const { history, /* onEnter, */ store } = this.props;
 
     return (
       <Provider store={store}>
         <Router history={history}>
-          <Route component={App} onEnter={onEnter} path="/">
+          <Route component={App} /* onEnter={onEnter} */ path="/">
             <Route component={Home} path={HOME_PATH}/>
             <Route component={SignIn} path={SIGN_IN_PATH}/>
             <Route component={Tasks} path={TASKS_PATH}/>

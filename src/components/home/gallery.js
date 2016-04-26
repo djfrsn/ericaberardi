@@ -16,7 +16,7 @@ export class SignIn extends Component {
     //   signInWithTwitter
     // } = this.props;
     const elements = [
-      { src: 'images/home_gallery/photo1.jpg' },
+      { src: 'images/home_gallery/photo1.jpg', topText: 'Matt, Ryan & Kyle', bottomText: 'Family, Los Angeles' },
       { src: 'images/home_gallery/photo2.jpg' },
       { src: 'images/home_gallery/photo3.jpg' },
       { src: 'images/home_gallery/photo4.jpg' },
@@ -25,7 +25,10 @@ export class SignIn extends Component {
     ];
     const childElements = elements.map(function(element, i) {
       return (
-        <img key={i} src={element.src} />
+        <div key={i} className="image__container">
+          <img src={element.src} />
+          <div className="overlay"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div>
+        </div>
       );
     });
     return (

@@ -57,4 +57,13 @@
 footer {
   font-size: 14px;
   text-align: center;
+  a {
+    color: inherit;
+    text-decoration: none;
+    margin: 0;
+    @extend .link-style;
+    &:hover {
+      @extend .link-border-style;
+    }
+  }
 }

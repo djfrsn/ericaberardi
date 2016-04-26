@@ -62,7 +62,7 @@ export class App extends Component {
 
         <main className="main">{children}</main>
 
-        <footer>© Erica Berardi Photography</footer>
+        <footer>© 2016 by Erica Berardi & <a href="https://digitalarch.com">Digital Architecture</a></footer>
       </div>
     );
   }

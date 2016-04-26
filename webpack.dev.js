@@ -41,7 +41,12 @@ module.exports = {
         ]
       }},
 
-      {test: /\.scss$/, loader: 'style!css!postcss-loader!sass'}
+      {test: /\.scss$/, loader: 'style!css!postcss-loader!sass'},
+
+      {
+        test: /masonry|imagesloaded|fizzy\-ui\-utils|desandro\-|outlayer|get\-size|doc\-ready|eventie|eventemitter/,
+        loader: 'imports?define=>false&this=>window'
+      }
     ]
   },
 

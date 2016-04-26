@@ -14,7 +14,7 @@
     "node": ">=5.2"
   },
   "scripts": {
-    "build": "npm run lint && npm test && npm run clean && webpack --config webpack.dist.js --progress",
+    "build": "npm run lint && npm test && npm run clean && webpack --config webpack.dist.js --progress && cp -r ./src/images ./target/images",
     "clean": "del-cli ./target",
     "lint": "eslint -c .eslintrc ./src",
     "start": "webpack-dev-server --config webpack.dev.js --progress",
@@ -24,6 +24,7 @@
     "babel-polyfill": "~6.7.2",
     "classnames": "~2.2.3",
     "firebase": "~2.3.2",
+    "imports-loader": "^0.6.5",
     "react": "~0.14.7",
     "react-dom": "~0.14.7",
     "react-masonry-component": "^4.0.2",

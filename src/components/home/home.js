@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
-
+import Gallery from './gallery';
 
 export class SignIn extends Component {
   static propTypes = {
@@ -18,9 +18,9 @@ export class SignIn extends Component {
     // } = this.props;
 
     return (
-      <div className="g-row sign-in">
+      <div className="g-row">
         <div className="g-col">
-
+          <Gallery />
         </div>
       </div>
     );

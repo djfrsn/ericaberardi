@@ -41,6 +41,9 @@
     &:first-child {
       border: none;
     }
+    &.active {
+      border-bottom: 1px solid #FFEA00;
+    }
   }
 }
 

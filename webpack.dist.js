@@ -25,7 +25,11 @@ module.exports = {
   module: {
     loaders: [
       {test: /\.js$/, exclude: /node_modules/, loader: 'babel'},
-      {test: /\.scss$/, loader: ExtractTextPlugin.extract('css!postcss-loader!sass')}
+      {test: /\.scss$/, loader: ExtractTextPlugin.extract('css!postcss-loader!sass')},
+      {
+        test: /masonry|imagesloaded|fizzy\-ui\-utils|desandro\-|outlayer|get\-size|doc\-ready|eventie|eventemitter/,
+        loader: 'imports?define=>false&this=>window'
+      }
     ]
   },
 

@@ -1,11 +1,6 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
-import Masonry from 'react-masonry-component';
-
-const masonryOptions = {
-  transitionDuration: 0
-};
 
 export class SignIn extends Component {
   // static propTypes = {

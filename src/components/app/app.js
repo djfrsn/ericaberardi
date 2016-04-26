@@ -61,6 +61,8 @@ export class App extends Component {
         </header>
 
         <main className="main">{children}</main>
+
+        <footer>© Erica Berardi Photography</footer>
       </div>
     );
   }

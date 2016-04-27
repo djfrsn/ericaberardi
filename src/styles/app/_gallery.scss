@@ -1,29 +1,59 @@
 .image__container {
-    > img {
+  position: relative;
+  margin-bottom: 10px;
+  > img {
     /* Just in case there are inline attributes */
     width: 100% !important;
     height: auto !important;
-    margin-bottom: 10px;
   }
 }
 
-.overlay    {
+.overlay {
   position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  color: white;
-  margin-top: -10px;
-  background:rgba(0,0,0,.75);
-  text-align:center;
-  padding:45px 0 66px 0;
+  top: 0;
+  left: 0;
   opacity:0;
-  -webkit-transition: opacity .25s ease;
-  -moz-transition: opacity .25s ease;}
+  color: white;
+  text-align:center;
+  transition: opacity 0.75s ease;
+
+  &:before {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background:rgba(0,0,0,.75);
+    padding:45px 0 66px 0;
+  }
+}
+
+.overlay__content {
+  width: 50%;
+  height: 50%;
+  overflow: auto;
+  margin: auto;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+
+  p:first-of-type {
+    padding-top: 32.5%;
+  }
+  span {
+    width: 30%;
+    display: block;
+    margin: 0.5em auto;
+    height: 1px;
+    background: white;
+  }
+}
 
 .image__container:hover .overlay {
-  opacity:1;
+  opacity: 1;
+  &:before {
+    opacity: 0.5;
+  }
 }
 
 .gallery-left {
@@ -45,5 +75,12 @@
   .gallery-right {
     float: right;
     width: 100%;
+  }
+}
+
+
+@media (max-width: 480px) {
+  .overlay__content p {
+    font-size: 0.9rem;
   }
 }

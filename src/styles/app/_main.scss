@@ -6,6 +6,13 @@
   padding-bottom: 120px;
 }
 
+::-webkit-scrollbar {
+  width: 2px;
+}
+::-webkit-scrollbar-thumb {
+  background: #000;
+}
+
 .image__container {
   position: relative;
 }

@@ -1,20 +1,21 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 
 export class SignIn extends Component {
-  // static propTypes = {
-  //   signInWithGithub: PropTypes.func.isRequired,
-  //   signInWithGoogle: PropTypes.func.isRequired,
-  //   signInWithTwitter: PropTypes.func.isRequired
-  // };
+  static propTypes = {
+    containerWidth: PropTypes.number.isRequired
+  }
+  componentDidMount() {
+    // window.addEventListener('resize', () => {
+    //   this.setState({
+    //     containerWidth: ReactDOM.findDOMNode(this.container).clientWidth
+    //   });
+    // }, false);
+  }
 
   render() {
-    // const {
-    //   signInWithGithub,
-    //   signInWithGoogle,
-    //   signInWithTwitter
-    // } = this.props;
     const elements = [
       { src: 'images/home_gallery/photo1.jpg', topText: 'Matt, Ryan & Kyle', bottomText: 'Family, Los Angeles' },
       { src: 'images/home_gallery/photo2.jpg' },
@@ -23,18 +24,23 @@ export class SignIn extends Component {
       { src: 'images/home_gallery/photo5.jpg' },
       { src: 'images/home_gallery/photo6.jpg' }
     ];
-    const childElements = elements.map(function(element, i) {
-      return (
-        <div key={i} className="image__container">
-          <img src={element.src} />
-          <div className="overlay"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div>
-        </div>
-      );
-    });
     return (
       <div className="">
         <div className="masonry">
-          {childElements}
+          {
+            elements.map((element, index) => {
+              let style = {
+                width: index % 2 === 0 ? 190 : 390,
+                height: index % 2 === 0 ? 175 : 370
+              };
+              return (
+                <div key={index} className="image__container" >
+                  <img src={element.src} />
+                  <div className="overlay"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div>
+                </div>
+              );
+            })
+          }
         </div>
       </div>
     );

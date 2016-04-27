@@ -36,25 +36,14 @@
   width: 59%;
 }
 
-// left container
-
-
-// right container
-
-
-@media (max-width: 1200px) {
-  .masonry {
+@media (max-width: 960px) {
+  .gallery-left {
+    float: left;
+    width: 100%;
   }
-}
-@media (max-width: 1000px) {
-  .masonry {
-  }
-}
-@media (max-width: 800px) {
-  .masonry {
-  }
-}
-@media (max-width: 400px) {
-  .masonry {
+
+  .gallery-right {
+    float: right;
+    width: 100%;
   }
 }

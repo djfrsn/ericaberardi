@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { Provider } from 'react-redux';
-import { Route, Router } from 'react-router';
+import { Route, Router, IndexRoute } from 'react-router';
 
 // Config
 import { SIGN_IN_PATH, HOME_PATH, TASKS_PATH } from 'config';
@@ -26,6 +26,7 @@ export class Root extends Component {
       <Provider store={store}>
         <Router history={history}>
           <Route component={App} /* onEnter={onEnter} */ path="/">
+            <IndexRoute component={Home}/>
             <Route component={Home} path={HOME_PATH}/>
             <Route component={SignIn} path={SIGN_IN_PATH}/>
             <Route component={Tasks} path={TASKS_PATH}/>

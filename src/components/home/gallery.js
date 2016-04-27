@@ -17,28 +17,35 @@ export class SignIn extends Component {
 
   render() {
     const elements = [
-      { src: 'images/home_gallery/photo1.jpg', topText: 'Matt, Ryan & Kyle', bottomText: 'Family, Los Angeles' },
+      { src: 'images/home_gallery/photo4.jpg', topText: 'Matt, Ryan & Kyle', bottomText: 'Family, Los Angeles' },
       { src: 'images/home_gallery/photo2.jpg' },
-      { src: 'images/home_gallery/photo3.jpg' },
-      { src: 'images/home_gallery/photo4.jpg' },
-      { src: 'images/home_gallery/photo5.jpg' },
-      { src: 'images/home_gallery/photo6.jpg' }
+      { src: 'images/home_gallery/photo1.jpg' },
+      { src: 'images/home_gallery/photo6.jpg' },
+      { src: 'images/home_gallery/photo5.jpg' }
     ];
     return (
       <div className="">
-        <div className="masonry">
+        <div className="gallery-left">
           {
             elements.map((element, index) => {
-              let style = {
-                width: index % 2 === 0 ? 190 : 390,
-                height: index % 2 === 0 ? 175 : 370
-              };
-              return (
+              const image = index % 2 ? null : (
                 <div key={index} className="image__container" >
                   <img src={element.src} />
-                  <div className="overlay"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div>
                 </div>
               );
+              return image;
+            })
+          }
+        </div>
+        <div className="gallery-right">
+          {
+            elements.map((element, index) => {
+              const image = index % 2 ? (
+                <div key={index} className="image__container" >
+                  <img src={element.src} />
+                </div>
+              ) : null;
+              return image;
             })
           }
         </div>
@@ -46,5 +53,7 @@ export class SignIn extends Component {
     );
   }
 }
+
+// <div className="overlay"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div>
 
 export default connect(null, authActions)(SignIn);

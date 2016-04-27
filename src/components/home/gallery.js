@@ -19,7 +19,7 @@ export class SignIn extends Component {
       { src: 'images/home_gallery/photo4.jpg', topText: 'Milo', bottomText: 'Portrait, Los Angeles' },
       { src: 'images/home_gallery/photo2.jpg', topText: 'Lara Croft', bottomText: 'Portrait, San Francisco Coast' },
       { src: 'images/home_gallery/photo1.jpg', topText: 'Matt, Ryan & Kyle', bottomText: 'Family, San Diego' },
-      { src: 'images/home_gallery/photo6.jpg', topText: 'Sila, Rebecca & Milo', bottomText: 'Family, Los Angeles' },
+      { src: 'images/home_gallery/photo6.jpg', topText: 'Stella, Rebecca & Milo', bottomText: 'Family, Los Angeles' },
       { src: 'images/home_gallery/photo5.jpg', topText: 'Laura Vance', bottomText: 'Portrait, Los Angeles' }
     ];
     return (

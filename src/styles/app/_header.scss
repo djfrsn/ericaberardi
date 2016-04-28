@@ -10,10 +10,13 @@
   line-height: 40px;
 }
 
+.home__link {
+  color: inherit;
+}
 
 .header__title {
   float: left;
-  font-size: rem(28px);
+  font-size: rem(32px);
   font-weight: 400;
   text-rendering: auto;
   transform: translate(0,0);
@@ -23,7 +26,7 @@
   color: #999;
   float: left;
   margin: 4px 0 0 3px;
-  font-size: rem(14px);
+  font-size: rem(16px);
 }
 
 .header__links {
@@ -45,7 +48,7 @@
 .header__link {
   display: block;
   color: inherit;
-  font-size: rem(14px);
+  font-size: rem(16px);
   text-decoration: none;
   text-rendering: auto;
   transform: translate(0,0);

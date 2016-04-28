@@ -2,10 +2,10 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 
-export class SignIn extends Component {
-  static propTypes = {
-    containerWidth: PropTypes.number.isRequired
-  }
+export class Gallery extends Component {
+  // static propTypes = {
+  //   containerWidth: PropTypes.number.isRequired
+  // }
   componentDidMount() {
     // window.addEventListener('resize', () => {
     //   this.setState({
@@ -57,4 +57,4 @@ export class SignIn extends Component {
 
 
 
-export default connect(null, authActions)(SignIn);
+export default connect(null, authActions)(Gallery);

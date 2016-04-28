@@ -46,9 +46,10 @@ export class App extends Component {
         <header className="header">
           <div className="g-row">
             <div className="g-col">
-              <h1 className="header__title">Erica Berardi</h1>
-              <h2 className="header__sub_title">Photography</h2>
-
+              <a href="/" className="home__link">
+                <h1 className="header__title">Erica Berardi</h1>
+                <h2 className="header__sub_title">Photography</h2>
+              </a>
               <ul className="header__links">
                 <li><a className="header__link" href="/galleries">Galleries</a></li>
                 <li><a className="header__link" href="/news-reporting">News Reporting</a></li>

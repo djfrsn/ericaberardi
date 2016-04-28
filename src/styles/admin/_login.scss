@@ -5,6 +5,18 @@
 .sign-in {
   margin-top: 90px;
   max-width: 300px;
+  input {
+    color: #999;
+    border: none;
+    border-bottom: 1px solid black;
+    margin-bottom: 1em;
+    font-family: Marvel;
+    font-size: 1.35rem;
+    width: 100%;
+    &:focus {
+      outline: none;
+    }
+  }
 }
 
 .sign-in__heading {

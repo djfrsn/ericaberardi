@@ -1,6 +1,7 @@
 import {
   INIT_AUTH,
   SIGN_IN_SUCCESS,
+  SIGN_IN_ERROR,
   SIGN_OUT_SUCCESS
 } from './action-types';
 
@@ -26,6 +27,13 @@ export function authReducer(state = initialState, action) {
       return {
         authenticated: true,
         id: payload.uid
+      };
+
+    case SIGN_IN_ERROR:
+      return {
+        authenticated: false,
+        error: payload,
+        id: null
       };
 
     case SIGN_OUT_SUCCESS:

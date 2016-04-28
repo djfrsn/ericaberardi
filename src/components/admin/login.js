@@ -5,23 +5,34 @@ import { authActions } from 'core/auth';
 
 export class Login extends Component {
   static propTypes = {
-    signInWithEmail: PropTypes.func.isRequired
+    auth: PropTypes.object.isRequired,
+    signInWithEmail: PropTypes.func.isRequired,
+    signOut: PropTypes.func.isRequired
   };
   onLogin = () => {
     this.props.signInWithEmail(this.email.value, this.password.value);
   }
   render() {
+    const { auth } = this.props;
+    const errorMsg = auth.error ? (<p className="login__error-msg">Invalid email/password</p>) : null;
+    let component = <button className="sign-in__button" onClick={this.signOut}>Sign Out</button>;
+    if (!auth.authenticated) {
+      component = (<div><h1 className="sign-in__heading">Admin</h1>
+        <input type="text" placeholder="Email" ref={ref => this.email = ref}/>
+        <input type="password" placeholder="Password" ref={ref => this.password = ref}/>
+        <button className="sign-in__button" onClick={this.onLogin}>Login</button>
+        {errorMsg}</div>);
+    }
     return (
       <div className="g-row sign-in">
         <div className="g-col">
-          <h1 className="sign-in__heading">Admin</h1>
-          <input type="text" placeholder="Email" ref={ref => this.email = ref}/>
-          <input type="password" placeholder="Password" ref={ref => this.password = ref}/>
-          <button className="sign-in__button" onClick={this.onLogin}>Login</button>
+          {component}
         </div>
       </div>
     );
   }
 }
 
-export default connect(null, authActions)(Login);
+export default connect(state => ({
+  auth: state.auth
+}), authActions)(Login);

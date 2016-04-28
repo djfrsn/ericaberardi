@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { POST_SIGN_IN_PATH, POST_SIGN_OUT_PATH } from 'config';
+import { POST_LOGIN_PATH } from 'config';
 import { authActions } from 'core/auth';
 
 
@@ -25,11 +25,8 @@ export class App extends Component {
     const { router } = this.context;
     const { auth } = this.props;
 
-    if (auth.authenticated && !nextProps.auth.authenticated) {
-      router.replace(POST_SIGN_OUT_PATH);
-    }
-    else if (!auth.authenticated && nextProps.auth.authenticated) {
-      router.replace(POST_SIGN_IN_PATH);
+    if (!auth.authenticated && nextProps.auth.authenticated) {
+      router.replace(POST_LOGIN_PATH);
     }
   }
 

@@ -43,7 +43,8 @@ export function signInWithEmail(email, password) {
             timestamp: Date.now()
           }
         });
-      } else {
+      }
+      else {
         dispatch({
           type: SIGN_IN_SUCCESS,
           payload: authData,

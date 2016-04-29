@@ -9,7 +9,8 @@ export class Login extends Component {
     signInWithEmail: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired
   };
-  onLogin = () => {
+  onLogin = e => {
+    e.preventDefault();
     this.props.signInWithEmail(this.email.value, this.password.value);
   }
   render() {
@@ -18,9 +19,11 @@ export class Login extends Component {
     let component = <button className="sign-in__button" onClick={this.signOut}>Sign Out</button>;
     if (!auth.authenticated) {
       component = (<div><h1 className="sign-in__heading">Admin</h1>
-        <input type="text" placeholder="Email" ref={ref => this.email = ref}/>
-        <input type="password" placeholder="Password" ref={ref => this.password = ref}/>
-        <button className="sign-in__button" onClick={this.onLogin}>Login</button>
+        <form onSubmit={this.onLogin}>
+          <input type="text" placeholder="Email" ref={ref => this.email = ref}/>
+          <input type="password" placeholder="Password" ref={ref => this.password = ref}/>
+          <button type="submit" className="sign-in__button" onClick={this.onLogin}>Login</button>
+        </form>
         {errorMsg}</div>);
     }
     return (

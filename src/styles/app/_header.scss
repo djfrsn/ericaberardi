@@ -38,8 +38,10 @@
     float: left;
     @extend .link-style;
 
-    &:hover, &.active {
-      @extend .link-border-style;
+    a {
+      &.active, &:hover {
+        @extend .link-border-style;
+      }
     }
   }
 }

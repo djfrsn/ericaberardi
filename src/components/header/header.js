@@ -1,13 +1,19 @@
 import React, { Component, PropTypes } from 'react';
+import classNames from 'classnames';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 
 export class Header extends Component {
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   static propTypes = {
     auth: PropTypes.object.isRequired
   };
   render() {
     const { auth } = this.props;
+    const { router } = this.context;
     return (
       <header className="header">
         <div className="g-row">
@@ -17,10 +23,10 @@ export class Header extends Component {
               <h2 className="header__sub_title">Photography</h2>
             </a>
             <ul className="header__links">
-              <li><a className="header__link" href="/galleries">Galleries</a></li>
-              <li><a className="header__link" href="/news-reporting">News Reporting</a></li>
-              <li><a className="header__link" href="/about">About</a></li>
-              <li><a className="header__link" href="/contact">Contact</a></li>
+              <li><a className={classNames('header__link', {'active': router.isActive('galleries')})} href="/galleries">Galleries</a></li>
+              <li><a className={classNames('header__link', {'active': router.isActive('news-reporting')})} href="/news-reporting">News Reporting</a></li>
+              <li><a className={classNames('header__link', {'active': router.isActive('about')})} href="/about">About</a></li>
+              <li><a className={classNames('header__link', {'active': router.isActive('contact')})} href="/contact">Contact</a></li>
               {auth.authenticated ? <li><a className="header__link" onClick={this.signOut} href="#">Sign out</a></li> : null}
             </ul>
           </div>

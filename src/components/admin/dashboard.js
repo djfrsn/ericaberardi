@@ -10,6 +10,7 @@ export class DashBoard extends Component {
       <div className="g-row sign-in">
         <div className="g-col">
           <h1 className="sign-in__heading">Admin DashBoard</h1>
+          <a href="/changepassword" className="change-password__link">Change Password</a>
         </div>
       </div>
     );

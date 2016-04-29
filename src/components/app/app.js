@@ -37,8 +37,7 @@ export class App extends Component {
   }
 
   render() {
-    const { auth, children } = this.props;
-
+    const { children } = this.props;
     return (
       <div>
         <Header />

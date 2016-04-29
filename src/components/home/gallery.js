@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { authActions } from 'core/auth';
+import { galleryActions } from 'core/gallery';
 
 export class Gallery extends Component {
   // static propTypes = {
@@ -57,4 +57,6 @@ export class Gallery extends Component {
 
 
 
-export default connect(null, authActions)(Gallery);
+export default connect(state => ({
+  homeGallery: state.homeGallery
+}), galleryActions)(Gallery);

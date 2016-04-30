@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { galleryActions } from 'core/gallery';
+import { galleryActions } from 'core/galleries';
 
 export class Gallery extends Component {
   // static propTypes = {
   //   containerWidth: PropTypes.number.isRequired
   // }
-  componentDidMount() {
-    // window.addEventListener('resize', () => {
-    //   this.setState({
-    //     containerWidth: ReactDOM.findDOMNode(this.container).clientWidth
-    //   });
-    // }, false);
+  componentWillUpdate(prevState, newState) {
+   // debugger
   }
 
   render() {

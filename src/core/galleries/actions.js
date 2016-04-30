@@ -1,4 +1,6 @@
 import {
+  INIT_HOME_GALLERY,
+  INIT_GALLERIES,
   CREATE_TASK_ERROR,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_ERROR,
@@ -7,6 +9,31 @@ import {
   UPDATE_TASK_SUCCESS
 } from './action-types';
 
+export function initHomeGallery() {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    dispatch({
+      type: INIT_HOME_GALLERY,
+      payload: firebase.getAuth(),
+      meta: {
+        timestamp: Date.now()
+      }
+    });
+  };
+}
+
+export function initGalleries() {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    dispatch({
+      type: INIT_GALLERIES,
+      payload: firebase.getAuth(),
+      meta: {
+        timestamp: Date.now()
+      }
+    });
+  };
+}
 
 export function createTask(title) {
   return (dispatch, getState) => {

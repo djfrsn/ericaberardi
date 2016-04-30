@@ -131,7 +131,6 @@ export function signInWithTwitter() {
 
 
 export function signOut() {
-  console.log('signOut');
   return (dispatch, getState) => {
     const { firebase } = getState();
     firebase.unauth();

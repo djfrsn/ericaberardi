@@ -7,7 +7,20 @@
   text-align: center;
 }
 
-.sign-in, .change-password {
+.change-password__success-msg, .change-password__error-msg {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.change-password__success-msg {
+  color: #00B900;
+}
+
+.change-password__error-msg {
+  color: red;
+}
+
+.sign-in, .change-password, .dashboard {
   margin-top: 90px;
   max-width: 300px;
   input {

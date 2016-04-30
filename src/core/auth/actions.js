@@ -2,9 +2,22 @@ import {
   INIT_AUTH,
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
-  SIGN_OUT_SUCCESS
+  SIGN_OUT_SUCCESS,
+  CHANGE_PASSWORD_SUCCESS,
+  CHANGE_PASSWORD_ERROR,
+  RESET_AUTH_MESSAGES
 } from './action-types';
 
+
+export function resetAuthMessages(timeout = 1250) {
+  return dispatch => {
+    setTimeout(() => {
+      dispatch({
+        type: RESET_AUTH_MESSAGES
+      });
+    }, timeout);
+  };
+}
 
 function authenticate(provider) {
   return (dispatch, getState) => {
@@ -68,7 +81,7 @@ export function changePassword(oldPassword, newPassword) {
     }, function(error, res) {
       if (error === null) {
         dispatch({
-          type: SIGN_IN_ERROR,
+          type: CHANGE_PASSWORD_ERROR,
           payload: error,
           meta: {
             timestamp: Date.now()
@@ -77,7 +90,7 @@ export function changePassword(oldPassword, newPassword) {
       }
       else {
         dispatch({
-          type: SIGN_IN_SUCCESS,
+          type: CHANGE_PASSWORD_SUCCESS,
           payload: res,
           meta: {
             timestamp: Date.now()

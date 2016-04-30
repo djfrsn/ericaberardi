@@ -1,7 +1,7 @@
 export const FIREBASE_URL = 'https://ericaberardi.firebaseio.com';
 
 // Route paths
-export const LOGIN_PATH = '/admin';
+export const LOGIN_PATH = '/login';
 export const CHANGE_PASSWORD_PATH = '/changepassword';
 export const DASHBOARD_PATH = '/dashboard';
 export const HOME_PATH = '/home';

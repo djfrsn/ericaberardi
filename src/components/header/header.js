@@ -9,7 +9,8 @@ export class Header extends Component {
   };
 
   static propTypes = {
-    auth: PropTypes.object.isRequired
+    auth: PropTypes.object.isRequired,
+    signOut: PropTypes.func.isRequired
   };
   render() {
     const { auth } = this.props;
@@ -27,7 +28,7 @@ export class Header extends Component {
               <li><a className={classNames('header__link', {'active': router.isActive('news-reporting')})} href="/news-reporting">News Reporting</a></li>
               <li><a className={classNames('header__link', {'active': router.isActive('about')})} href="/about">About</a></li>
               <li><a className={classNames('header__link', {'active': router.isActive('contact')})} href="/contact">Contact</a></li>
-              {auth.authenticated ? <li><a className="header__link" onClick={this.signOut} href="#">Sign out</a></li> : null}
+              {auth.authenticated ? <li><a className="header__link" onClick={this.props.signOut} href="#">Sign out</a></li> : null}
             </ul>
           </div>
         </div>

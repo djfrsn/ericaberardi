@@ -20,6 +20,7 @@ export function authReducer(state = initialState, action) {
       let authenticated = payload !== null && (payload.expires * 1000) > meta.timestamp;
       return {
         authenticated,
+        userEmail: payload.password.email,
         id: authenticated ? payload.uid : null
       };
 

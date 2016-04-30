@@ -57,6 +57,36 @@ export function signInWithEmail(email, password) {
   };
 }
 
+export function changePassword(oldPassword, newPassword) {
+  return (dispatch, getState) => {
+    const { firebase, auth } = getState();
+
+    firebase.changePassword({
+      email: auth.userEmail,
+      oldPassword: oldPassword,
+      newPassword: newPassword
+    }, function(error, res) {
+      if (error === null) {
+        dispatch({
+          type: SIGN_IN_ERROR,
+          payload: error,
+          meta: {
+            timestamp: Date.now()
+          }
+        });
+      }
+      else {
+        dispatch({
+          type: SIGN_IN_SUCCESS,
+          payload: res,
+          meta: {
+            timestamp: Date.now()
+          }
+        });
+      }
+    });
+  };
+}
 
 export function initAuth() {
   return (dispatch, getState) => {
@@ -88,6 +118,7 @@ export function signInWithTwitter() {
 
 
 export function signOut() {
+  console.log('signOut');
   return (dispatch, getState) => {
     const { firebase } = getState();
     firebase.unauth();

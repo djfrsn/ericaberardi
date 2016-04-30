@@ -16,7 +16,7 @@ export class Login extends Component {
   render() {
     const { auth } = this.props;
     const errorMsg = auth.error ? (<p className="login__error-msg">Invalid email/password</p>) : null;
-    let component = <button className="sign-in__button" onClick={this.signOut}>Sign Out</button>;
+    let component = <button className="sign-in__button" onClick={this.props.signOut}>Sign Out</button>;
     if (!auth.authenticated) {
       component = (<div><h1 className="sign-in__heading">Admin</h1>
         <form onSubmit={this.onLogin}>

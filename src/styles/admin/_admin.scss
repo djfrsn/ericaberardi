@@ -7,7 +7,7 @@
   text-align: center;
 }
 
-.sign-in {
+.sign-in, .change-password {
   margin-top: 90px;
   max-width: 300px;
   input {
@@ -31,7 +31,7 @@
   text-align: center;
 }
 
-.sign-in__button {
+.sign-in__button, .password-submit__button {
   @include button-base;
   margin-bottom: 10px;
   outline: none;

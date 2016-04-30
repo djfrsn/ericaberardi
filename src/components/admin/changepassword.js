@@ -6,7 +6,7 @@ import { authActions } from 'core/auth';
 export class ChangePassword extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
-    signInWithEmail: PropTypes.func.isRequired,
+    changePassword: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired
   };
   changePassword = e => {
@@ -17,7 +17,9 @@ export class ChangePassword extends Component {
     const { auth } = this.props;
     const errorMsg = auth.error ? (<p className="login__error-msg">Invalid Old Password/New Password</p>) : null;
     return (
-     <div><h1 className="sign-in__heading">Change Password</h1>
+    <div className="g-row sign-in">
+      <div className="g-col">
+        <h1 className="sign-in__heading">Change Password</h1>
         <form onSubmit={this.changePassword}>
           <input type="text" placeholder="Old Password" ref={ref => this.oldPassword = ref}/>
           <input type="password" placeholder="New Password" ref={ref => this.newPassword = ref}/>
@@ -25,6 +27,7 @@ export class ChangePassword extends Component {
         </form>
         {errorMsg}
       </div>
+    </div>
     );
   }
 }

@@ -37,7 +37,7 @@ export function galleriesReducer(state = initialState, action) {
 
     case TOGGLE_GALLERY_EDIT:
       let newState = {};
-      if (action.payload.galleryindex === 'one') {
+      if (action.payload.galleryindex === 'homeGalleryOne') {
         const homeGalleryOne = state.homeGalleryOne.map(gallery => {
           return {
             ...gallery,
@@ -49,7 +49,7 @@ export function galleriesReducer(state = initialState, action) {
           homeGalleryOne
         };
       }
-      else if (action.payload.galleryindex === 'two') {
+      else if (action.payload.galleryindex === 'homeGalleryTwo') {
         const homeGalleryTwo = state.homeGalleryTwo.map(gallery => {
           return {
             ...gallery,

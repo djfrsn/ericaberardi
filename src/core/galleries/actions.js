@@ -3,7 +3,8 @@ import {
   INIT_HOME_GALLERY_TWO,
   INIT_GALLERIES,
   TOGGLE_GALLERY_EDIT,
-  CREATE_TASK_ERROR,
+  SUBMIT_GALLERY_IMAGE_URL_SUCCESS,
+  SUBMIT_GALLERY_IMAGE_URL_ERROR,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_ERROR,
   DELETE_TASK_SUCCESS,
@@ -47,16 +48,22 @@ export function toggleGalleryEdit(data) {
   };
 }
 
-export function createTask(title) {
+export function submitGalleryImageUrl(data) {
   return (dispatch, getState) => {
-    const { auth, firebase } = getState();
-
+    const { auth, firebase, galleries } = getState();
+debugger
     firebase.child(`tasks/${auth.id}`)
-      .push({completed: false, title}, error => {
+      .push(data, error => {
         if (error) {
           console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
           dispatch({
-            type: CREATE_TASK_ERROR,
+            type: SUBMIT_GALLERY_IMAGE_URL_ERROR,
+            payload: error
+          });
+        }
+        else {
+          dispatch({
+            type: SUBMIT_GALLERY_IMAGE_URL_SUCCESS,
             payload: error
           });
         }

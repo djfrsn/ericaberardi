@@ -34,6 +34,7 @@
 .gallery-url__input, .gallery-url_input-label {
   left: 0;
   background: none;
+  width: 210px;
   border: none;
   border-bottom: 1px solid white;
 }
@@ -135,6 +136,7 @@
 }
 
 @media (max-width: 960px) {
+
   .gallery-left {
     float: left;
     width: 100%;
@@ -148,7 +150,10 @@
 
 
 @media (max-width: 480px) {
-  .overlay__content p {
+  .gallery-url__input, .gallery-url_input-label {
+    width: 150px;
+  }
+  .overlay__content .gallery-image-text, .gallery-edit__image-text {
     font-size: 0.9rem;
   }
 }

@@ -8,15 +8,51 @@
   }
 }
 
-.gallery-edit__icon, .overlay {
+.gallery-edit__icon, .overlay, .gallery-url__input, .gallery-url_input-label {
   position: absolute;
   top: 0;
   color: white;
 }
 
+.gallery-url__input:focus {
+  outline: none;
+}
+
+.gallery-url__input, .gallery-url_input-label {
+  left: 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid white;
+}
+
+.gallery-url_input-label {
+  font-family: Marvel, 'sans-serif';
+  font-size: 0.8rem;
+  letter-spacing: 0.1rem;
+  font-weight: bold;
+  border: none;
+}
+
+.gallery-left {
+  .gallery-url_input-label {
+    margin: -28% 0 0 -45%;
+  }
+  .gallery-url__input {
+    margin: -37% 0 0 -41%;
+  }
+}
+
+.gallery-right {
+  .gallery-url_input-label {
+    margin: -33% 0 0 -45%;
+  }
+  .gallery-url__input {
+    margin: -39% 0 0 -45%;
+  }
+}
+
 .gallery-edit__icon {
   right: 0;
-  margin: 0.5em 0.5em 0 0;
 }
 
 .gallery-left {

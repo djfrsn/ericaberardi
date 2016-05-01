@@ -1,6 +1,10 @@
 {
   "rules": {
-    "homeGallery": {
+    "homeGalleryOne": {
+        ".read": true,
+        ".write":"auth !== null"
+    },
+    "homeGalleryTwo": {
         ".read": true,
         ".write":"auth !== null"
     },

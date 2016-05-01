@@ -20,10 +20,16 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 store.dispatch(authActions.initAuth());
 
-let homeGallery = new Firebase(`${FIREBASE_URL}/homeGallery`);
+let homeGalleryOne = new Firebase(`${FIREBASE_URL}/homeGalleryOne`);
 
-homeGallery.on('value', snapshot => {
-  store.dispatch(galleryActions.initHomeGallery(snapshot.val()));
+homeGalleryOne.on('value', snapshot => {
+  store.dispatch(galleryActions.initHomeGalleryOne(snapshot.val()));
+});
+
+let homeGalleryTwo = new Firebase(`${FIREBASE_URL}/homeGalleryTwo`);
+
+homeGalleryTwo.on('value', snapshot => {
+  store.dispatch(galleryActions.initHomeGalleryTwo(snapshot.val()));
 });
 
 let galleries = new Firebase(`${FIREBASE_URL}/galleries`);

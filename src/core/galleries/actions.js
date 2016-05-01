@@ -1,6 +1,8 @@
 import {
-  INIT_HOME_GALLERY,
+  INIT_HOME_GALLERY_ONE,
+  INIT_HOME_GALLERY_TWO,
   INIT_GALLERIES,
+  TOGGLE_GALLERY_EDIT,
   CREATE_TASK_ERROR,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_ERROR,
@@ -9,10 +11,19 @@ import {
   UPDATE_TASK_SUCCESS
 } from './action-types';
 
-export function initHomeGallery(data) {
+export function initHomeGalleryOne(data) {
   return dispatch => {
     dispatch({
-      type: INIT_HOME_GALLERY,
+      type: INIT_HOME_GALLERY_ONE,
+      payload: data
+    });
+  };
+}
+
+export function initHomeGalleryTwo(data) {
+  return dispatch => {
+    dispatch({
+      type: INIT_HOME_GALLERY_TWO,
       payload: data
     });
   };
@@ -22,6 +33,15 @@ export function initGalleries(data) {
   return dispatch => {
     dispatch({
       type: INIT_GALLERIES,
+      payload: data
+    });
+  };
+}
+
+export function toggleGalleryEdit(data) {
+  return dispatch => {
+    dispatch({
+      type: TOGGLE_GALLERY_EDIT,
       payload: data
     });
   };

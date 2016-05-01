@@ -51,17 +51,18 @@ export function toggleGalleryEdit(data) {
 export function submitGalleryImageUpdates(data) {
   return (dispatch, getState) => {
     const { firebase, galleries } = getState();
-    const gallery = galleries[data.galleryindex].map((gallery, index) => {
+    let imageData = {};
+    galleries[data.galleryindex].forEach((gallery, index) => {
       const match = data.id === index;
-      return {
+      imageData = {
         ...gallery,
         src: match && data.newImageUrl ? data.newImageUrl : gallery.src,
         bottomText: match && data.newImageBottomText ? data.newImageBottomText : gallery.src,
         topText: match && data.newImageTopText ? data.newImageTopText : gallery.src
       };
     });
-    firebase.child(`pendingAdminChanges/${data.galleryindex}`)
-      .push(gallery, error => {
+    firebase.child(`pendingAdminChanges/${data.galleryindex}/${data.id}`)
+      .set(imageData, error => {
         if (error) {
           console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
           dispatch({

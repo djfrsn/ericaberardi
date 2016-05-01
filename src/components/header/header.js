@@ -2,12 +2,32 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
+import { toastActions } from 'core/toast';
+const toastr = require('react-toastr-redux/lib');
+
+const {ToastContainer} = toastr;
+const ToastMessageFactory = React.createFactory(toastr.ToastMessage.animation);
 
 export class Header extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
-    signOut: PropTypes.func.isRequired
+    signOut: PropTypes.func.isRequired,
+    toast: PropTypes.object.isRequired
   };
+  componentWillReceiveProps(nextProps) {
+    this.toast(nextProps);
+  }
+  toast = nextProps => {
+    if (nextProps.toast.message) {
+      this.container[nextProps.toast.message.type](
+        nextProps.message.firstLine,
+        nextProps.message.secondLine, {
+          timeOut: 10000,
+          extendedTimeOut: 10000
+        }
+      );
+    }
+  }
   reRender = () => {
     this.forceUpdate(); // ugly hack since activeClassName only works on page refresh
   }
@@ -30,11 +50,13 @@ export class Header extends Component {
             </ul>
           </div>
         </div>
+        <ToastContainer ref={ref => this.container = ref} toastMessageFactory={ToastMessageFactory} className="toast-top-right" />
       </header>
     );
   }
 }
 
 export default connect(state => ({
-  auth: state.auth
-}), authActions)(Header);
+  auth: state.auth,
+  toast: state.toast
+}), Object.assign({}, authActions, toastActions))(Header);

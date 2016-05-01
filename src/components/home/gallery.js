@@ -13,27 +13,25 @@ export class Gallery extends Component {
       <div className="">
         <div className="gallery-left">
           {
-            homeGallery.map((element, index) => {
-              const image = index % 2 ? null : (
-                <div key={index} className="image__container" >
-                  <img src={element.src} />
-                  <div className="overlay"><div className="overlay__content"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div></div>
-                </div>
-              );
-              return image;
-            })
-          }
-        </div>
-        <div className="gallery-right">
-          {
-            homeGallery.map((element, index) => {
-              const image = index % 2 ? (
+            homeGallery['0'].map((element, index) => {
+              return element ? (
                 <div key={index} className="image__container" >
                   <img src={element.src} />
                   <div className="overlay"><div className="overlay__content"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div></div>
                 </div>
               ) : null;
-              return image;
+            })
+          }
+        </div>
+        <div className="gallery-right">
+          {
+            homeGallery['1'].map((element, index) => {
+              return element ? (
+                <div key={index} className="image__container" >
+                  <img src={element.src} />
+                  <div className="overlay"><div className="overlay__content"><p>{element.topText}</p><span></span><p>{element.bottomText}</p></div></div>
+                </div>
+              ) : null;
             })
           }
         </div>

@@ -6,7 +6,10 @@ import {
 
 
 export const initialState = {
-  homeGallery: [],
+  homeGallery: {
+    '0': [],
+    '1': []
+  },
   galleries: []
 };
 

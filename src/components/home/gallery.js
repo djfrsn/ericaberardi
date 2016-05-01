@@ -7,7 +7,7 @@ export class Gallery extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     galleries: PropTypes.object.isRequired,
-    submitGalleryImageUrl: PropTypes.func.isRequired,
+    submitGalleryImageUpdates: PropTypes.func.isRequired,
     toggleGalleryEdit: PropTypes.func.isRequired
   }
   onEditIconClick = e => {
@@ -22,7 +22,7 @@ export class Gallery extends Component {
       const id = e.currentTarget.parentElement.parentElement.id;
       const galleryindex = e.currentTarget.parentElement.parentElement.dataset.gallery;
       const newImageUrl = e.currentTarget.value;
-      this.props.submitGalleryImageUrl({id, galleryindex, newImageUrl});
+      this.props.submitGalleryImageUpdates({id, galleryindex, newImageUrl});
     }
   }
   render() {

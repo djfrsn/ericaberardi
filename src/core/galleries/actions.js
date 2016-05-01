@@ -3,8 +3,8 @@ import {
   INIT_HOME_GALLERY_TWO,
   INIT_GALLERIES,
   TOGGLE_GALLERY_EDIT,
-  SUBMIT_GALLERY_IMAGE_URL_SUCCESS,
-  SUBMIT_GALLERY_IMAGE_URL_ERROR,
+  SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
+  SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_ERROR,
   DELETE_TASK_SUCCESS,
@@ -48,22 +48,30 @@ export function toggleGalleryEdit(data) {
   };
 }
 
-export function submitGalleryImageUrl(data) {
+export function submitGalleryImageUpdates(data) {
   return (dispatch, getState) => {
-    const { auth, firebase, galleries } = getState();
-debugger
-    firebase.child(`tasks/${auth.id}`)
-      .push(data, error => {
+    const { firebase, galleries } = getState();
+    const gallery = galleries[data.galleryindex].map((gallery, index) => {
+      const match = data.id === index;
+      return {
+        ...gallery,
+        src: match && data.newImageUrl ? data.newImageUrl : gallery.src,
+        bottomText: match && data.newImageBottomText ? data.newImageBottomText : gallery.src,
+        topText: match && data.newImageTopText ? data.newImageTopText : gallery.src,
+      };
+    });
+    firebase.child(`pendingAdminChanges/${data.galleryindex}`)
+      .push(gallery, error => {
         if (error) {
-          console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
+          console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
           dispatch({
-            type: SUBMIT_GALLERY_IMAGE_URL_ERROR,
+            type: SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
             payload: error
           });
         }
         else {
           dispatch({
-            type: SUBMIT_GALLERY_IMAGE_URL_SUCCESS,
+            type: SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
             payload: error
           });
         }

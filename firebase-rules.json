@@ -11,6 +11,10 @@
     "galleries": {
         ".read": true,
         ".write":"auth !== null"
+    },
+    "pendingAdminChanges": {
+        ".read": "auth !== null",
+        ".write": "auth !== null"
     }
   }
 }

@@ -3,6 +3,8 @@ import {
   INIT_HOME_GALLERY_ONE,
   INIT_HOME_GALLERY_TWO,
   INIT_GALLERIES,
+  SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
+  SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
   TOGGLE_GALLERY_EDIT
 } from './action-types';
 
@@ -30,6 +32,18 @@ export function galleriesReducer(state = initialState, action) {
       };
 
     case INIT_GALLERIES:
+      return {
+        ...state,
+        galleries: action.payload
+      };
+
+    case SUBMIT_GALLERY_IMAGE_UPDATE_ERROR:
+      return {
+        ...state,
+        galleries: action.payload
+      };
+
+    case SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS:
       return {
         ...state,
         galleries: action.payload

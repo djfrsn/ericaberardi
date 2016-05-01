@@ -22,7 +22,7 @@ export class Header extends Component {
       this.container[nextProps.toast.toastType](
         nextProps.toast.firstLine,
         nextProps.toast.secondLine, {
-          timeOut: 10000,
+          timeOut: 5000,
           extendedTimeOut: 10000
         }
       );

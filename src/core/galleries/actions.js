@@ -57,7 +57,7 @@ export function submitGalleryImageUpdates(data) {
         ...gallery,
         src: match && data.newImageUrl ? data.newImageUrl : gallery.src,
         bottomText: match && data.newImageBottomText ? data.newImageBottomText : gallery.src,
-        topText: match && data.newImageTopText ? data.newImageTopText : gallery.src,
+        topText: match && data.newImageTopText ? data.newImageTopText : gallery.src
       };
     });
     firebase.child(`pendingAdminChanges/${data.galleryindex}`)

@@ -19,19 +19,16 @@ const store = configureStore({
 const history = syncHistoryWithStore(browserHistory, store);
 
 store.dispatch(authActions.initAuth());
-console.log(`${FIREBASE_URL}/homeGallery`)
-const homeGallery = new Firebase(`${FIREBASE_URL}/homeGallery`);
+
+let homeGallery = new Firebase(`${FIREBASE_URL}/homeGallery`);
 
 homeGallery.on('value', snapshot => {
-  debugger
   store.dispatch(galleryActions.initHomeGallery(snapshot.val()));
 });
 
-const galleries = new Firebase(`${FIREBASE_URL}/galleries`);
+let galleries = new Firebase(`${FIREBASE_URL}/galleries`);
 
 galleries.on('value', snapshot => {
-
-  debugger
   store.dispatch(galleryActions.initGalleries(snapshot.val()));
 });
 

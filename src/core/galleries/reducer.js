@@ -14,17 +14,18 @@ export const initialState = {
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
     case INIT_HOME_GALLERY:
-    debugger
       return {
-        homeGallery: []
+        ...state,
+        homeGallery: action.payload
       };
 
     case INIT_GALLERIES:
       return {
-        galleries: []
+        ...state,
+        galleries: action.payload
       };
 
     default:
       return state;
-  }
+    }
 }

@@ -9,28 +9,21 @@ import {
   UPDATE_TASK_SUCCESS
 } from './action-types';
 
-export function initHomeGallery() {
-  return (dispatch, getState) => {
-    const { firebase } = getState();
+export function initHomeGallery(data) {
+  return dispatch => {
+      console.log('call', INIT_HOME_GALLERY, data);
     dispatch({
       type: INIT_HOME_GALLERY,
-      payload: firebase.getAuth(),
-      meta: {
-        timestamp: Date.now()
-      }
+      payload: data
     });
   };
 }
 
-export function initGalleries() {
-  return (dispatch, getState) => {
-    const { firebase } = getState();
+export function initGalleries(data) {
+  return dispatch => {
     dispatch({
       type: INIT_GALLERIES,
-      payload: firebase.getAuth(),
-      meta: {
-        timestamp: Date.now()
-      }
+      payload: data
     });
   };
 }

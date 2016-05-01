@@ -10,5 +10,5 @@ export const NEWS_REPORTING_PATH = '/news-reporting';
 export const ABOUT_PATH = '/about';
 export const CONTACT_PATH = '/contact';
 export const TASKS_PATH = '/tasks';
-export const POST_LOGIN_PATH = DASHBOARD_PATH;
+export const POST_LOGIN_PATH = HOME_PATH;
 export const POST_LOGOUT_PATH = HOME_PATH;

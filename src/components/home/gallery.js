@@ -19,7 +19,7 @@ export class Gallery extends Component {
     const { auth } = this.props;
     const editIcon = auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.editIcon}></i>) : null;
     const urlInput = (el, direction) => { return auth.authenticated ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" placeholder={el.src} onClick={this.editUrl}/></div>) : null; };
-    const imageText = (topText, bottomText) => { return auth.authenticated ? (<div><p>{topText}</p><span></span><p>{bottomText}</p></div>) : (<div><p>{topText}</p><span></span><p>{bottomText}</p></div>); };
+    const imageText = (topText, bottomText) => { return auth.authenticated ? (<div className="gallery-edit__image-text"><input type="text" placeholder={topText}/><span></span><input type="text" placeholder={bottomText}/></div>) : (<div><p>{topText}</p><span></span><p>{bottomText}</p></div>); };
     return (
       <div className="">
         <div className="gallery-left">

@@ -7,6 +7,19 @@
     height: auto !important;
   }
 }
+.gallery-edit__image-text input {
+  background: none;
+  color: white;
+  border: none;
+  text-align: center;
+  font-size: inherit;
+  font-family: $base-font-family;
+  width: 100%;
+
+  &:focus {
+    outline: none;
+  }
+}
 
 .gallery-edit__icon, .overlay, .gallery-url__input, .gallery-url_input-label {
   position: absolute;
@@ -92,7 +105,7 @@
   position: absolute;
   top: 0; left: 0; bottom: 0; right: 0;
 
-  p:first-of-type {
+  p:first-of-type, .gallery-edit__image-text {
     padding-top: 32.5%;
   }
   span {

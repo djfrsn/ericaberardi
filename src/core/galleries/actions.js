@@ -62,12 +62,12 @@ export function submitGalleryImageUpdates(data) {
     const { firebase, galleries } = getState();
     let imageData = {};
     galleries[data.galleryindex].forEach((gallery, index) => {
-      const match = data.id === index;
+      const match = parseFloat(data.id) === index;
       imageData = {
         ...gallery,
         src: match && data.newImageUrl ? data.newImageUrl : gallery.src,
-        bottomText: match && data.newImageBottomText ? data.newImageBottomText : gallery.src,
-        topText: match && data.newImageTopText ? data.newImageTopText : gallery.src
+        bottomText: match && data.newImageBottomText ? data.newImageBottomText : gallery.bottomText,
+        topText: match && data.newImageTopText ? data.newImageTopText : gallery.topText
       };
     });
     firebase.child(`pendingAdminChanges/${data.galleryindex}/${data.id}`)

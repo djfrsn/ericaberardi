@@ -2,13 +2,22 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { galleryActions } from 'core/galleries';
 import { authActions } from 'core/auth';
+import { toastActions } from 'core/toast';
 
 export class Gallery extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    clearToast: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
+    showToast: PropTypes.func.isRequired,
     submitGalleryImageUpdates: PropTypes.func.isRequired,
     toggleGalleryEdit: PropTypes.func.isRequired
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.galleries.toast.type) {
+      this.props.clearToast();
+      this.props.showToast(nextProps.galleries.toast);
+    }
   }
   onEditIconClick = e => {
     const galleryName = 'homeGallery';
@@ -78,5 +87,6 @@ export class Gallery extends Component {
 
 export default connect(state => ({
   galleries: state.galleries,
-  auth: state.auth
-}), Object.assign({}, authActions, galleryActions))(Gallery);
+  auth: state.auth,
+  toast: state.toast
+}), Object.assign({}, authActions, galleryActions, toastActions))(Gallery);

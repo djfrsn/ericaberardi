@@ -2,6 +2,7 @@
 import {
   INIT_HOME_GALLERY_ONE,
   INIT_HOME_GALLERY_TWO,
+  CLEAR_TOAST,
   INIT_GALLERIES,
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
   SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
@@ -13,12 +14,19 @@ export const initialState = {
   homeGalleryOne: [],
   homeGalleryTwo: [],
   galleries: [],
-  editing: {}
+  editing: {},
+  toast: {}
 };
 
 
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
+    case CLEAR_TOAST:
+      return {
+        ...state,
+        toast: {}
+      };
+
     case INIT_HOME_GALLERY_ONE:
       return {
         ...state,
@@ -40,13 +48,21 @@ export function galleriesReducer(state = initialState, action) {
     case SUBMIT_GALLERY_IMAGE_UPDATE_ERROR:
       return {
         ...state,
-        galleries: action.payload
+        toast: {
+          firstLine: 'Error!',
+          secondLine: 'The update was unsuccessful, please try again.',
+          type: 'error'
+        }
       };
 
     case SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS:
       return {
         ...state,
-        galleries: action.payload
+        toast: {
+          firstLine: 'Success!',
+          secondLine: 'Changes are now pending, publish to go live!.',
+          type: 'success'
+        }
       };
 
     case TOGGLE_GALLERY_EDIT:

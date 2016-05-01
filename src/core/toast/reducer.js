@@ -1,6 +1,7 @@
 
 import {
-  INIT_TOAST
+  INIT_TOAST,
+  SHOW_TOAST
 } from './action-types';
 
 
@@ -14,6 +15,13 @@ export function toastReducer(state = initialState, action) {
     case INIT_TOAST:
       return {
         ...state
+      };
+
+    case SHOW_TOAST:
+      return {
+        firstLine: action.payload.firstLine,
+        secondLine: action.payload.secondLine,
+        toastType: action.payload.type
       };
 
     default:

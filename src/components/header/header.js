@@ -18,10 +18,10 @@ export class Header extends Component {
     this.toast(nextProps);
   }
   toast = nextProps => {
-    if (nextProps.toast.message) {
-      this.container[nextProps.toast.message.type](
-        nextProps.message.firstLine,
-        nextProps.message.secondLine, {
+    if (nextProps.toast.toastType) {
+      this.container[nextProps.toast.toastType](
+        nextProps.toast.firstLine,
+        nextProps.toast.secondLine, {
           timeOut: 10000,
           extendedTimeOut: 10000
         }

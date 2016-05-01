@@ -1,6 +1,7 @@
 import {
   INIT_HOME_GALLERY_ONE,
   INIT_HOME_GALLERY_TWO,
+  CLEAR_TOAST,
   INIT_GALLERIES,
   TOGGLE_GALLERY_EDIT,
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
@@ -11,6 +12,14 @@ import {
   UPDATE_TASK_ERROR,
   UPDATE_TASK_SUCCESS
 } from './action-types';
+
+export function clearToast() {
+  return dispatch => {
+    dispatch({
+      type: CLEAR_TOAST
+    });
+  };
+}
 
 export function initHomeGalleryOne(data) {
   return dispatch => {
@@ -62,7 +71,7 @@ export function submitGalleryImageUpdates(data) {
       };
     });
     firebase.child(`pendingAdminChanges/${data.galleryindex}/${data.id}`)
-      .set(imageData, error => {
+      .set(imageData, (error, res) => {
         if (error) {
           console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
           dispatch({
@@ -73,7 +82,7 @@ export function submitGalleryImageUpdates(data) {
         else {
           dispatch({
             type: SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
-            payload: error
+            payload: res
           });
         }
       });

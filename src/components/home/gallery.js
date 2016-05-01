@@ -18,19 +18,22 @@ export class Gallery extends Component {
     const { homeGallery } = this.props.galleries;
     const { auth } = this.props;
     const editIcon = auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.editIcon}></i>) : null;
+    const urlInput = (el, direction) => { return auth.authenticated ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" placeholder={el.src} onClick={this.editUrl}/></div>) : null; };
+    const imageText = (topText, bottomText) => { return auth.authenticated ? (<div><p>{topText}</p><span></span><p>{bottomText}</p></div>) : (<div><p>{topText}</p><span></span><p>{bottomText}</p></div>); };
     return (
       <div className="">
         <div className="gallery-left">
           {
             homeGallery['0'].map((element, index) => {
-              const urlInput = auth.authenticated ? (<div><label className="gallery-url_input-label" htmlFor="gallery-left-url__input">Image Url</label><input id="gallery-left-url__input" className="da-editable gallery-url__input" placeholder={element.src} onClick={this.editUrl}/></div>) : null;
+              const elInput = urlInput(element, 'left');
+              const elementText = imageText(element.topText, element.bottomText);
               return element ? (
                 <div key={index} className="image__container" >
                   <img src={element.src} />
                   <div className="overlay"><div className="overlay__content">
-                    {urlInput}
+                    {elInput}
                     {editIcon}
-                    <p>{element.topText}</p><span></span><p>{element.bottomText}</p>
+                    {elementText}
                   </div></div>
                 </div>
               ) : null;
@@ -40,14 +43,15 @@ export class Gallery extends Component {
         <div className="gallery-right">
           {
             homeGallery['1'].map((element, index) => {
-              const urlInput = auth.authenticated ? (<div><label className="gallery-url_input-label" htmlFor="gallery-right-url__input">Image Url</label><input id="gallery-right-url__input" className="da-editable gallery-url__input" placeholder={element.src} onClick={this.editUrl}/></div>) : null;
+              const elInput = urlInput(element, 'right');
+              const elementText = imageText(element.topText, element.bottomText);
               return element ? (
                 <div key={index} className="image__container" >
                   <img src={element.src} />
                   <div className="overlay"><div className="overlay__content">
-                    {urlInput}
+                    {elInput}
                     {editIcon}
-                    <p>{element.topText}</p><span></span><p>{element.bottomText}</p>
+                    {elementText}
                   </div></div>
                 </div>
               ) : null;

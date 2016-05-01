@@ -27,5 +27,5 @@ export function galleriesReducer(state = initialState, action) {
 
     default:
       return state;
-    }
+  }
 }

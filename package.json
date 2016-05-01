@@ -2,11 +2,11 @@
   "name": "ericaberardi.com",
   "version": "0.3.0",
   "description": "Erica Berardi Photography",
-  "homepage": "https://github.com/r-park/todo-react-redux",
-  "repository": "https://github.com/r-park/todo-react-redux.git",
+  "homepage": "https://ericaberardi.com",
+  "repository": "https://github.com/djfrsn/ericaberardi.git",
   "author": {
-    "name": "Richard Park",
-    "email": "objectiv@gmail.com"
+    "name": "Dennis Jefferson",
+    "email": "sub@dennisjefferson.com"
   },
   "license": "MIT",
   "private": true,

@@ -4,7 +4,6 @@ import { galleryActions } from 'core/galleries';
 
 export class Gallery extends Component {
   static propTypes = {
-    containerWidth: PropTypes.number.isRequired,
     galleries: PropTypes.object.isRequired
   }
 

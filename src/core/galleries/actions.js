@@ -11,7 +11,6 @@ import {
 
 export function initHomeGallery(data) {
   return dispatch => {
-      console.log('call', INIT_HOME_GALLERY, data);
     dispatch({
       type: INIT_HOME_GALLERY,
       payload: data

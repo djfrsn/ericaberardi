@@ -17,6 +17,7 @@ import ChangePassword from './admin/changePassword';
 import Dashboard from './admin/dashboard';
 import Tasks from './tasks/tasks';
 
+// TODO: <Route component={NotFound} path='*'/>
 
 export class Root extends Component {
   static propTypes = {

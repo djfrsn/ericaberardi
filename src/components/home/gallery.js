@@ -8,11 +8,13 @@ export class Gallery extends Component {
     galleries: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired
   }
+  editIcon = () => {
 
+  }
   render() {
     const { homeGallery } = this.props.galleries;
     const { auth } = this.props;
-    const editIcon = auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true"></i>) : null;
+    const editIcon = auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.editIcon}></i>) : null;
     return (
       <div className="">
         <div className="gallery-left">

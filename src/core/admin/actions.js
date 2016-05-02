@@ -1,5 +1,7 @@
 import {
   LOAD_PENDING_UPDATES,
+  PUBLISH_SUCCESS,
+  PUBLISH_ERROR,
   CREATE_TASK_ERROR,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_ERROR,
@@ -32,6 +34,40 @@ export function initAdmin() {
 export function loadPendingAdminUpdates() {
   return dispatch => {
     loadPendingUpdates(dispatch);
+  };
+}
+
+export function publishUpdates() {
+  return (dispatch, getState) => {
+    const { firebase, admin, galleries } = getState();
+    admin.pendingUpdates.forEach(update => {
+      const updateComputed = update.data[Object.keys(update.data)[0]];
+      let data = galleries[update.name].map(gal => {
+        return {
+          ...gal,
+          src: updateComputed.id === gal.id ? updateComputed.src : gal.src,
+          topText: updateComputed.id === gal.id ? updateComputed.topText : gal.topText,
+          bottomText: updateComputed.id === gal.id ? updateComputed.bottomText : gal.bottomText
+        };
+      });
+      const childUrl = update.name === 'homeGalleryOne' || update.name === 'homeGalleryTwo' ? update.name : `${update.name}/${updateComputed.id}`;
+      firebase.child(childUrl)
+        .set(data, error => {
+          if (error) {
+            console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
+            dispatch({
+              type: PUBLISH_ERROR,
+              payload: error
+            });
+          }
+          else {
+            dispatch({
+              type: PUBLISH_SUCCESS,
+              payload: update
+            });
+          }
+        });
+    });
   };
 }
 

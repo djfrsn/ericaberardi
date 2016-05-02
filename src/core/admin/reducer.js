@@ -5,6 +5,8 @@ import {
 import {
   INIT_ADMIN,
   LOAD_PENDING_UPDATES,
+  PUBLISH_SUCCESS,
+  PUBLISH_ERROR,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_SUCCESS,
   UPDATE_TASK_SUCCESS
@@ -12,7 +14,8 @@ import {
 
 
 export const initialState = {
-  pendingUpdates: []
+  pendingUpdates: [],
+  pendingUpdatesComputed: []
 };
 
 
@@ -25,14 +28,26 @@ export function adminReducer(state = initialState, action) {
 
     case LOAD_PENDING_UPDATES:
       let pendingUpdates = [];
-      for (let gallery in action.payload) {
-        if (gallery) {
-          pendingUpdates.push({ gallery, data: action.payload[gallery]});
+      for (let name in action.payload) {
+        if (name) {
+          pendingUpdates.push({ name, data: action.payload[name]});
         }
       }
       return {
         ...state,
         pendingUpdates: pendingUpdates
+      };
+
+    case PUBLISH_SUCCESS:
+      return {
+        ...state,
+        publishSuccess: true
+      };
+
+    case PUBLISH_ERROR:
+      return {
+        ...state,
+        publishError: action.error
       };
 
     case CREATE_TASK_SUCCESS:

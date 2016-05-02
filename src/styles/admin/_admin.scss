@@ -58,7 +58,7 @@
   text-align: center;
 }
 
-.sign-in__button, .password-submit__button {
+.sign-in__button, .password-submit__button, .pending-changes__publish {
   @include button-base;
   margin-bottom: 10px;
   outline: none;
@@ -77,6 +77,13 @@
     line-height: 46px;
     //border-color: #aaa;
   }
+}
+
+.pending-changes__publish {
+  background: lighten(red, 20%);
+  margin-top: 1em;
+  color: black;
+  width: 50%;
 }
 
 .login__error-msg {

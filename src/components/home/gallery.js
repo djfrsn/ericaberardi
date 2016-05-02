@@ -20,6 +20,14 @@ export class Gallery extends Component {
       this.props.clearToast();
       this.props.showToast(nextProps.galleries.toast);
     }
+    const galleriesReady = nextProps.galleries.homeGalleryOne.length >= 1 && nextProps.galleries.homeGalleryTwo >= 1 ? true : false;
+    debugger
+    if (galleriesReady) {
+      this.setImageDimensions(500);
+    }
+  }
+  setImageDimensions = () => {
+    debugger
   }
   onEditIconClick = e => {
     const galleryName = 'homeGallery';
@@ -53,6 +61,7 @@ export class Gallery extends Component {
     const editIcon = () => { return auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onEditIconClick}></i>) : null; };
     const urlInput = (el, direction, editing) => { return auth.authenticated && editing ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" placeholder={el.src} onKeyUp={this.editUrl}/></div>) : null; };
     const imageText = (topText, bottomText, editing) => { return auth.authenticated && editing ? (<div className="gallery-edit__image-text"><input type="text" placeholder={topText} data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" placeholder={bottomText} onKeyUp={this.editImageText} data-position="bottom"/></div>) : (<div><p className="gallery-image-text">{topText}</p><span></span><p className="gallery-image-text">{bottomText}</p></div>); };
+    const placeholderImage = auth.authenticated ? (<div className="image__container gallery-edit__image-placeholder"><input type="text" placeholder="topText" data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" placeholder="bottomText" onKeyUp={this.editImageText} data-position="bottom"/></div>) : null;
     return (
       <div className="">
         <div className="gallery-left">
@@ -69,7 +78,7 @@ export class Gallery extends Component {
               const elUrlInput = urlInput(element, 'left', element.editing);
               const elImageText = imageText(topText, bottomText, element.editing);
               return element ? (
-                <div key={index} id={element.id} className="image__container" >
+                <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-left-${index}`] = ref; }} >
                   <img src={src} />
                   <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryOne">
                     {elUrlInput}
@@ -80,6 +89,7 @@ export class Gallery extends Component {
               ) : null;
             })
           }
+          {placeholderImage}
         </div>
         <div className="gallery-right">
           {
@@ -95,7 +105,7 @@ export class Gallery extends Component {
               const elUrlInput = urlInput(element, 'right', element.editing);
               const elImageText = imageText(topText, bottomText, element.editing);
               return element ? (
-                <div key={index} id={element.id} className="image__container" >
+                <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-right-${index}`] = ref; }}>
                   <img src={src} />
                   <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryTwo">
                     {elUrlInput}
@@ -106,6 +116,7 @@ export class Gallery extends Component {
               ) : null;
             })
           }
+          {placeholderImage}
         </div>
       </div>
     );

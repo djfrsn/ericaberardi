@@ -30,7 +30,7 @@ export class ChangePassword extends Component {
         <form onSubmit={this.changePassword}>
           <input type="password" placeholder="Old Password" ref={ref => this.oldPassword = ref}/>
           <input type="password" placeholder="New Password" ref={ref => this.newPassword = ref}/>
-          <button type="submit" className="password-submit__button" onClick={this.changePassword}>Submit</button>
+          <button type="submit" className="eb-button password-submit__button" onClick={this.changePassword}>Submit</button>
         </form>
         {msg}</div>);
     }

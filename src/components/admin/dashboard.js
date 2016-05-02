@@ -28,13 +28,15 @@ export class DashBoard extends Component {
       const pendingCountList = pendingUpdatesCount >= 1 ? admin.pendingUpdates.map((update, index) => {
         return (<ul key={index} className="admin-pending_count"><li >{update.name} - {Object.keys(update.data).length}</li></ul>);
       }) : null;
-      const publishButton = admin.pendingUpdates.length >= 1 ? (<button className="pending-changes__publish" onClick={this.onPublish}>Publish</button>) : null;
+      const publishButton = admin.pendingUpdates.length >= 1 ? (<button className="eb-button pending-changes__publish" onClick={this.onPublish}>Publish</button>) : null;
+      const clearChangesButton = admin.pendingUpdates.length >= 1 ? (<button className="eb-button pending-changes__clear" onClick={this.onClear}>Clear Changes</button>) : null;
       component = (<div><h1 className="sign-in__heading">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
           <Link to="changepassword" className="change-password__link" >Change Password</Link>
           <div className="pending-changes__wrapper">
             {pendingChangesTitle}
             {pendingCountList}
+            {clearChangesButton}
             {publishButton}
           </div>
         </div>

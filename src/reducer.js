@@ -7,8 +7,6 @@ import { adminReducer } from 'core/admin';
 import { galleriesReducer } from 'core/galleries';
 import { toastReducer } from 'core/toast';
 import { firebaseReducer } from 'core/firebase';
-import { notificationReducer } from 'core/notification';
-import { tasksReducer } from 'core/tasks';
 
 
 export default combineReducers({
@@ -17,7 +15,5 @@ export default combineReducers({
   galleries: galleriesReducer,
   toast: toastReducer,
   firebase: firebaseReducer,
-  notification: notificationReducer,
-  routing: routerReducer,
-  tasks: tasksReducer
+  routing: routerReducer
 });

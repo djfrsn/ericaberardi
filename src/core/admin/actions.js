@@ -37,7 +37,7 @@ export function loadPendingAdminUpdates() {
   };
 }
 
-const childUrl = update => { return update.name === 'homeGalleryOne' || update.name === 'homeGalleryTwo' ? update.name : `${update.name}/${updateComputed.id}`; };
+const childUrl = (update, updateComputed) => { return update.name === 'homeGalleryOne' || update.name === 'homeGalleryTwo' ? update.name : `${update.name}/${updateComputed.id}`; };
 
 export function publishUpdates() {
   return (dispatch, getState) => {
@@ -52,7 +52,7 @@ export function publishUpdates() {
           bottomText: updateComputed.id === gal.id ? updateComputed.bottomText : gal.bottomText
         };
       });
-      const url = childUrl(update);
+      const url = childUrl(update, updateComputed);
       firebase.child(url)
         .set(data, error => {
           if (error) {
@@ -76,7 +76,7 @@ export function publishUpdates() {
 export function deletePublishUpdates(update) {
   return (dispatch, getState) => {
     const { firebase } = getState();
-    firebase.child(`pendingAdminChanges/${childUrl(update)}`)
+    firebase.child(`pendingAdminChanges/${childUrl(update, {})}`)
       .remove(error => {
         if (error) {
           console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console

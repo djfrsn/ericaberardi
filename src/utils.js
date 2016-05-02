@@ -1,6 +1,5 @@
 export default {
-  uuid: function () {
-    /*jshint bitwise:false */
+  uuid: function() {
     var i, random;
     var uuid = '';
 
@@ -9,14 +8,14 @@ export default {
       if (i === 8 || i === 12 || i === 16 || i === 20) {
         uuid += '-';
       }
-      uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random))
+      uuid += (i === 12 ? 4 : (i === 16 ? (random & 3 | 8) : random)) // eslint-disable-line no-nested-ternary
         .toString(16);
     }
 
     return uuid;
   },
 
-  store: function (namespace, data) {
+  store: function(namespace, data) {
     if (data) {
       return localStorage.setItem(namespace, JSON.stringify(data));
     }

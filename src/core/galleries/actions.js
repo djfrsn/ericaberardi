@@ -61,31 +61,35 @@ export function submitGalleryImageUpdates(data) {
   return (dispatch, getState) => {
     const { firebase, galleries } = getState();
     let imageData = {};
-    galleries[data.galleryindex].forEach((gallery, index) => {
-      const match = parseFloat(data.id) === index;
-      imageData = {
-        ...gallery,
-        src: match && data.newImageUrl ? data.newImageUrl : gallery.src,
-        bottomText: match && data.newImageBottomText ? data.newImageBottomText : gallery.bottomText,
-        topText: match && data.newImageTopText ? data.newImageTopText : gallery.topText
-      };
+    galleries[data.galleryindex].forEach(gallery => {
+      const match = data.id === gallery.id;
+      if (match) {
+        imageData = {
+          ...gallery,
+          src: data.newImageUrl ? data.newImageUrl : gallery.src,
+          bottomText: data.newImageBottomText ? data.newImageBottomText : gallery.bottomText,
+          topText: data.newImageTopText ? data.newImageTopText : gallery.topText
+        };
+      }
     });
-    firebase.child(`pendingAdminChanges/${data.galleryindex}/${data.id}`)
-      .set(imageData, (error, res) => {
-        if (error) {
-          console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
-          dispatch({
-            type: SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
-            payload: error
-          });
-        }
-        else {
-          dispatch({
-            type: SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
-            payload: res
-          });
-        }
-      });
+    if (imageData.src) {
+      firebase.child(`pendingAdminChanges/${data.galleryindex}/${data.id}`)
+        .set(imageData, (error, res) => {
+          if (error) {
+            console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
+            dispatch({
+              type: SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
+              payload: error
+            });
+          }
+          else {
+            dispatch({
+              type: SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
+              payload: res
+            });
+          }
+        });
+    }
   };
 }
 

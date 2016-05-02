@@ -1,6 +1,20 @@
 //===================================================================
 //  ADMIN
 //===================================================================
+.pending-changes__title {
+  margin-top: 1em;
+  font-family: Marvel, 'sans-serif';
+}
+
+.dashboard__wrapper {
+  text-align: center;
+}
+
+.admin-pending_count {
+  margin-top: 0.5em;
+  list-style: none;
+}
+
 
 .change-password__link {
   color: black;

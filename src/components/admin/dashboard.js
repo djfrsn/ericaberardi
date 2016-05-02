@@ -2,17 +2,30 @@ import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
+import { adminActions } from 'core/admin';
 
 export class DashBoard extends Component {
   static propTypes = {
+    admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired
   };
   render() {
-    const { auth } = this.props;
+    const { auth, admin } = this.props;
     let component = <p style={{textAlign: 'center'}}><a href="/admin">Login</a> to use the dashboard.</p>;
     if (auth.authenticated) {
+
+      const pendingCount = admin.pendingUpdates.length >= 1 ? admin.pendingUpdates.map((update, index) => {
+        return (<ul key={index} className="admin-pending_count"><li >{update.gallery} - {Object.keys(update.data).length}</li></ul>);
+      }) : null;
       component = (<div><h1 className="sign-in__heading">Admin DashBoard</h1>
-        <Link to="changepassword" className="change-password__link" >Change Password</Link></div>);
+        <div className="dashboard__wrapper">
+          <Link to="changepassword" className="change-password__link" >Change Password</Link>
+          <div className="pending-changes__wrapper">
+            <h3 className="pending-changes__title">Pending Changes</h3>
+            {pendingCount}
+          </div>
+        </div>
+      </div>);
     }
     return (
       <div className="g-row dashboard">
@@ -25,5 +38,6 @@ export class DashBoard extends Component {
 }
 
 export default connect(state => ({
-  auth: state.auth
-}), authActions)(DashBoard);
+  auth: state.auth,
+  admin: state.admin
+}), Object.assign({}, authActions, adminActions))(DashBoard);

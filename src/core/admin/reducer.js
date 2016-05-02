@@ -3,6 +3,7 @@ import {
 } from 'core/auth';
 
 import {
+  INIT_ADMIN,
   LOAD_PENDING_UPDATES,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_SUCCESS,
@@ -11,16 +12,27 @@ import {
 
 
 export const initialState = {
-  pendingUpdates: {}
+  pendingUpdates: []
 };
 
 
-export function tasksReducer(state = initialState, action) {
+export function adminReducer(state = initialState, action) {
   switch (action.type) {
+    case INIT_ADMIN:
+      return {
+        ...state
+      };
+
     case LOAD_PENDING_UPDATES:
+      let pendingUpdates = [];
+      for (let gallery in action.payload) {
+        if (gallery) {
+          pendingUpdates.push({ gallery, data: action.payload[gallery]});
+        }
+      }
       return {
         ...state,
-        pendingUpdates: action.pendingUpdates
+        pendingUpdates: pendingUpdates
       };
 
     case CREATE_TASK_SUCCESS:

@@ -12,7 +12,7 @@ import { FIREBASE_URL } from '../../config';
 
 const loadPendingUpdates = dispatch => {
   let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
-  pendingAdminChanges.once('value', snapshot => {
+  pendingAdminChanges.on('value', snapshot => {
     dispatch({
       type: LOAD_PENDING_UPDATES,
       payload: snapshot.val()
@@ -30,7 +30,7 @@ export function initAdmin() {
 }
 
 export function loadPendingAdminUpdates() {
-  return (dispatch) => {
+  return dispatch => {
     loadPendingUpdates(dispatch);
   };
 }

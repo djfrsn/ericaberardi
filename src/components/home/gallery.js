@@ -74,12 +74,19 @@ export class Gallery extends Component {
         <div className="gallery-right">
           {
             homeGalleryTwo.map((element, index) => {
+              let match = null;
+              if (admin.pendingUpdatesRaw.homeGalleryTwo) {
+                match = admin.pendingUpdatesRaw.homeGalleryTwo[element.id] ? admin.pendingUpdatesRaw.homeGalleryTwo[element.id] : undefined;
+              }
+              const src = match ? match.src : element.src;
+              const topText = match ? match.topText : element.topText;
+              const bottomText = match ? match.bottomText : element.bottomText;
               const elEditIcon = editIcon();
               const elUrlInput = urlInput(element, 'right', element.editing);
-              const elImageText = imageText(element.topText, element.bottomText, element.editing);
+              const elImageText = imageText(topText, bottomText, element.editing);
               return element ? (
                 <div key={index} id={element.id} className="image__container" >
-                  <img src={element.src} />
+                  <img src={src} />
                   <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryTwo">
                     {elUrlInput}
                     {elEditIcon}

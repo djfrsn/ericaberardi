@@ -1,4 +1,5 @@
 import {
+  LOAD_PENDING_UPDATES,
   CREATE_TASK_ERROR,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_ERROR,
@@ -6,6 +7,33 @@ import {
   UPDATE_TASK_ERROR,
   UPDATE_TASK_SUCCESS
 } from './action-types';
+import Firebase from 'firebase';
+import { FIREBASE_URL } from '../../config';
+
+const loadPendingUpdates = dispatch => {
+  let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
+  pendingAdminChanges.once('value', snapshot => {
+    dispatch({
+      type: LOAD_PENDING_UPDATES,
+      payload: snapshot.val()
+    });
+  });
+};
+
+export function initAdmin() {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    if (firebase.getAuth()) {
+      loadPendingUpdates(dispatch);
+    }
+  };
+}
+
+export function loadPendingAdminUpdates() {
+  return (dispatch) => {
+    loadPendingUpdates(dispatch);
+  };
+}
 
 export function createTask(title) {
   return (dispatch, getState) => {

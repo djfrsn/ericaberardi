@@ -3,6 +3,7 @@ import Header from '../header/header';
 import { connect } from 'react-redux';
 import { POST_LOGIN_PATH } from 'config';
 import { authActions } from 'core/auth';
+import { adminActions } from 'core/admin';
 
 
 export class App extends Component {
@@ -14,6 +15,7 @@ export class App extends Component {
     auth: PropTypes.object.isRequired,
     children: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    loadPendingAdminUpdates: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired
   };
 
@@ -28,6 +30,7 @@ export class App extends Component {
 
     if (!auth.authenticated && nextProps.auth.authenticated) {
       router.replace(POST_LOGIN_PATH);
+      this.props.loadPendingAdminUpdates();
     }
   }
 
@@ -52,4 +55,4 @@ export class App extends Component {
 
 export default connect(state => ({
   auth: state.auth
-}), authActions)(App);
+}), Object.assign({}, authActions, adminActions))(App);

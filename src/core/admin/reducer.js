@@ -3,6 +3,7 @@ import {
 } from 'core/auth';
 
 import {
+  LOAD_PENDING_UPDATES,
   CREATE_TASK_SUCCESS,
   DELETE_TASK_SUCCESS,
   UPDATE_TASK_SUCCESS
@@ -10,14 +11,18 @@ import {
 
 
 export const initialState = {
-  deleted: null,
-  list: [],
-  previous: []
+  pendingUpdates: {}
 };
 
 
 export function tasksReducer(state = initialState, action) {
   switch (action.type) {
+    case LOAD_PENDING_UPDATES:
+      return {
+        ...state,
+        pendingUpdates: action.pendingUpdates
+      };
+
     case CREATE_TASK_SUCCESS:
       let list;
 

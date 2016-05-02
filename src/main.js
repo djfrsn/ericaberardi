@@ -7,6 +7,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import 'styles/styles.scss';
 import { Root } from 'components/root';
 import { authActions /* , authRouteResolver */ } from 'core/auth';
+import { adminActions } from 'core/admin';
 import { galleryActions } from 'core/galleries';
 import { FIREBASE_URL } from './config';
 import configureStore from './store';
@@ -19,6 +20,8 @@ const store = configureStore({
 const history = syncHistoryWithStore(browserHistory, store);
 
 store.dispatch(authActions.initAuth());
+
+store.dispatch(adminActions.initAdmin());
 
 let homeGalleryOne = new Firebase(`${FIREBASE_URL}/homeGalleryOne`);
 

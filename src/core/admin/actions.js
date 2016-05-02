@@ -37,6 +37,8 @@ export function loadPendingAdminUpdates() {
   };
 }
 
+const childUrl = update => { return update.name === 'homeGalleryOne' || update.name === 'homeGalleryTwo' ? update.name : `${update.name}/${updateComputed.id}`; };
+
 export function publishUpdates() {
   return (dispatch, getState) => {
     const { firebase, admin, galleries } = getState();
@@ -50,8 +52,8 @@ export function publishUpdates() {
           bottomText: updateComputed.id === gal.id ? updateComputed.bottomText : gal.bottomText
         };
       });
-      const childUrl = update.name === 'homeGalleryOne' || update.name === 'homeGalleryTwo' ? update.name : `${update.name}/${updateComputed.id}`;
-      firebase.child(childUrl)
+      const url = childUrl(update);
+      firebase.child(url)
         .set(data, error => {
           if (error) {
             console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
@@ -68,6 +70,22 @@ export function publishUpdates() {
           }
         });
     });
+  };
+}
+
+export function deletePublishUpdates(update) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    firebase.child(`pendingAdminChanges/${childUrl(update)}`)
+      .remove(error => {
+        if (error) {
+          console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
+          dispatch({
+            type: DELETE_TASK_ERROR,
+            payload: error
+          });
+        }
+      });
   };
 }
 

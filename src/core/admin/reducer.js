@@ -41,7 +41,8 @@ export function adminReducer(state = initialState, action) {
     case PUBLISH_SUCCESS:
       return {
         ...state,
-        publishSuccess: true
+        publishSuccess: true,
+        publishedChangesDeleteQueue: action.payload
       };
 
     case PUBLISH_ERROR:

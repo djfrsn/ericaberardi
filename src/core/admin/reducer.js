@@ -15,7 +15,7 @@ import {
 
 export const initialState = {
   pendingUpdates: [],
-  pendingUpdatesComputed: []
+  pendingUpdatesRaw: []
 };
 
 
@@ -35,7 +35,8 @@ export function adminReducer(state = initialState, action) {
       }
       return {
         ...state,
-        pendingUpdates: pendingUpdates
+        pendingUpdates: pendingUpdates,
+        pendingUpdatesRaw: action.payload || []
       };
 
     case PUBLISH_SUCCESS:

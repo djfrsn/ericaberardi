@@ -1,12 +1,14 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { galleryActions } from 'core/galleries';
+import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
 import { toastActions } from 'core/toast';
 
 export class Gallery extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    admin: PropTypes.object.isRequired,
     clearToast: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     showToast: PropTypes.func.isRequired,
@@ -35,6 +37,7 @@ export class Gallery extends Component {
     }
   }
   render() {
+    const { admin } = this.props;
     const { homeGalleryOne, homeGalleryTwo } = this.props.galleries;
     const { auth } = this.props;
     const editIcon = () => { return auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onEditIconClick}></i>) : null; };
@@ -45,12 +48,19 @@ export class Gallery extends Component {
         <div className="gallery-left">
           {
             homeGalleryOne.map((element, index) => {
+              let match = null;
+              if (admin.pendingUpdatesRaw.homeGalleryOne) {
+                match = admin.pendingUpdatesRaw.homeGalleryOne[element.id] ? admin.pendingUpdatesRaw.homeGalleryOne[element.id] : undefined;
+              }
+              const src = match ? match.src : element.src;
+              const topText = match ? match.topText : element.topText;
+              const bottomText = match ? match.bottomText : element.bottomText;
               const elEditIcon = editIcon();
               const elUrlInput = urlInput(element, 'left', element.editing);
-              const elImageText = imageText(element.topText, element.bottomText, element.editing);
+              const elImageText = imageText(topText, bottomText, element.editing);
               return element ? (
                 <div key={index} id={element.id} className="image__container" >
-                  <img src={element.src} />
+                  <img src={src} />
                   <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryOne">
                     {elUrlInput}
                     {elEditIcon}
@@ -86,7 +96,8 @@ export class Gallery extends Component {
 }
 
 export default connect(state => ({
+  admin: state.admin,
   galleries: state.galleries,
   auth: state.auth,
   toast: state.toast
-}), Object.assign({}, authActions, galleryActions, toastActions))(Gallery);
+}), Object.assign({}, authActions, adminActions, galleryActions, toastActions))(Gallery);

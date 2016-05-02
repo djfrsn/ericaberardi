@@ -3,18 +3,25 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
+import { toastActions } from 'core/toast';
 
 export class DashBoard extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     clearPublishUpdates: PropTypes.func.isRequired,
+    clearToast: PropTypes.func.isRequired,
     deletePublishUpdates: PropTypes.func.isRequired,
-    publishUpdates: PropTypes.func.isRequired
+    publishUpdates: PropTypes.func.isRequired,
+    showToast: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.admin.publishSuccess) {
       this.props.deletePublishUpdates(nextProps.admin.publishedChangesDeleteQueue);
+    }
+    if (nextProps.admin.toast.type) {
+      this.props.clearToast();
+      this.props.showToast(nextProps.admin.toast);
     }
   }
   onPublish = () => {
@@ -28,12 +35,12 @@ export class DashBoard extends Component {
     let component = <p style={{textAlign: 'center'}}><a href="/admin">Login</a> to use the dashboard.</p>;
     if (auth.authenticated) {
       const pendingUpdatesCount = admin.pendingUpdates.length;
-      const pendingChangesTitle = pendingUpdatesCount >= 1 ? (<h3 className="pending-changes__title">Pending Changes</h3>) : null;
+      const pendingChangesTitle = pendingUpdatesCount >= 1 ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
       const pendingCountList = pendingUpdatesCount >= 1 ? admin.pendingUpdates.map((update, index) => {
         return (<ul key={index} className="admin-pending_count"><li >{update.name} - {Object.keys(update.data).length}</li></ul>);
       }) : null;
       const publishButton = admin.pendingUpdates.length >= 1 ? (<button className="eb-button pending-changes__publish" onClick={this.onPublish}>Publish</button>) : null;
-      const clearChangesButton = admin.pendingUpdates.length >= 1 ? (<button className="eb-button pending-changes__clear" onClick={this.onClear}>Clear Changes</button>) : null;
+      const clearChangesButton = admin.pendingUpdates.length >= 1 ? (<button className="eb-button pending-changes__clear" onClick={this.onClear}>Undo Edits</button>) : null;
       component = (<div><h1 className="sign-in__heading">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
           <Link to="changepassword" className="change-password__link" >Change Password</Link>
@@ -59,4 +66,4 @@ export class DashBoard extends Component {
 export default connect(state => ({
   auth: state.auth,
   admin: state.admin
-}), Object.assign({}, authActions, adminActions))(DashBoard);
+}), Object.assign({}, authActions, adminActions, toastActions))(DashBoard);

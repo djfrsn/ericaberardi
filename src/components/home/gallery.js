@@ -115,6 +115,5 @@ export class Gallery extends Component {
 export default connect(state => ({
   admin: state.admin,
   galleries: state.galleries,
-  auth: state.auth,
-  toast: state.toast
+  auth: state.auth
 }), Object.assign({}, authActions, adminActions, galleryActions, toastActions))(Gallery);

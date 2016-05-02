@@ -1,16 +1,25 @@
 import {
+  CLEAR_TOAST,
   LOAD_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
   CREATE_TASK_ERROR,
   CREATE_TASK_SUCCESS,
-  DELETE_TASK_ERROR,
+  CLEAR_UPDATES_ERROR,
   DELETE_TASK_SUCCESS,
   UPDATE_TASK_ERROR,
   UPDATE_TASK_SUCCESS
 } from './action-types';
 import Firebase from 'firebase';
 import { FIREBASE_URL } from '../../config';
+
+export function clearToast() {
+  return dispatch => {
+    dispatch({
+      type: CLEAR_TOAST
+    });
+  };
+}
 
 const loadPendingUpdates = dispatch => {
   let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
@@ -79,7 +88,7 @@ const deleteAdminChanges = (firebase, update, dispatch) => {
       if (error) {
         console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
         dispatch({
-          type: DELETE_TASK_ERROR,
+          type: CLEAR_UPDATES_ERROR,
           payload: error
         });
       }
@@ -114,24 +123,6 @@ export function createTask(title) {
           console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
           dispatch({
             type: CREATE_TASK_ERROR,
-            payload: error
-          });
-        }
-      });
-  };
-}
-
-
-export function deleteTask(task) {
-  return (dispatch, getState) => {
-    const { auth, firebase } = getState();
-
-    firebase.child(`tasks/${auth.id}/${task.key}`)
-      .remove(error => {
-        if (error) {
-          console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
-          dispatch({
-            type: DELETE_TASK_ERROR,
             payload: error
           });
         }

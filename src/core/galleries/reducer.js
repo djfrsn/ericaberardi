@@ -60,7 +60,7 @@ export function galleriesReducer(state = initialState, action) {
         ...state,
         toast: {
           firstLine: 'Success!',
-          secondLine: 'Changes are now pending, publish to go live!.',
+          secondLine: 'Updates are now pending, publish to go live!.',
           type: 'success'
         }
       };

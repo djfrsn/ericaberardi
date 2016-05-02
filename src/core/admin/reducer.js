@@ -3,11 +3,12 @@ import {
 } from 'core/auth';
 
 import {
+  CLEAR_TOAST,
   INIT_ADMIN,
   LOAD_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
-  CREATE_TASK_SUCCESS,
+  CLEAR_UPDATES_ERROR,
   DELETE_TASK_SUCCESS,
   UPDATE_TASK_SUCCESS
 } from './action-types';
@@ -15,12 +16,19 @@ import {
 
 export const initialState = {
   pendingUpdates: [],
-  pendingUpdatesRaw: []
+  pendingUpdatesRaw: [],
+  toast: {}
 };
 
 
 export function adminReducer(state = initialState, action) {
   switch (action.type) {
+    case CLEAR_TOAST:
+      return {
+        ...state,
+        toast: {}
+      };
+
     case INIT_ADMIN:
       return {
         ...state
@@ -43,29 +51,33 @@ export function adminReducer(state = initialState, action) {
       return {
         ...state,
         publishSuccess: true,
-        publishedChangesDeleteQueue: action.payload
+        publishedChangesDeleteQueue: action.payload,
+        toast: {
+          firstLine: 'Success!',
+          secondLine: 'Your updates are live!.',
+          type: 'success'
+        }
       };
 
     case PUBLISH_ERROR:
       return {
         ...state,
-        publishError: action.error
+        publishError: action.error,
+        toast: {
+          firstLine: 'Error!',
+          secondLine: 'Publish failed! Please try again.',
+          type: 'error'
+        }
       };
-
-    case CREATE_TASK_SUCCESS:
-      let list;
-
-      if (state.deleted && state.deleted.key === action.payload.key) {
-        list = [ ...state.previous ];
-      }
-      else {
-        list = [ action.payload, ...state.list ];
-      }
-
+    case CLEAR_UPDATES_ERROR:
       return {
-        deleted: null,
-        list,
-        previous: []
+        ...state,
+        publishError: action.error,
+        toast: {
+          firstLine: 'Error!',
+          secondLine: 'Clearing updates failed! Please try again.',
+          type: 'error'
+        }
       };
 
     case DELETE_TASK_SUCCESS:

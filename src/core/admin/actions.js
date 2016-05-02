@@ -73,19 +73,34 @@ export function publishUpdates() {
   };
 }
 
+const deleteAdminChanges = (firebase, update, dispatch) => {
+  firebase.child(`pendingAdminChanges/${childUrl(update, {})}`)
+    .remove(error => {
+      if (error) {
+        console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
+        dispatch({
+          type: DELETE_TASK_ERROR,
+          payload: error
+        });
+      }
+    });
+};
+
+export function clearPublishUpdates() {
+  return (dispatch, getState) => {
+    const { firebase, admin } = getState();
+    if (admin.pendingUpdates.length >= 1) {
+      admin.pendingUpdates.forEach(update => {
+        deleteAdminChanges(firebase, update, dispatch);
+      });
+    }
+  };
+}
+
 export function deletePublishUpdates(update) {
   return (dispatch, getState) => {
     const { firebase } = getState();
-    firebase.child(`pendingAdminChanges/${childUrl(update, {})}`)
-      .remove(error => {
-        if (error) {
-          console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
-          dispatch({
-            type: DELETE_TASK_ERROR,
-            payload: error
-          });
-        }
-      });
+    deleteAdminChanges(firebase, update, dispatch);
   };
 }
 

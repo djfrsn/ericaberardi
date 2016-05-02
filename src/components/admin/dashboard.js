@@ -8,6 +8,7 @@ export class DashBoard extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    clearPublishUpdates: PropTypes.func.isRequired,
     deletePublishUpdates: PropTypes.func.isRequired,
     publishUpdates: PropTypes.func.isRequired
   };
@@ -18,6 +19,9 @@ export class DashBoard extends Component {
   }
   onPublish = () => {
     this.props.publishUpdates();
+  }
+  onClear = () => {
+    this.props.clearPublishUpdates();
   }
   render() {
     const { auth, admin } = this.props;

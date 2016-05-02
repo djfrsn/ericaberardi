@@ -79,8 +79,11 @@
   }
 }
 
-.pending-changes__publish {
+.pending-changes__clear {
   background: lighten(red, 20%);
+}
+.pending-changes__publish {
+  background: #62F462;
 }
 
 .pending-changes__publish, .pending-changes__clear {

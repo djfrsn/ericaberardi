@@ -72,7 +72,6 @@ export function submitGalleryImageUpdates(data) {
         };
       }
     });
-    debugger
     if (imageData.src) {
       firebase.child(`pendingAdminChanges/${data.galleryindex}/${data.id}`)
         .set(imageData, (error, res) => {

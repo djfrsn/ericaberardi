@@ -7,8 +7,8 @@ import { toastActions } from 'core/toast';
 
 export class Gallery extends Component {
   static propTypes = {
-    auth: PropTypes.object.isRequired,
     admin: PropTypes.object.isRequired,
+    auth: PropTypes.object.isRequired,
     clearToast: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     showToast: PropTypes.func.isRequired,
@@ -27,6 +27,16 @@ export class Gallery extends Component {
     const galleryindex = e.currentTarget.parentElement.dataset.gallery;
     this.props.toggleGalleryEdit({id, galleryindex, galleryName});
   }
+  editImageText = e => {
+    const key = e.which || e.keyCode || 0;
+    if (key === 13) {
+      const id = e.currentTarget.parentElement.parentElement.id;
+      const galleryindex = e.currentTarget.parentElement.parentElement.dataset.gallery;
+      const text = e.currentTarget.value;
+      const position = e.currentTarget.dataset.position;
+      this.props.submitGalleryImageUpdates({id, galleryindex, text, position});
+    }
+  }
   editUrl = e => {
     const key = e.which || e.keyCode || 0;
     if (key === 13) {
@@ -42,7 +52,7 @@ export class Gallery extends Component {
     const { auth } = this.props;
     const editIcon = () => { return auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onEditIconClick}></i>) : null; };
     const urlInput = (el, direction, editing) => { return auth.authenticated && editing ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" placeholder={el.src} onKeyUp={this.editUrl}/></div>) : null; };
-    const imageText = (topText, bottomText, editing) => { return auth.authenticated && editing ? (<div className="gallery-edit__image-text"><input type="text" placeholder={topText}/><span></span><input type="text" placeholder={bottomText}/></div>) : (<div><p className="gallery-image-text">{topText}</p><span></span><p className="gallery-image-text">{bottomText}</p></div>); };
+    const imageText = (topText, bottomText, editing) => { return auth.authenticated && editing ? (<div className="gallery-edit__image-text"><input type="text" placeholder={topText} data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" placeholder={bottomText} onKeyUp={this.editImageText} data-position="bottom"/></div>) : (<div><p className="gallery-image-text">{topText}</p><span></span><p className="gallery-image-text">{bottomText}</p></div>); };
     return (
       <div className="">
         <div className="gallery-left">

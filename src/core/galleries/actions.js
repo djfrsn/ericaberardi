@@ -67,8 +67,8 @@ export function submitGalleryImageUpdates(data) {
         imageData = {
           ...gallery,
           src: data.newImageUrl ? data.newImageUrl : gallery.src,
-          bottomText: data.newImageBottomText ? data.newImageBottomText : gallery.bottomText,
-          topText: data.newImageTopText ? data.newImageTopText : gallery.topText
+          bottomText: data.text && data.position === 'bottom' ? data.text : gallery.bottomText,
+          topText: data.text && data.position === 'top' ? data.text : gallery.topText
         };
       }
     });

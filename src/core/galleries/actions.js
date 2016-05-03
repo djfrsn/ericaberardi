@@ -1,4 +1,5 @@
 import {
+  CREATE_PLACEHOLDER_IMAGES,
   INIT_HOME_GALLERY_ONE,
   INIT_HOME_GALLERY_TWO,
   CLEAR_TOAST,
@@ -17,6 +18,15 @@ export function clearToast() {
   return dispatch => {
     dispatch({
       type: CLEAR_TOAST
+    });
+  };
+}
+
+export function createPlaceholderImages(data) {
+  return dispatch => {
+    dispatch({
+      type: CREATE_PLACEHOLDER_IMAGES,
+      payload: data
     });
   };
 }

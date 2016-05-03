@@ -1,5 +1,6 @@
 
 import {
+  CREATE_PLACEHOLDER_IMAGES,
   INIT_HOME_GALLERY_ONE,
   INIT_HOME_GALLERY_TWO,
   CLEAR_TOAST,
@@ -15,6 +16,7 @@ export const initialState = {
   homeGalleryTwo: [],
   galleries: [],
   editing: {},
+  placeholderImages: [],
   toast: {}
 };
 
@@ -25,6 +27,12 @@ export function galleriesReducer(state = initialState, action) {
       return {
         ...state,
         toast: {}
+      };
+
+    case CREATE_PLACEHOLDER_IMAGES:
+      return {
+        ...state,
+        placeholderImages: action.payload
       };
 
     case INIT_HOME_GALLERY_ONE:

@@ -5,14 +5,12 @@ import {
   CLEAR_TOAST,
   INIT_GALLERIES,
   TOGGLE_GALLERY_EDIT,
+  SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS,
+  SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR,
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
-  SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
-  CREATE_TASK_SUCCESS,
-  DELETE_TASK_ERROR,
-  DELETE_TASK_SUCCESS,
-  UPDATE_TASK_ERROR,
-  UPDATE_TASK_SUCCESS
+  SUBMIT_GALLERY_IMAGE_UPDATE_ERROR
 } from './action-types';
+import utils from 'utils';
 
 export function clearToast() {
   return dispatch => {
@@ -103,83 +101,24 @@ export function submitGalleryImageUpdates(data) {
   };
 }
 
-
-export function deleteTask(task) {
+export function saveGalleryImage(data) {
   return (dispatch, getState) => {
-    const { auth, firebase } = getState();
-
-    firebase.child(`tasks/${auth.id}/${task.key}`)
-      .remove(error => {
-        if (error) {
-          console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
-          dispatch({
-            type: DELETE_TASK_ERROR,
-            payload: error
-          });
-        }
-      });
+    const { firebase } = getState();
+    firebase.child(`pendingAdminChanges/${data.galleryindex}/${utils.uuid()}`)
+        .set({ src: data.src, topText: data.topText, bottomText: data.bottomText }, (error, res) => {
+          if (error) {
+            console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
+            dispatch({
+              type: SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR,
+              payload: error
+            });
+          }
+          else {
+            dispatch({
+              type: SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS,
+              payload: res
+            });
+          }
+        });
   };
-}
-
-
-export function undeleteTask() {
-  return (dispatch, getState) => {
-    const { auth, firebase, tasks } = getState();
-    const task = tasks.deleted;
-
-    firebase.child(`tasks/${auth.id}/${task.key}`)
-      .set({completed: task.completed, title: task.title}, error => {
-        if (error) {
-          console.error('ERROR @ undeleteTask :', error); // eslint-disable-line no-console
-        }
-      });
-  };
-}
-
-
-export function updateTask(task, changes) {
-  return (dispatch, getState) => {
-    const { auth, firebase } = getState();
-
-    firebase.child(`tasks/${auth.id}/${task.key}`)
-      .update(changes, error => {
-        if (error) {
-          console.error('ERROR @ updateTask :', error); // eslint-disable-line no-console
-          dispatch({
-            type: UPDATE_TASK_ERROR,
-            payload: error
-          });
-        }
-      });
-  };
-}
-
-
-export function registerListeners() {
-  return (dispatch, getState) => {
-    const { auth, firebase } = getState();
-    const ref = firebase.child(`tasks/${auth.id}`);
-
-    ref.on('child_added', snapshot => dispatch({
-      type: CREATE_TASK_SUCCESS,
-      payload: recordFromSnapshot(snapshot)
-    }));
-
-    ref.on('child_changed', snapshot => dispatch({
-      type: UPDATE_TASK_SUCCESS,
-      payload: recordFromSnapshot(snapshot)
-    }));
-
-    ref.on('child_removed', snapshot => dispatch({
-      type: DELETE_TASK_SUCCESS,
-      payload: recordFromSnapshot(snapshot)
-    }));
-  };
-}
-
-
-function recordFromSnapshot(snapshot) {
-  let record = snapshot.val();
-  record.key = snapshot.key();
-  return record;
 }

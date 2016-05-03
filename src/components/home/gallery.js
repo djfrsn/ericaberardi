@@ -12,6 +12,7 @@ export class Gallery extends Component {
     clearToast: PropTypes.func.isRequired,
     createPlaceholderImages: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
+    saveGalleryImage: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
     submitGalleryImageUpdates: PropTypes.func.isRequired,
     toggleGalleryEdit: PropTypes.func.isRequired
@@ -31,15 +32,23 @@ export class Gallery extends Component {
       const imageOne = this['gallery-left-0'];
       const imageTwo = this['gallery-right-0'];
       this.props.createPlaceholderImages([{
-        name: 'imageOne',
+        direction: 'left',
         height: imageOne.clientHeight,
         width: imageOne.clientWidth
       }, {
-        name: 'imageTwo',
+        direction: 'right',
         height: imageTwo.clientHeight,
         width: imageTwo.clientWidth
       }]);
     }, delay);
+  }
+  onSaveIconClick = e => {
+    const galleryName = 'homeGallery';
+    const galleryindex = e.currentTarget.parentElement.parentElement.dataset.gallery;
+    const src = this[`placeholder-image-${galleryindex}-src`].value;
+    const topText = this[`placeholder-image-${galleryindex}-topText`].value;
+    const bottomText = this[`placeholder-image-${galleryindex}-bottomText`].value;
+    this.props.saveGalleryImage({galleryindex, galleryName, src, topText, bottomText});
   }
   onEditIconClick = e => {
     const galleryName = 'homeGallery';
@@ -47,9 +56,12 @@ export class Gallery extends Component {
     const galleryindex = e.currentTarget.parentElement.dataset.gallery;
     this.props.toggleGalleryEdit({id, galleryindex, galleryName});
   }
+  isPlaceholderEl = e => {
+    return e.currentTarget.parentElement.parentElement.dataset.placeholder === 'true' ? true : false;
+  }
   editImageText = e => {
     const key = e.which || e.keyCode || 0;
-    if (key === 13) {
+    if (key === 13 && !this.isPlaceholderEl(e)) {
       const id = e.currentTarget.parentElement.parentElement.id;
       const galleryindex = e.currentTarget.parentElement.parentElement.dataset.gallery;
       const text = e.currentTarget.value;
@@ -59,7 +71,7 @@ export class Gallery extends Component {
   }
   editUrl = e => {
     const key = e.which || e.keyCode || 0;
-    if (key === 13) {
+    if (key === 13 && !this.isPlaceholderEl(e)) {
       const id = e.currentTarget.parentElement.parentElement.id;
       const galleryindex = e.currentTarget.parentElement.parentElement.dataset.gallery;
       const newImageUrl = e.currentTarget.value;
@@ -70,12 +82,16 @@ export class Gallery extends Component {
     const { admin } = this.props;
     const { homeGalleryOne, homeGalleryTwo } = this.props.galleries;
     const { auth } = this.props;
+    const saveIcon = () => { return auth.authenticated ? (<i className="fa fa-check-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onSaveIconClick}></i>) : null; };
     const editIcon = () => { return auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onEditIconClick}></i>) : null; };
-    const urlInput = (el, direction, editing) => { return auth.authenticated && editing ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" placeholder={el.src} onKeyUp={this.editUrl}/></div>) : null; };
-    const imageText = (topText, bottomText, editing) => { return auth.authenticated && editing ? (<div className="gallery-edit__image-text"><input type="text" placeholder={topText} data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" placeholder={bottomText} onKeyUp={this.editImageText} data-position="bottom"/></div>) : (<div><p className="gallery-image-text">{topText}</p><span></span><p className="gallery-image-text">{bottomText}</p></div>); };
+    const urlInput = (el, direction, editing, attr = '') => { return auth.authenticated && editing ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" ref={ref => { this[attr] = ref; }} placeholder={el.src} onKeyUp={this.editUrl}/></div>) : null; };
+    const imageText = (topText, bottomText, editing, attr = '') => { return auth.authenticated && editing ? (<div className="gallery-edit__image-text"><input type="text" ref={ref => { this[`${attr}-topText`] = ref; }} placeholder={topText} data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" ref={ref => { this[`${attr}-bottomText`] = ref; }} placeholder={bottomText} onKeyUp={this.editImageText} data-position="bottom"/></div>) : (<div><p className="gallery-image-text">{topText}</p><span></span><p className="gallery-image-text">{bottomText}</p></div>); };
     const placeholderImages = auth.authenticated && this.props.galleries.placeholderImages.length >= 2 ?
     this.props.galleries.placeholderImages.map((image, index) => {
-      return (<div key={index} className="image__container gallery-edit__image-placeholder" style={{height: image.height, width: image.width }}><input type="text" placeholder="topText" data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" placeholder="bottomText" onKeyUp={this.editImageText} data-position="bottom"/></div>);
+      const galleryindex = index === 0 ? 'homeGalleryOne' : 'homeGalleryTwo';
+      const elUrlInput = urlInput({src: 'Replace w/ img url and click checkmark!'}, image.direction, true, `placeholder-image-${galleryindex}-src`);
+      const elImageText = imageText('topText', 'bottomText', true, `placeholder-image-${galleryindex}`);
+      return (<div key={index} data-gallery={galleryindex} className="image__container gallery-edit__image-placeholder" style={{height: image.height, width: image.width }}><div className="overlay__content" data-placeholder="true">{elUrlInput}{saveIcon()}{elImageText}</div></div>);
     }) : null;
     const placeholderImageOne = placeholderImages ? placeholderImages[0] : null;
     const placeholderImageTwo = placeholderImages ? placeholderImages[1] : null;

@@ -5,6 +5,8 @@ import {
   INIT_HOME_GALLERY_TWO,
   CLEAR_TOAST,
   INIT_GALLERIES,
+  SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS,
+  SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR,
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
   SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
   TOGGLE_GALLERY_EDIT
@@ -20,6 +22,17 @@ export const initialState = {
   toast: {}
 };
 
+const successToast = {
+  firstLine: 'Success!',
+  secondLine: 'Updates are now pending, publish to go live!.',
+  type: 'success'
+};
+
+const errorToast = {
+  firstLine: 'Error!',
+  secondLine: 'The update was unsuccessful, please try again.',
+  type: 'error'
+};
 
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
@@ -53,24 +66,28 @@ export function galleriesReducer(state = initialState, action) {
         galleries: action.payload
       };
 
-    case SUBMIT_GALLERY_IMAGE_UPDATE_ERROR:
+    case SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS:
       return {
         ...state,
-        toast: {
-          firstLine: 'Error!',
-          secondLine: 'The update was unsuccessful, please try again.',
-          type: 'error'
-        }
+        toast: errorToast
+      };
+
+    case SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR:
+      return {
+        ...state,
+        toast: successToast
       };
 
     case SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS:
       return {
         ...state,
-        toast: {
-          firstLine: 'Success!',
-          secondLine: 'Updates are now pending, publish to go live!.',
-          type: 'success'
-        }
+        toast: successToast
+      };
+
+    case SUBMIT_GALLERY_IMAGE_UPDATE_ERROR:
+      return {
+        ...state,
+        toast: errorToast
       };
 
     case TOGGLE_GALLERY_EDIT:

@@ -7,6 +7,12 @@
     height: auto !important;
   }
 }
+
+.gallery-edit__image-placeholder {
+  background: black;
+  opacity: 0.7;
+}
+
 .gallery-edit__image-text input {
   background: none;
   color: white;

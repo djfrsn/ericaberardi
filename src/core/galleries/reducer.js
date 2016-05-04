@@ -69,13 +69,13 @@ export function galleriesReducer(state = initialState, action) {
     case SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS:
       return {
         ...state,
-        toast: errorToast
+        toast: successToast
       };
 
     case SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR:
       return {
         ...state,
-        toast: successToast
+        toast: errorToast
       };
 
     case SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS:

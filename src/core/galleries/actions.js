@@ -10,6 +10,7 @@ import {
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
   SUBMIT_GALLERY_IMAGE_UPDATE_ERROR
 } from './action-types';
+import galleryImageDefaults from './galleryImageDefaults';
 import utils from 'utils';
 
 export function clearToast() {
@@ -105,7 +106,7 @@ export function saveGalleryImage(data) {
   return (dispatch, getState) => {
     const { firebase } = getState();
     firebase.child(`pendingAdminChanges/${data.galleryindex}/${utils.uuid()}`)
-        .set({ src: data.src, topText: data.topText, bottomText: data.bottomText }, (error, res) => {
+        .set({ ...galleryImageDefaults, src: data.src, topText: data.topText, bottomText: data.bottomText }, (error, res) => {
           if (error) {
             console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
             dispatch({

@@ -4,6 +4,7 @@ import { galleryActions } from 'core/galleries';
 import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
 import { toastActions } from 'core/toast';
+import galleryImageContainer from './galleryImageContainer';
 
 export class Gallery extends Component {
   static propTypes = {
@@ -56,6 +57,12 @@ export class Gallery extends Component {
     const galleryindex = e.currentTarget.parentElement.dataset.gallery;
     this.props.toggleGalleryEdit({id, galleryindex, galleryName});
   }
+  onDeleteIconClick = e => {
+    const galleryName = 'homeGallery';
+    const id = e.currentTarget.parentElement.id;
+    const galleryindex = e.currentTarget.parentElement.dataset.gallery;
+    this.props.toggleGalleryEdit({id, galleryindex, galleryName});
+  }
   isPlaceholderEl = e => {
     return e.currentTarget.parentElement.parentElement.dataset.placeholder === 'true' ? true : false;
   }
@@ -84,6 +91,7 @@ export class Gallery extends Component {
     const { auth } = this.props;
     const saveIcon = () => { return auth.authenticated ? (<i className="fa fa-check-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onSaveIconClick}></i>) : null; };
     const editIcon = () => { return auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onEditIconClick}></i>) : null; };
+    const deleteIcon = () => { return auth.authenticated ? (<i className="fa fa-trash-o gallery-edit__icon" aria-hidden="true" onClick={this.onDeleteIconClick}></i>) : null; };
     const urlInput = (el, direction, editing, attr = '') => { return auth.authenticated && editing ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" ref={ref => { this[attr] = ref; }} placeholder={el.src} onKeyUp={this.editUrl}/></div>) : null; };
     const imageText = (topText, bottomText, editing, attr = '') => { return auth.authenticated && editing ? (<div className="gallery-edit__image-text"><input type="text" ref={ref => { this[`${attr}-topText`] = ref; }} placeholder={topText} data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" ref={ref => { this[`${attr}-bottomText`] = ref; }} placeholder={bottomText} onKeyUp={this.editImageText} data-position="bottom"/></div>) : (<div><p className="gallery-image-text">{topText}</p><span></span><p className="gallery-image-text">{bottomText}</p></div>); };
     const placeholderImages = auth.authenticated && this.props.galleries.placeholderImages.length >= 2 ?
@@ -95,6 +103,46 @@ export class Gallery extends Component {
     }) : null;
     const placeholderImageOne = placeholderImages ? placeholderImages[0] : null;
     const placeholderImageTwo = placeholderImages ? placeholderImages[1] : null;
+    let pendingNewImagesOne = null;
+    let pendingNewImagesTwo = null;
+    if (admin.pendingUpdatesRaw.homeGalleryOne) {
+      pendingNewImagesOne = [];
+      let i = 0;
+      const pendingHomeGalleryOne = admin.pendingUpdatesRaw.homeGalleryOne;
+      for (let key in pendingHomeGalleryOne) {
+        if (pendingHomeGalleryOne.hasOwnProperty(key)) {
+          let element = pendingHomeGalleryOne[key];
+          pendingNewImagesOne.push(galleryImageContainer({
+            element,
+            src: element.src,
+            index: i++,
+            direction: 'left',
+            elUrlInput: urlInput(element, 'left', element.editing),
+            elEditIcon: editIcon(),
+            elImageText: imageText(element.topText, element.bottomText, element.editing)
+          }));
+        }
+      }
+    }
+    if (admin.pendingUpdatesRaw.homeGalleryTwo) {
+      pendingNewImagesTwo = [];
+      let h = 0;
+      const pendingHomeGalleryTwo = admin.pendingUpdatesRaw.homeGalleryTwo;
+      for (let key in pendingHomeGalleryTwo) {
+        if (pendingHomeGalleryTwo.hasOwnProperty(key)) {
+          let element = pendingHomeGalleryTwo[key];
+          pendingNewImagesTwo.push(galleryImageContainer({
+            element,
+            src: element.src,
+            index: h++,
+            direction: 'right',
+            elUrlInput: urlInput(element, 'right', element.editing),
+            elEditIcon: editIcon(),
+            elImageText: imageText(element.topText, element.bottomText, element.editing)
+          }));
+        }
+      }
+    }
     return (
       <div className="">
         <div className="gallery-left">
@@ -110,6 +158,7 @@ export class Gallery extends Component {
               const elEditIcon = editIcon();
               const elUrlInput = urlInput(element, 'left', element.editing);
               const elImageText = imageText(topText, bottomText, element.editing);
+              const elDeleteIcon = index > 3 ? deleteIcon(element) : null;
               return element ? (
                 <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-left-${index}`] = ref; }} >
                   <img src={src} />
@@ -117,11 +166,13 @@ export class Gallery extends Component {
                     {elUrlInput}
                     {elEditIcon}
                     {elImageText}
+                    {elDeleteIcon}
                   </div></div>
                 </div>
               ) : null;
             })
           }
+          {pendingNewImagesOne}
           {placeholderImageOne}
         </div>
         <div className="gallery-right">
@@ -137,6 +188,7 @@ export class Gallery extends Component {
               const elEditIcon = editIcon();
               const elUrlInput = urlInput(element, 'right', element.editing);
               const elImageText = imageText(topText, bottomText, element.editing);
+              const elDeleteIcon = index > 2 ? deleteIcon(element) : null;
               return element ? (
                 <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-right-${index}`] = ref; }}>
                   <img src={src} />
@@ -144,11 +196,13 @@ export class Gallery extends Component {
                     {elUrlInput}
                     {elEditIcon}
                     {elImageText}
+                    {elDeleteIcon}
                   </div></div>
                 </div>
               ) : null;
             })
           }
+          {pendingNewImagesTwo}
           {placeholderImageTwo}
         </div>
       </div>

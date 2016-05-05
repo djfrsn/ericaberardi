@@ -10,6 +10,7 @@ export class Gallery extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    clearImageResetMeta: PropTypes.func.isRequired,
     clearToast: PropTypes.func.isRequired,
     createPlaceholderImages: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
@@ -19,6 +20,12 @@ export class Gallery extends Component {
     toggleGalleryEdit: PropTypes.func.isRequired
   }
   componentWillReceiveProps(nextProps) {
+    if (nextProps.galleries.imageResetMeta.length > 0) {
+      // reset url, imageText inputs for given array of id's
+      // should be image type agnostic
+      debugger
+      this.props.clearImageResetMeta();
+    }
     if (nextProps.galleries.toast.type) {
       this.props.clearToast();
       this.props.showToast(nextProps.galleries.toast);
@@ -92,7 +99,7 @@ export class Gallery extends Component {
     const saveIcon = () => { return auth.authenticated ? (<i className="fa fa-check-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onSaveIconClick}></i>) : null; };
     const editIcon = () => { return auth.authenticated ? (<i className="fa fa-pencil-square-o gallery-edit__icon" aria-hidden="true" onClick={this.onEditIconClick}></i>) : null; };
     const deleteIcon = () => { return auth.authenticated ? (<i className="fa fa-trash-o gallery-edit__icon" aria-hidden="true" onClick={this.onDeleteIconClick}></i>) : null; };
-    const urlInput = (el, direction, editing, attr = '') => { return auth.authenticated && editing ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" ref={ref => { this[attr] = ref; }} placeholder={el.src} onKeyUp={this.editUrl}/></div>) : null; };
+    const urlInput = (el, direction, editing) => { return auth.authenticated && editing ? (<div><label className="gallery-url_input-label" htmlFor={`gallery-${direction}-url__input`}>Image Url</label><input id={`gallery-${direction}-url__input`} className="da-editable gallery-url__input" ref={ref => { this[`urlInput-${el.id}`] = ref; }} placeholder={el.src} onKeyUp={this.editUrl}/></div>) : null; };
     const imageText = (topText, bottomText, editing, attr = '') => { return auth.authenticated && editing ? (<div className="gallery-edit__image-text"><input type="text" ref={ref => { this[`${attr}-topText`] = ref; }} placeholder={topText} data-position="top" onKeyUp={this.editImageText}/><span></span><input type="text" ref={ref => { this[`${attr}-bottomText`] = ref; }} placeholder={bottomText} onKeyUp={this.editImageText} data-position="bottom"/></div>) : (<div><p className="gallery-image-text">{topText}</p><span></span><p className="gallery-image-text">{bottomText}</p></div>); };
     const placeholderImages = auth.authenticated && this.props.galleries.placeholderImages.length >= 2 ?
     this.props.galleries.placeholderImages.map((image, index) => {
@@ -114,6 +121,7 @@ export class Gallery extends Component {
           let element = pendingHomeGalleryOne[key];
           pendingNewImagesOne.push(galleryImageContainer({
             element,
+            gallery: 'homeGalleryOnePending',
             src: element.src,
             index: i++,
             direction: 'left',
@@ -133,6 +141,7 @@ export class Gallery extends Component {
           let element = pendingHomeGalleryTwo[key];
           pendingNewImagesTwo.push(galleryImageContainer({
             element,
+            gallery: 'homeGalleryTwoPending',
             src: element.src,
             index: h++,
             direction: 'right',

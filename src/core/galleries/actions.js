@@ -5,6 +5,7 @@ import {
   CLEAR_TOAST,
   INIT_GALLERIES,
   TOGGLE_GALLERY_EDIT,
+  CLEAR_IMAGE_RESET_META,
   SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS,
   SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR,
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
@@ -62,6 +63,14 @@ export function toggleGalleryEdit(data) {
     dispatch({
       type: TOGGLE_GALLERY_EDIT,
       payload: data
+    });
+  };
+}
+
+export function clearImageResetMeta() {
+  return dispatch => {
+    dispatch({
+      type: CLEAR_IMAGE_RESET_META
     });
   };
 }

@@ -15,6 +15,10 @@
     "pendingAdminChanges": {
         ".read": "auth !== null",
         ".write": "auth !== null"
+    },
+    "qa": {
+        ".read": true,
+        ".write":"auth !== null"
     }
   }
 }

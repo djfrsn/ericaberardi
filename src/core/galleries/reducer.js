@@ -106,7 +106,6 @@ export function galleriesReducer(state = initialState, action) {
 
     case TOGGLE_GALLERY_EDIT:
       let newState = {};
-      debugger
       switch (action.payload.galleryindex) {
         case 'homeGalleryOne':
           const homeGalleryOne = state.homeGalleryOne.map(gallery => {

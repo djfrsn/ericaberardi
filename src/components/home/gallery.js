@@ -23,7 +23,7 @@ export class Gallery extends Component {
     if (nextProps.galleries.imageResetMeta.length > 0) {
       // reset url, imageText inputs for given array of id's
       // should be image type agnostic
-      debugger
+
       this.props.clearImageResetMeta();
     }
     if (nextProps.galleries.toast.type) {

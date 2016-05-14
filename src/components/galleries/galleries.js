@@ -15,42 +15,46 @@ export class Galleries extends Component {
     location: PropTypes.object.isRequired
   }
   state = {
-    gallery: []
+    gallery: [],
+    categories: []
   }
   componentWillMount() {
-    this.loadGallery(this.props);
+    this.setGallery(this.props);
   }
   componentWillReceiveProps(nextProps) {
-    this.loadGallery(nextProps);
+    this.setGallery(nextProps);
   }
-  loadGallery = props => {
+  setGallery = props => {
     const { pathname } = props.location;
     const path = utils.parsePath(pathname).path;
     const defaultGallery = 'commercial';
     const galleryPath = path === '/' ? defaultGallery : path;
     const galleries = props.galleries.galleries;
     const gallery = props.galleries.galleries[galleryPath] || {};
+    const categories = Object.keys(galleries);
 
-    if (Object.keys(galleries).length > 0) {
-      this.setState({ gallery });
-      // set route to gallery_path
+    if (categories.length > 0) {
+      this.setState({ categories, gallery });
     }
   }
-  reRender = () => {
-    this.forceUpdate(); // ugly hack since activeClassName only works on page refresh
-  }
   render() {
-    const { gallery } = this.state;
+    const { gallery, categories } = this.state;
     return (
       <div className="g-row gallery__container">
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              <li><Link to="/galleries/commercial" className="gallery__link" onClick={this.reRender} activeClassName="active">Commercial</Link></li>
-              <li><Link to="/galleries/families" className="gallery__link" onClick={this.reRender} activeClassName="active">Families</Link></li>
-              <li><Link to="/galleries/portraits" className="gallery__link" onClick={this.reRender} activeClassName="active">Portraits</Link></li>
-              <li><Link to="/galleries/events" className="gallery__link" onClick={this.reRender} activeClassName="active">Events</Link></li>
-              <li><Link to="/galleries/sports" className="gallery__link" onClick={this.reRender} activeClassName="active">Sports</Link></li>
+            {
+              categories.map((category, index) => {
+                const { pathname } = this.props.location;
+                const path = utils.parsePath(pathname).path;
+                const galleryLink = 'gallery__link';
+                const className = (path === '/' ? 'commercial' : path) === category ? `${galleryLink} active` : galleryLink;
+                return category ? (
+                  <li key={index}><Link to={`/galleries/${category}`} className={className}>{category}</Link></li>
+                ) : null;
+              })
+            }
             </ul>
           </div>
           <div className="gallery">

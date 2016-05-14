@@ -4,6 +4,8 @@ import {
   INIT_HOME_GALLERY_TWO,
   CLEAR_TOAST,
   INIT_GALLERIES,
+  FETCH_GALLERY_SUCCESS,
+  FETCH_GALLERY_ERROR,
   TOGGLE_GALLERY_EDIT,
   CLEAR_IMAGE_RESET_META,
   SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS,
@@ -54,6 +56,16 @@ export function initGalleries() {
     dispatch({
       type: INIT_GALLERIES,
       payload: []
+    });
+  };
+}
+
+export function fetchGallery(data) {
+  return dispatch => {
+    // fetch galleries from firebase
+    dispatch({
+      type: FETCH_GALLERY_SUCCESS,
+      payload: data
     });
   };
 }

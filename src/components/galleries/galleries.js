@@ -5,6 +5,7 @@ import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
 import { galleryActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
+import * as utils from './galleriesUtils';
 // TODO: Import galleryImageContainer
 // import galleryImageContainer from './galleryImageContainer';
 
@@ -13,8 +14,16 @@ export class Galleries extends Component {
     galleries: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired
   }
-  loadGallery = pathname => {
-    return pathname;
+  componentWillMount() {
+    this.loadGallery();
+  }
+  componentWillReceiveProps() {
+    this.loadGallery();
+  }
+  loadGallery = () => {
+    const { pathname } = this.props.location;
+    const path = utils.parsePath(pathname);
+    debugger
   }
   reRender = () => {
     this.forceUpdate(); // ugly hack since activeClassName only works on page refresh
@@ -27,11 +36,11 @@ export class Galleries extends Component {
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              <li><Link to="galleries" className="gallery__link" onClick={this.reRender} activeClassName="active">Commercial</Link></li>
-              <li><Link to="news-reporting" className="gallery__link" onClick={this.reRender} activeClassName="active">Families</Link></li>
-              <li><Link to="pricing" className="gallery__link" onClick={this.reRender} activeClassName="active">Portraits</Link></li>
-              <li><Link to="about" className="gallery__link" onClick={this.reRender} activeClassName="active">Events</Link></li>
-              <li><Link to="contact" className="gallery__link" onClick={this.reRender} activeClassName="active">Sports</Link></li>
+              <li><Link to="galleries/commercial" className="gallery__link" onClick={this.reRender} activeClassName="active">Commercial</Link></li>
+              <li><Link to="galleries/families" className="gallery__link" onClick={this.reRender} activeClassName="active">Families</Link></li>
+              <li><Link to="galleries/portraits" className="gallery__link" onClick={this.reRender} activeClassName="active">Portraits</Link></li>
+              <li><Link to="galleries/events" className="gallery__link" onClick={this.reRender} activeClassName="active">Events</Link></li>
+              <li><Link to="galleries/sports" className="gallery__link" onClick={this.reRender} activeClassName="active">Sports</Link></li>
             </ul>
           </div>
           <div className="gallery">

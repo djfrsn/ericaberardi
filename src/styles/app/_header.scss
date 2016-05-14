@@ -23,10 +23,11 @@
 }
 
 .header__sub_title {
-  color: #999;
+  color: $colors-gray;
   float: left;
   margin: 4px 0 0 3px;
   font-size: rem(16px);
+
   > span {
     font-size: 14px;
   }
@@ -37,13 +38,16 @@
   float: right;
   padding: 15px 0 0;
   line-height: 24px;
+
   li {
     float: left;
-    @extend .link-style;
+    @extend .link;
 
     a {
+      @extend .link-border-hidden;
+
       &.active, &:hover {
-        @extend .link-border-style;
+        @extend .link-border;
       }
     }
   }

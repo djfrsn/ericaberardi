@@ -16,7 +16,7 @@
         ".read": "auth !== null",
         ".write": "auth !== null"
     },
-    "qa": {
+    "dev": {
         ".read": true,
         ".write":"auth !== null"
     }

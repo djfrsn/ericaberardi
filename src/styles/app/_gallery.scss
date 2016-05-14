@@ -9,13 +9,13 @@
 }
 
 .gallery-edit__image-placeholder {
-  background: black;
+  background: $colors-black;
   opacity: 0.7;
 }
 
 .gallery-edit__image-text input {
   background: none;
-  color: white;
+  color: $colors-white;
   border: none;
   text-align: center;
   font-size: inherit;
@@ -30,7 +30,7 @@
 .gallery-edit__icon, .overlay, .gallery-url__input, .gallery-url_input-label {
   position: absolute;
   top: 0;
-  color: white;
+  color: $colors-white;
 }
 
 .fa-check-square-o {
@@ -45,7 +45,7 @@
   background: none;
   width: 210px;
   border: none;
-  border-bottom: 1px solid white;
+  border-bottom: 1px solid $colors-white;
 }
 
 .gallery-url_input-label {
@@ -123,7 +123,7 @@
     display: block;
     margin: 0.5em auto;
     height: 1px;
-    background: white;
+    background: $colors-white;
   }
 }
 

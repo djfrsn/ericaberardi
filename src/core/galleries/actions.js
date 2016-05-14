@@ -49,11 +49,11 @@ export function initHomeGalleryTwo(data) {
   };
 }
 
-export function initGalleries() {
+export function initGalleries(data) {
   return dispatch => {
     dispatch({
       type: INIT_GALLERIES,
-      payload: []
+      payload: data
     });
   };
 }

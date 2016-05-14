@@ -8,6 +8,9 @@ $base-font-family: 'Josefin Slab', Helvetica Neue, Arial, sans-serif !default;
 $base-font-size: 18px !default;
 $base-line-height: 24px !default;
 
+$colors-gray: #999;
+$colors-black: black;
+$colors-white: white;
 
 //===============================================
 //  GRID
@@ -18,13 +21,18 @@ $grid-max-width: 70% !default;
 //===============================================
 //  EXTENDS
 //===============================================
-.link-style {
+.link {
     list-style: none;
     margin: 0 0.4em;
     transition: border-bottom 0.8s linear;
     border-bottom: 1px solid white;
 }
 
-.link-border-style {
+.link-border-hidden {
+  transition: border 0.5s linear;
+  border-bottom: 1px solid rgba(255, 234, 0, 0);
+}
+
+.link-border {
   border-bottom: 1px solid #FFEA00;
 }

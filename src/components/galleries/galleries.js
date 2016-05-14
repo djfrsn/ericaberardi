@@ -18,21 +18,21 @@ export class Galleries extends Component {
     gallery: []
   }
   componentWillMount() {
-    this.loadGallery();
+    this.loadGallery(this.props.galleries.galleries);
   }
-  componentWillReceiveProps() {
-    this.loadGallery();
+  componentWillReceiveProps(nextProps) {
+    this.loadGallery(nextProps.galleries.galleries);
   }
-  loadGallery = () => {
+  loadGallery = galleries => {
     const { pathname } = this.props.location;
-    const { galleries } = this.props.galleries;
-    const path = utils.parsePath(pathname);
+    const path = utils.parsePath(pathname).path;
     const defaultGallery = 'commercial';
     const galleryPath = path === '/' ? defaultGallery : path;
-    const matchedGallery = galleries[galleryPath] || [];
+    const gallery = galleries[galleryPath] || {};
 
-    if (matchedGallery.length > 0) {
-      return galleryPath;
+    if (Object.keys(gallery).length > 0) {
+
+      this.setState({ gallery });
       // set gallery state to matchedGallery
       // set route to gallery_path
     }
@@ -42,7 +42,6 @@ export class Galleries extends Component {
   }
   render() {
     const { gallery } = this.state;
-    const imageText = category => { return (<div><p className="gallery-image-text">{category}</p></div>); };
     return (
       <div className="g-row gallery__container">
         <div className="g-col" >
@@ -59,13 +58,11 @@ export class Galleries extends Component {
           {
             gallery.map((element, index) => {
               return element ? (
-                <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-left-${index}`] = ref; }} >
+                <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-img-${index}`] = ref; }} >
                   <img src={element.src} />
-                  <Link to={`galleries/${element.category.toLowerCase()}`} className="gallery__link" >
-                    <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="mainGallery">
-                      {imageText(element.category)}
-                    </div></div>
-                  </Link>
+                  <div className="overlay">
+                    <div className="overlay__content" id={element.id} data-gallery="mainGallery"></div>
+                  </div>
                 </div>
               ) : null;
             })

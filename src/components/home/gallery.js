@@ -22,7 +22,6 @@ export class Gallery extends Component {
   }
   render() {
     const { homeGalleryOne, homeGalleryTwo } = this.props.galleries;
-
     const imageText = category => { return (<div><p className="gallery-image-text">{category}</p></div>); };
     return (
       <div className="">

@@ -17,7 +17,7 @@ import {
 export const initialState = {
   homeGalleryOne: [],
   homeGalleryTwo: [],
-  galleries: [],
+  galleries: {},
   editing: {},
   placeholderImages: [],
   toast: {},

@@ -31,7 +31,7 @@ export class Gallery extends Component {
               return element ? (
                 <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-left-${index}`] = ref; }} >
                   <img src={element.src} />
-                  <Link to={element.category.toLowerCase()} className="gallery__link" >
+                  <Link to={`galleries/${element.category.toLowerCase()}`} className="gallery__link" >
                     <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryOne">
                       {imageText(element.category)}
                     </div></div>
@@ -47,7 +47,7 @@ export class Gallery extends Component {
               return element ? (
                 <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-right-${index}`] = ref; }}>
                   <img src={element.src} />
-                  <Link to={element.category.toLowerCase()} className="gallery__link" >
+                  <Link to={`galleries/${element.category.toLowerCase()}`} className="gallery__link" >
                     <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryTwo">
                       {imageText(element.category)}
                     </div></div>

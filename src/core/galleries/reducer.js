@@ -21,7 +21,7 @@ export const initialState = {
   editing: {},
   placeholderImages: [],
   toast: {},
-  imageResetMeta: []
+  imageResetMeta: {}
 };
 
 const successToast = {
@@ -71,16 +71,14 @@ export function galleriesReducer(state = initialState, action) {
     case CLEAR_IMAGE_RESET_META:
       return {
         ...state,
-        imageResetMeta: []
+        imageResetMeta: {}
       };
 
     case SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS:
       return {
         ...state,
         toast: successToast,
-        imageResetMeta: action.ids.map(id => {
-          return { id: id };
-        })
+        imageResetMeta: { ...action.payload }
       };
 
     case SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR:
@@ -93,9 +91,7 @@ export function galleriesReducer(state = initialState, action) {
       return {
         ...state,
         toast: successToast,
-        imageResetMeta: action.ids.map(id => {
-          return { id: id };
-        })
+        imageResetMeta: { ...action.payload }
       };
 
     case SUBMIT_GALLERY_IMAGE_UPDATE_ERROR:

@@ -49,11 +49,11 @@ export function initHomeGalleryTwo(data) {
   };
 }
 
-export function initGalleries(data) {
+export function initGalleries() {
   return dispatch => {
     dispatch({
       type: INIT_GALLERIES,
-      payload: data
+      payload: []
     });
   };
 }
@@ -92,7 +92,7 @@ export function submitGalleryImageUpdates(data) {
     });
     if (imageData.src) {
       firebase.child(`pendingAdminChanges/${data.galleryindex}/${data.id}`)
-        .set(imageData, (error, res) => {
+        .set(imageData, error => {
           if (error) {
             console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
             dispatch({
@@ -103,7 +103,7 @@ export function submitGalleryImageUpdates(data) {
           else {
             dispatch({
               type: SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
-              payload: res
+              payload: { id: data.id, type: data.type }
             });
           }
         });
@@ -115,7 +115,7 @@ export function saveGalleryImage(data) {
   return (dispatch, getState) => {
     const { firebase } = getState();
     firebase.child(`pendingAdminChanges/${data.galleryindex}/${utils.uuid()}`)
-        .set({ ...galleryImageDefaults, src: data.src, topText: data.topText, bottomText: data.bottomText }, (error, res) => {
+        .set({ ...galleryImageDefaults, src: data.src, topText: data.topText, bottomText: data.bottomText }, error => {
           if (error) {
             console.error('ERROR @ submitGalleryImageUrl :', error); // eslint-disable-line no-console
             dispatch({
@@ -126,7 +126,7 @@ export function saveGalleryImage(data) {
           else {
             dispatch({
               type: SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS,
-              payload: res
+              payload: { id: 'placeholder', type: data.type }
             });
           }
         });

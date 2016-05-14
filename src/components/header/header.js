@@ -39,7 +39,7 @@ export class Header extends Component {
           <div className="g-col">
             <Link to="/" onClick={this.reRender} className="home__link" >
               <h1 className="header__title">Erica Berardi</h1>
-              <h2 className="header__sub_title">Photography</h2>
+              <h2 className="header__sub_title">Photography <span>LLC</span></h2>
             </Link>
             <ul className="header__links">
               <li><Link to="galleries" className="header__link" onClick={this.reRender} activeClassName="active">Galleries</Link></li>

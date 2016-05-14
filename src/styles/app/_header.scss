@@ -27,6 +27,9 @@
   float: left;
   margin: 4px 0 0 3px;
   font-size: rem(16px);
+  > span {
+    font-size: 14px;
+  }
 }
 
 .header__links {

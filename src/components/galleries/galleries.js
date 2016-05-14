@@ -18,22 +18,21 @@ export class Galleries extends Component {
     gallery: []
   }
   componentWillMount() {
-    this.loadGallery(this.props.galleries.galleries);
+    this.loadGallery(this.props);
   }
   componentWillReceiveProps(nextProps) {
-    this.loadGallery(nextProps.galleries.galleries);
+    this.loadGallery(nextProps);
   }
-  loadGallery = galleries => {
-    const { pathname } = this.props.location;
+  loadGallery = props => {
+    const { pathname } = props.location;
     const path = utils.parsePath(pathname).path;
     const defaultGallery = 'commercial';
     const galleryPath = path === '/' ? defaultGallery : path;
-    const gallery = galleries[galleryPath] || {};
+    const galleries = props.galleries.galleries;
+    const gallery = props.galleries.galleries[galleryPath] || {};
 
-    if (Object.keys(gallery).length > 0) {
-
+    if (Object.keys(galleries).length > 0) {
       this.setState({ gallery });
-      // set gallery state to matchedGallery
       // set route to gallery_path
     }
   }
@@ -47,11 +46,11 @@ export class Galleries extends Component {
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              <li><Link to="galleries/commercial" className="gallery__link" onClick={this.reRender} activeClassName="active">Commercial</Link></li>
-              <li><Link to="galleries/families" className="gallery__link" onClick={this.reRender} activeClassName="active">Families</Link></li>
-              <li><Link to="galleries/portraits" className="gallery__link" onClick={this.reRender} activeClassName="active">Portraits</Link></li>
-              <li><Link to="galleries/events" className="gallery__link" onClick={this.reRender} activeClassName="active">Events</Link></li>
-              <li><Link to="galleries/sports" className="gallery__link" onClick={this.reRender} activeClassName="active">Sports</Link></li>
+              <li><Link to="/galleries/commercial" className="gallery__link" onClick={this.reRender} activeClassName="active">Commercial</Link></li>
+              <li><Link to="/galleries/families" className="gallery__link" onClick={this.reRender} activeClassName="active">Families</Link></li>
+              <li><Link to="/galleries/portraits" className="gallery__link" onClick={this.reRender} activeClassName="active">Portraits</Link></li>
+              <li><Link to="/galleries/events" className="gallery__link" onClick={this.reRender} activeClassName="active">Events</Link></li>
+              <li><Link to="/galleries/sports" className="gallery__link" onClick={this.reRender} activeClassName="active">Sports</Link></li>
             </ul>
           </div>
           <div className="gallery">

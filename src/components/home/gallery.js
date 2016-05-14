@@ -1,4 +1,5 @@
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { galleryActions } from 'core/galleries';
 import { adminActions } from 'core/admin';
@@ -30,9 +31,11 @@ export class Gallery extends Component {
               return element ? (
                 <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-left-${index}`] = ref; }} >
                   <img src={element.src} />
-                  <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryOne">
-                    {imageText(element.topText)}
-                  </div></div>
+                  <Link to={element.category.toLowerCase()} className="gallery__link" >
+                    <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryOne">
+                      {imageText(element.category)}
+                    </div></div>
+                  </Link>
                 </div>
               ) : null;
             })
@@ -44,9 +47,11 @@ export class Gallery extends Component {
               return element ? (
                 <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-right-${index}`] = ref; }}>
                   <img src={element.src} />
-                  <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryTwo">
-                    {imageText(element.topText)}
-                  </div></div>
+                  <Link to={element.category.toLowerCase()} className="gallery__link" >
+                    <div className="overlay"><div className="overlay__content" id={element.id} data-gallery="homeGalleryTwo">
+                      {imageText(element.category)}
+                    </div></div>
+                  </Link>
                 </div>
               ) : null;
             })

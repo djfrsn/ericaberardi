@@ -14,6 +14,9 @@ export class Galleries extends Component {
     galleries: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired
   }
+  state = {
+    gallery: []
+  }
   componentWillMount() {
     this.loadGallery();
   }
@@ -22,14 +25,19 @@ export class Galleries extends Component {
   }
   loadGallery = () => {
     const { pathname } = this.props.location;
+    const { galleries } = this.props.galleries;
     const path = utils.parsePath(pathname);
-    debugger
+    const defaultGallery = 'commercial';
+    const gallery_path = path === '/' ? defaultGallery : path;
+    if (galleries.length > 0) {
+      debugger
+    }
   }
   reRender = () => {
     this.forceUpdate(); // ugly hack since activeClassName only works on page refresh
   }
   render() {
-    const { galleries } = this.props.galleries;
+    const { gallery } = this.state;
     const imageText = category => { return (<div><p className="gallery-image-text">{category}</p></div>); };
     return (
       <div className="g-row gallery__container">
@@ -45,7 +53,7 @@ export class Galleries extends Component {
           </div>
           <div className="gallery">
           {
-            galleries.map((element, index) => {
+            gallery.map((element, index) => {
               return element ? (
                 <div key={index} id={element.id} className="image__container" ref={ref => { this[`gallery-left-${index}`] = ref; }} >
                   <img src={element.src} />

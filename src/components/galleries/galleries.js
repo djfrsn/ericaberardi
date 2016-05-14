@@ -10,7 +10,11 @@ import { toastActions } from 'core/toast';
 
 export class Galleries extends Component {
   static propTypes = {
-    galleries: PropTypes.object.isRequired
+    galleries: PropTypes.object.isRequired,
+    location: PropTypes.object.isRequired
+  }
+  loadGallery = pathname => {
+    return pathname;
   }
   reRender = () => {
     this.forceUpdate(); // ugly hack since activeClassName only works on page refresh

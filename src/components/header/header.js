@@ -43,6 +43,8 @@ export class Header extends Component {
             </Link>
             <ul className="header__links">
               <li><Link to="galleries" className="header__link" onClick={this.reRender} activeClassName="active">Galleries</Link></li>
+              <li><Link to="news-reporting" className="header__link" onClick={this.reRender} activeClassName="active">News Reporting</Link></li>
+              <li><Link to="pricing" className="header__link" onClick={this.reRender} activeClassName="active">Pricing</Link></li>
               <li><Link to="about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>
               <li><Link to="contact" className="header__link" onClick={this.reRender} activeClassName="active">Contact</Link></li>
               {auth.authenticated ? <li><Link to="dashboard" className="header__link" onClick={this.reRender} activeClassName="active">Dashboard</Link></li> : null}

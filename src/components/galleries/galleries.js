@@ -28,9 +28,13 @@ export class Galleries extends Component {
     const { galleries } = this.props.galleries;
     const path = utils.parsePath(pathname);
     const defaultGallery = 'commercial';
-    const gallery_path = path === '/' ? defaultGallery : path;
-    if (galleries.length > 0) {
-      debugger
+    const galleryPath = path === '/' ? defaultGallery : path;
+    const matchedGallery = galleries[galleryPath] || [];
+
+    if (matchedGallery.length > 0) {
+      return galleryPath;
+      // set gallery state to matchedGallery
+      // set route to gallery_path
     }
   }
   reRender = () => {

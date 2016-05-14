@@ -19,7 +19,7 @@ export class Galleries extends Component {
     const { galleries } = this.props.galleries;
     const imageText = category => { return (<div><p className="gallery-image-text">{category}</p></div>); };
     return (
-      <div className="g-row">
+      <div className="g-row gallery__container">
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">

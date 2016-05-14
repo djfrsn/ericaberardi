@@ -1,0 +1,18 @@
+.gallery__container {
+  border-top: 1px solid black;
+}
+
+.galleries__links {
+  margin-top: 30px;
+  font-size: 1.55rem;
+  text-align: center;
+
+  > li {
+    display: inline-block;
+    margin: 0 20px;
+
+    > a {
+      text-decoration: none;
+    }
+  }
+}

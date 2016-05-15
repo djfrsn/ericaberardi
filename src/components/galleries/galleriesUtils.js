@@ -44,16 +44,19 @@ export function mq() {
   const width = window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
-  if (width > 480 && width < 960) {
+  if (width > 480 && width < 992) {
     mqt = 'tablet';
   }
-  if (width > 960) {
+  if (width > 960 && width < 1200) {
+    mqt = 'laptop';
+  }
+  if (width >= 1200) {
     mqt = 'desktop';
   }
   return mqt;
 }
 
-export function resizeGallery(scope) {
+export function resizeGallery() {
   switch (mq()) {
     case 'desktop':
       break;
@@ -70,41 +73,44 @@ export function resizeGallery(scope) {
 // }
 
 export function cloudinaryTransform( opts ) {
-  let width = '';
-  let height = '';
-  let srcWidth = '';
+  let containerWidth = 100; // mobile defaults
+  let srcWidth = 275;
   const mqt = mq();
   const url = opts.src.split('d/v');
   const defaults = 'f_auto,c_scale';
   const getUrl = w => {
     return `${url[0]}d/${defaults},w_${w}/v${url[1]}`;
   };
-  // TODO: try different mods on images
   // ar_4:3 http://cloudinary.com/documentation/image_transformations#aspect_ratio_based_cropping
   // f_auto auto deliver best file format
   // q_70 quality
   switch (opts.type) {
     case 'gallery-preview':
       if (mqt === 'mobile') {
-        width = 275;
+        containerWidth = 100;
+        srcWidth = 275;
       }
       else if (mqt === 'tablet') {
-        width = 300;
+        containerWidth = 50;
+        srcWidth = 300;
+      }
+      else if (mqt === 'laptop') {
+        containerWidth = 33.33333333;
+        srcWidth = 300;
       }
       else if (mqt === 'desktop') {
-        // TODO: mimic his demo
-        srcWidth = 450;
+        containerWidth = 25;
+        srcWidth = 350;
       }
       break;
     case 'gallery-expanded':
       break;
     default:
   }
-  // return imageMeta height & width to vary img sizing in grid
+  // return containerWidth as a percentage to control column count
   // transform a given src to cloudinary format based on the window.width
   return {
-    height: height,
-    width: width,
+    containerWidth: containerWidth,
     src: getUrl(srcWidth)
   };
 }

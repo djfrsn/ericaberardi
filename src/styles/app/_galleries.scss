@@ -36,6 +36,10 @@
   padding: 5px;
   border-radius: 2px;
   transition: position 0.4s ease-in-out;
+  > img {
+    width: 100%;
+    height: auto;
+  }
 }
 
 // @media (max-width: 960px) {

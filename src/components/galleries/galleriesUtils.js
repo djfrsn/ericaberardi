@@ -1,8 +1,8 @@
 import imagesLoaded from 'imagesloaded';
 
-export function parsePath(val) {
+export function parsePath(val) { // takes paths like galleries/sports and returns sports
   let path = '/';
-  const pathSplit = val.split('/');
+  const pathSplit = val.split('s/');
   const length = pathSplit.length;
 
   if (length === 2 || length === 3) {
@@ -23,8 +23,8 @@ export function setGallery(props, scope) {
   const galleryPath = categories.includes(path) ? path : defaultGallery;
   let galleryProp = props.galleries.galleries[galleryPath];
 
-  if (path !== galleryPath) { // correct browser url to show current category
-    scope.context.router.replace(`galleries/${galleryPath}`);
+  if (path !== galleryPath) { // if needed correct browser url to show current category
+    scope.context.router.replace(`/galleries/${galleryPath}`);
   }
 
   if (categories.length > 0) {

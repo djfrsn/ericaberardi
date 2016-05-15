@@ -4,8 +4,10 @@ import imagesLoaded from 'imagesloaded';
 export function parsePath(val) {
   let path = '/';
   const pathSplit = val.split('/');
-  if (pathSplit.length === 3) {
-    path = pathSplit[2];
+  const length = pathSplit.length;
+
+  if (length === 2 || length === 3) {
+    path = pathSplit[length - 1];
   }
 
   return {
@@ -17,13 +19,23 @@ export function setGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const defaultGallery = 'commercial';
-  const galleryPath = path === '/' ? defaultGallery : path;
   const galleries = props.galleries.galleries;
-  const gallery = props.galleries.galleries[galleryPath] || {};
   const categories = Object.keys(galleries);
+  const galleryPath = categories.includes(path) ? path : defaultGallery;
+  let galleryProp = props.galleries.galleries[galleryPath];
+
+  if (path !== galleryPath) {
+    scope.context.router.replace(`galleries/${galleryPath}`);
+  }
 
   if (categories.length > 0) {
-    scope.setState({ categories, gallery, loadImagesSeq: true });
+    const gallery = galleryProp.map(image => {
+      return {
+        ...image,
+        show: false // add view only attributes
+      };
+    });
+    scope.setState({ ...scope.state, categories, gallery, loadImagesSeq: true });
   }
 }
 
@@ -33,17 +45,25 @@ export function setGallery(props, scope) {
 export function seqImagesLoaded(element, scope) {
   const imgLoad = imagesLoaded(element);
 
-  const hideLoadingSpinner = () => {
-    scope.setState({ ...scope.state, showSpinner: false, loadImagesSeq: false });
-  };
-
-  imgLoad.on( 'always', hideLoadingSpinner );
-
   // a dispatch is used to iteratively remove the hidden class from each element
   imgLoad.on( 'progress', ( instance, image ) => {
-    const result = image.isLoaded ? 'loaded' : 'broken';
-    // debugger
-    return result;
+    const loaded = image.isLoaded;
+    if (scope.state.loadImagesSeq) {
+      scope.setState({...scope.state, loadImagesSeq: false });
+    }
+    if (loaded) {
+      const img = image.img;
+      const id = img.parentElement.id;
+
+      // reveal image
+      const gallery = scope.state.gallery.map(image => {
+        return {
+          ...image, // update state to reveal each image
+          show: image.id === id ? true : image.show
+        };
+      });
+      scope.setState({...scope.state, gallery});
+    }
   });
   // images are hidden by default
   // as its triggered by the imagesLoaded.progress event
@@ -71,7 +91,10 @@ export function mq() {
 // change image column count by updating image width, height
 // check the window size and define rules for column count @ window.width
 export function resizeGallery(scope) {
-  this.setGallery(scope.props, scope);
+  const needResizeLayout = scope.masonry.masonry.needsResizeLayout();
+  if (needResizeLayout) {
+    this.setGallery(scope.props, scope);
+  }
 }
 
 // function randomInt( min, max ) {

@@ -15,6 +15,10 @@ const masonryOptions = {
 };
 
 export class Galleries extends Component {
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   static propTypes = {
     galleries: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired
@@ -22,15 +26,16 @@ export class Galleries extends Component {
   state = {
     gallery: [],
     categories: [],
-    loadImagesSeq: false
+    loadImagesSeq: true
   }
   componentWillMount() {
-    this.setGallery(this.props); // set current gallery images src attr
+    this.setGallery(this.props);
   }
   componentDidMount() {
     window.onresize = () => {
       utils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     };
+    this.loadImagesSeq();
   }
   componentWillReceiveProps(nextProps) {
     if (Object.keys(nextProps.galleries.galleries).length > 0) {
@@ -38,15 +43,18 @@ export class Galleries extends Component {
     }
   }
   componentDidUpdate() {
-    if (this.state.loadImagesSeq) {
-      utils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
-    }
+    this.loadImagesSeq();
   }
   componentWillUnmount() {
     window.onresize = () => {}; // remove listener
   }
   setGallery = props => {
-    utils.setGallery(props, this);
+    utils.setGallery(props, this); // set current gallery images src attr
+  }
+  loadImagesSeq = () => {
+    if (this.state.loadImagesSeq) {
+      utils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
+    }
   }
   render() {
     const { gallery, categories } = this.state;

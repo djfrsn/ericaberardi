@@ -56,14 +56,8 @@ export function mq() {
   return mqt;
 }
 
-export function resizeGallery() {
-  switch (mq()) {
-    case 'desktop':
-      break;
-    case 'tablet':
-      break;
-    default:
-  }
+export function resizeGallery(scope) {
+  this.setGallery(scope.props, scope);
   // change image column count by updating image width, height
   // check the window size and define rules for column count @ window.width
 }

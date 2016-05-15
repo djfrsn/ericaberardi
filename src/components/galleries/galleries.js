@@ -28,7 +28,9 @@ export class Galleries extends Component {
   }
   componentDidMount() {
     utils.seqImagesLoaded(this.galleryContainer); // show images progressively as they load
-    window.onresize = utils.resizeGallery(this); // handle responsive columns and image width/height on resizes
+    window.onresize = () => {
+      utils.resizeGallery(this); // handle responsive columns and image width/height on resizes
+    };
   }
   componentWillReceiveProps(nextProps) {
     this.setGallery(nextProps);

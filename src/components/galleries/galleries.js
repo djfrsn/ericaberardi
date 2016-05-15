@@ -40,7 +40,7 @@ export class Galleries extends Component {
   render() {
     const { gallery, categories } = this.state;
     return (
-      <div className="g-row gallery__container">
+      <div className="g-row gallery__container" ref={ref => { this.galleryContainer = ref; }}>
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">

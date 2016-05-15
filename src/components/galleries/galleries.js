@@ -26,14 +26,8 @@ export class Galleries extends Component {
   componentWillMount() {
     this.setGallery(this.props);
   }
-  componentDidMount() {
-    this.masonry.masonry.on('layoutComplete', this.handleLayoutComplete);
-  }
   componentWillReceiveProps(nextProps) {
     this.setGallery(nextProps);
-  }
-  handleLayoutComplete = props => {
-
   }
   setGallery = props => {
     utils.setGallery(props, this);

@@ -21,19 +21,26 @@ export class Galleries extends Component {
   }
   state = {
     gallery: [],
-    categories: []
+    categories: [],
+    loadImagesSeq: false
   }
   componentWillMount() {
     this.setGallery(this.props); // set current gallery images src attr
   }
   componentDidMount() {
-    utils.seqImagesLoaded(this.galleryContainer); // show images progressively as they load
     window.onresize = () => {
       utils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     };
   }
   componentWillReceiveProps(nextProps) {
-    this.setGallery(nextProps);
+    if (Object.keys(nextProps.galleries.galleries).length > 0) {
+      this.setGallery(nextProps);
+    }
+  }
+  componentDidUpdate() {
+    if (this.state.loadImagesSeq) {
+      utils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
+    }
   }
   componentWillUnmount() {
     window.onresize = () => {}; // remove listener

@@ -23,17 +23,29 @@ export function setGallery(props, scope) {
   const categories = Object.keys(galleries);
 
   if (categories.length > 0) {
-    scope.setState({ categories, gallery });
+    scope.setState({ categories, gallery, loadImagesSeq: true });
   }
 }
 
 // TODO: sequential loading
 // http://masonry.desandro.com/extras.html
 // https://github.com/desandro/imagesloaded
-export function seqImagesLoaded(element) {
-  // debugger
-  // images are hidden by default
+export function seqImagesLoaded(element, scope) {
+  const imgLoad = imagesLoaded(element);
+
+  const hideLoadingSpinner = () => {
+    scope.setState({ ...scope.state, showSpinner: false, loadImagesSeq: false });
+  };
+
+  imgLoad.on( 'always', hideLoadingSpinner );
+
   // a dispatch is used to iteratively remove the hidden class from each element
+  imgLoad.on( 'progress', ( instance, image ) => {
+    const result = image.isLoaded ? 'loaded' : 'broken';
+    // debugger
+    return result;
+  });
+  // images are hidden by default
   // as its triggered by the imagesLoaded.progress event
 }
 
@@ -56,16 +68,16 @@ export function mq() {
   return mqt;
 }
 
+// change image column count by updating image width, height
+// check the window size and define rules for column count @ window.width
 export function resizeGallery(scope) {
   this.setGallery(scope.props, scope);
-  // change image column count by updating image width, height
-  // check the window size and define rules for column count @ window.width
 }
 
 // function randomInt( min, max ) {
 //   return Math.floor( Math.random() * max + min );
 // }
-
+// http://cloudinary.com/documentation/image_transformations#image_optimization
 export function cloudinaryTransform( opts ) {
   let containerWidth = 100; // mobile defaults
   let srcWidth = 275;

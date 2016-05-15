@@ -24,10 +24,17 @@ export class Galleries extends Component {
     categories: []
   }
   componentWillMount() {
-    this.setGallery(this.props);
+    this.setGallery(this.props); // set current gallery images src attr
+  }
+  componentDidMount() {
+    utils.seqImagesLoaded(this.galleryContainer); // show images progressively as they load
+    window.onresize = utils.resizeGallery(this); // handle responsive columns and image width/height on resizes
   }
   componentWillReceiveProps(nextProps) {
     this.setGallery(nextProps);
+  }
+  componentWillUnmount() {
+    window.onresize = () => {}; // remove listener
   }
   setGallery = props => {
     utils.setGallery(props, this);

@@ -73,10 +73,10 @@ export function cloudinaryTransform( opts ) {
   let width = '';
   let height = '';
   const mqt = mq();
-  const url = opts.src.split('/v');
+  const url = opts.src.split('d/v');
   const defaults = 'q_70,f_auto,c_fit';
   const getUrl = (w, h) => {
-    return `${url[0]}/${defaults},w_${w},h_${h}/v${url[1]}`;
+    return `${url[0]}d/${defaults},w_${w},h_${h}/v${url[1]}`;
   };
   // TODO: try different mods on images
   // ar_4:3 http://cloudinary.com/documentation/image_transformations#aspect_ratio_based_cropping
@@ -93,8 +93,9 @@ export function cloudinaryTransform( opts ) {
         height = randomInt( 150, 250 );
       }
       else if (mqt === 'desktop') {
+        // TODO: mimic his demo
         width = randomInt( 300, 400 );
-        height = randomInt( 250, 300 );
+        height = randomInt( 150, 300 );
       }
       break;
     case 'gallery-expanded':

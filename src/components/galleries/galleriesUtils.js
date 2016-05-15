@@ -1,6 +1,5 @@
 import imagesLoaded from 'imagesloaded';
 
-
 export function parsePath(val) {
   let path = '/';
   const pathSplit = val.split('/');
@@ -24,7 +23,7 @@ export function setGallery(props, scope) {
   const galleryPath = categories.includes(path) ? path : defaultGallery;
   let galleryProp = props.galleries.galleries[galleryPath];
 
-  if (path !== galleryPath) {
+  if (path !== galleryPath) { // correct browser url to show current category
     scope.context.router.replace(`galleries/${galleryPath}`);
   }
 

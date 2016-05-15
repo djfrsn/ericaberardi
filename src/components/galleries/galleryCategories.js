@@ -10,7 +10,7 @@ export default opts => {
 
     const className = (path === '/' ? 'commercial' : path) === category ? `${galleryLink} active` : galleryLink;
     return category ? (
-      <li key={key}><Link to={`galleries/${category}`} className={className}>{category}</Link></li>
+      <li key={key}><Link to={`/galleries/${category}`} className={className}>{category}</Link></li>
     ) : null;
   });
 };

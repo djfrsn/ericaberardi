@@ -9,3 +9,16 @@ export function parsePath(val) {
     path
   };
 }
+export function setGallery(props, scope) {
+  const { pathname } = props.location;
+  const path = parsePath(pathname).path;
+  const defaultGallery = 'commercial';
+  const galleryPath = path === '/' ? defaultGallery : path;
+  const galleries = props.galleries.galleries;
+  const gallery = props.galleries.galleries[galleryPath] || {};
+  const categories = Object.keys(galleries);
+
+  if (categories.length > 0) {
+    scope.setState({ categories, gallery });
+  }
+}

@@ -72,8 +72,16 @@ function randomInt( min, max ) {
 export function cloudinaryTransform( opts ) {
   let width = '';
   let height = '';
-  let src = opts.src;
   const mqt = mq();
+  const url = opts.src.split('/v');
+  const defaults = 'q_70,f_auto,c_fit';
+  const getUrl = (w, h) => {
+    return `${url[0]}/${defaults},w_${w},h_${h}/v${url[1]}`;
+  };
+  // TODO: try different mods on images
+  // ar_4:3 http://cloudinary.com/documentation/image_transformations#aspect_ratio_based_cropping
+  // f_auto auto deliver best file format
+  // q_70 quality
   switch (opts.type) {
     case 'gallery-preview':
       if (mqt === 'mobile') {
@@ -85,9 +93,8 @@ export function cloudinaryTransform( opts ) {
         height = randomInt( 150, 250 );
       }
       else if (mqt === 'desktop') {
-        width = randomInt( 150, 400 );
-        height = randomInt( 150, 250 );
-        debugger
+        width = randomInt( 300, 400 );
+        height = randomInt( 250, 300 );
       }
       break;
     case 'gallery-expanded':
@@ -99,10 +106,10 @@ export function cloudinaryTransform( opts ) {
   return {
     height: height,
     width: width,
-    src
+    src: getUrl(width, height)
   };
 }
 // TODO: set random height widths for images
 
-var width = randomInt( 150, 400 );
-var height = randomInt( 150, 250 );
+// var width = randomInt( 150, 400 );
+// var height = randomInt( 150, 250 );

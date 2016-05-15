@@ -27,6 +27,8 @@ export function setGallery(props, scope) {
   }
 }
 
+// TODO: sequential loading
+// http://codepen.io/desandro/pen/kwsJb
 export function seqImagesLoaded(element) {
   // debugger
   // images are hidden by default
@@ -34,14 +36,24 @@ export function seqImagesLoaded(element) {
   // as its triggered by the imagesLoaded.progress event
 }
 
+
+// return type for media queries
 export function mq() {
-  debugger
-  // return type for media queries
+  let mq = 'mobile';
+  const width = window.innerWidth
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
+  if (width > 480 && width < 960) {
+    mq = 'tablet';
+  }
+  if (width > 960) {
+    mq = 'desktop';
+  }
+  return mq;
 }
 
 export function resizeGallery(scope) {
-  debugger
-  switch(mq()) {
+  switch (mq()) {
     case 'desktop':
       break;
     case 'tablet':
@@ -52,21 +64,44 @@ export function resizeGallery(scope) {
   // check the window size and define rules for column count @ window.width
 }
 
+function randomInt( min, max ) {
+  return Math.floor( Math.random() * max + min );
+}
+
 export function cloudinaryTransform( opts ) {
-  // debugger
+  let width = '';
+  let height = '';
+  let src = opts.src;
+  const mqt = mq();
+  switch (opts.type) {
+    case 'gallery-preview':
+      if (mqt === 'mobile') {
+        width = randomInt( 150, 400 );
+        height = randomInt( 150, 250 );
+      }
+      else if (mqt === 'tablet') {
+        width = randomInt( 150, 400 );
+        height = randomInt( 150, 250 );
+      }
+      else if (mqt === 'desktop') {
+        width = randomInt( 150, 400 );
+        height = randomInt( 150, 250 );
+        debugger
+      }
+      break;
+    case 'gallery-expanded':
+      break;
+    default:
+  }
   // return imageMeta height & width to vary img sizing in grid
   // transform a given src to cloudinary format based on the window.width
   return {
-    src: opts.src
+    height: height,
+    width: width,
+    src
   };
 }
-
-// TODO: sequential loading
-// http://codepen.io/desandro/pen/kwsJb
-
 // TODO: set random height widths for images
-// function randomInt( min, max ) {
-//   return Math.floor( Math.random() * max + min );
-// }
-// var width = randomInt( 150, 400 );
-// var height = randomInt( 150, 250 );
+
+var width = randomInt( 150, 400 );
+var height = randomInt( 150, 250 );

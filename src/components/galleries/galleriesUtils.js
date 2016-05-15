@@ -28,7 +28,8 @@ export function setGallery(props, scope) {
 }
 
 // TODO: sequential loading
-// http://codepen.io/desandro/pen/kwsJb
+// http://masonry.desandro.com/extras.html
+// https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element) {
   // debugger
   // images are hidden by default
@@ -39,17 +40,17 @@ export function seqImagesLoaded(element) {
 
 // return type for media queries
 export function mq() {
-  let mq = 'mobile';
+  let mqt = 'mobile'; // default media query type
   const width = window.innerWidth
     || document.documentElement.clientWidth
     || document.body.clientWidth;
   if (width > 480 && width < 960) {
-    mq = 'tablet';
+    mqt = 'tablet';
   }
   if (width > 960) {
-    mq = 'desktop';
+    mqt = 'desktop';
   }
-  return mq;
+  return mqt;
 }
 
 export function resizeGallery(scope) {

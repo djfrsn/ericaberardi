@@ -65,13 +65,14 @@ export function resizeGallery(scope) {
   // check the window size and define rules for column count @ window.width
 }
 
-function randomInt( min, max ) {
-  return Math.floor( Math.random() * max + min );
-}
+// function randomInt( min, max ) {
+//   return Math.floor( Math.random() * max + min );
+// }
 
 export function cloudinaryTransform( opts ) {
   let width = '';
   let height = '';
+  let srcWidth = '';
   const mqt = mq();
   const url = opts.src.split('d/v');
   const defaults = 'f_auto,c_scale';
@@ -85,17 +86,14 @@ export function cloudinaryTransform( opts ) {
   switch (opts.type) {
     case 'gallery-preview':
       if (mqt === 'mobile') {
-        width = randomInt( 150, 400 );
-        height = randomInt( 150, 250 );
+        width = 275;
       }
       else if (mqt === 'tablet') {
-        width = randomInt( 150, 400 );
-        height = randomInt( 150, 250 );
+        width = 300;
       }
       else if (mqt === 'desktop') {
         // TODO: mimic his demo
-        width = 450;
-        //height = randomInt( 250, 300 );
+        srcWidth = 450;
       }
       break;
     case 'gallery-expanded':
@@ -107,7 +105,7 @@ export function cloudinaryTransform( opts ) {
   return {
     height: height,
     width: width,
-    src: getUrl(width, height)
+    src: getUrl(srcWidth)
   };
 }
 // TODO: set random height widths for images

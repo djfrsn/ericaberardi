@@ -1,4 +1,4 @@
-export const FIREBASE_URL = 'https://ericaberardi.firebaseio.com';
+export const FIREBASE_URL = 'https://ericaberardi.firebaseio.com/dev';
 
 // Route paths
 export const LOGIN_PATH = '/login';

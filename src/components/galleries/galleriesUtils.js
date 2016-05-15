@@ -139,7 +139,7 @@ export function cloudinaryTransform( opts ) {
   // transform a given src to cloudinary format based on the window.width
   return {
     containerWidth: containerWidth,
-    src: getUrl(srcWidth)
+    src: opts.src.includes('lorempixel') ? opts.src : getUrl(srcWidth)
   };
 }
 // TODO: set random height widths for images

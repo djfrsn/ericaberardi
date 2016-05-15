@@ -8,19 +8,16 @@ import homeGalleryImages from './homeGalleryImages';
 
 export class Gallery extends Component {
   static propTypes = {
-    admin: PropTypes.object.isRequired,
-    auth: PropTypes.object.isRequired,
-    clearImageResetMeta: PropTypes.func.isRequired,
-    clearToast: PropTypes.func.isRequired,
-    createPlaceholderImages: PropTypes.func.isRequired,
-    galleries: PropTypes.object.isRequired,
-    saveGalleryImage: PropTypes.func.isRequired,
-    showToast: PropTypes.func.isRequired,
-    submitGalleryImageUpdates: PropTypes.func.isRequired,
-    toggleGalleryEdit: PropTypes.func.isRequired
+    galleries: PropTypes.object.isRequired
   }
   render() {
-    const { homeGalleryOne, homeGalleryTwo } = this.props.galleries;
+    const { galleries } = this.props.galleries;
+    let homeGalleryOne = [];
+    let homeGalleryTwo = [];
+    const galleryKeys = Object.keys(galleries);
+    if (galleryKeys.length > 0) {
+      // debugger
+    }
     return (
       <div className="">
         <div className="gallery-left">

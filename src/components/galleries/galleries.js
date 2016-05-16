@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
 import { galleryActions } from 'core/galleries';
+import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
 import * as utils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
@@ -22,7 +23,8 @@ export class Galleries extends Component {
 
   static propTypes = {
     galleries: PropTypes.object.isRequired,
-    location: PropTypes.object.isRequired
+    location: PropTypes.object.isRequired,
+    showLightbox: PropTypes.func.isRequired
   }
   state = {
     gallery: [],
@@ -51,7 +53,7 @@ export class Galleries extends Component {
   }
   showLightbox = e => {
     e.preventDefault();
-    debugger
+    this.props.showLightbox({e, id: e.currentTarget.parentElement.id, scope: this});
   }
   setGallery = props => {
     utils.setGallery(props, this); // set current gallery images src attr
@@ -92,4 +94,4 @@ export default connect(state => ({
   admin: state.admin,
   galleries: state.galleries,
   auth: state.auth
-}), Object.assign({}, authActions, adminActions, galleryActions, toastActions))(Galleries);
+}), Object.assign({}, authActions, adminActions, galleryActions, lightboxActions, toastActions))(Galleries);

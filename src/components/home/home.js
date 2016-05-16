@@ -1,18 +1,24 @@
-import React, { Component } from 'react';
+import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import { authActions } from 'core/auth';
-import HomeGallery from './homeGallery';
+import { galleryActions } from 'core/galleries';
+import homeGallery from './homeGallery';
 
 export class Home extends Component {
+  static propTypes = {
+    galleries: PropTypes.object.isRequired
+  }
   render() {
+    const { galleries } = this.props.galleries;
     return (
       <div className="g-row" ref={ref => this.row = ref}>
         <div className="g-col" >
-          <HomeGallery />
+          {homeGallery({galleries})}
         </div>
       </div>
     );
   }
 }
 
-export default connect(null, authActions)(Home);
+export default connect(state => ({
+  galleries: state.galleries
+}), Object.assign({}, galleryActions))(Home);

@@ -30,7 +30,7 @@ module.exports = {
       test: path.resolve('./test')
     },
     extensions: ['', '.js'],
-    modulesDirectories: ['node_modules'],
+    modulesDirectories: ['node_modules', 'src'],
     root: path.resolve('./src')
   },
 

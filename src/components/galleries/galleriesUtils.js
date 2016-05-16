@@ -112,19 +112,19 @@ export function cloudinaryTransform( opts ) {
     case 'gallery-preview':
       if (mqt === 'mobile') {
         containerWidth = 100;
-        srcWidth = 275;
+        srcWidth = opts.hq ? 480 : 275;
       }
       else if (mqt === 'tablet') {
         containerWidth = 50;
-        srcWidth = 300;
+        srcWidth = opts.hq ? 582 : 360;
       }
       else if (mqt === 'laptop') {
         containerWidth = 33.33333333;
-        srcWidth = 300;
+        srcWidth = opts.hq ? 812 : 480;
       }
       else if (mqt === 'desktop') {
         containerWidth = 25;
-        srcWidth = 350;
+        srcWidth = opts.hq ? 1080 : 640;
       }
       break;
     case 'gallery-expanded':

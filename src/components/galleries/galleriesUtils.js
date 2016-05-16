@@ -52,7 +52,7 @@ export function seqImagesLoaded(element, scope) {
     }
     if (loaded) {
       const img = image.img;
-      const id = img.parentElement.id;
+      const id = img.parentElement.parentElement.id;
 
       // reveal image
       const gallery = scope.state.gallery.map(image => {

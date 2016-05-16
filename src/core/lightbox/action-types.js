@@ -1,0 +1,1 @@
+export const INIT_LIGHTBOX = 'INIT_LIGHTBOX';

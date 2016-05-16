@@ -49,6 +49,10 @@ export class Galleries extends Component {
   componentWillUnmount() {
     window.onresize = () => {}; // remove listener
   }
+  showLightbox = e => {
+    e.preventDefault();
+    debugger
+  }
   setGallery = props => {
     utils.setGallery(props, this); // set current gallery images src attr
   }
@@ -74,7 +78,7 @@ export class Galleries extends Component {
               options={masonryOptions} // default {}
               disableImagesLoaded={false} // default false
               >
-                {galleryImages(gallery)}
+                {galleryImages({gallery, scope: this})}
             </Masonry>
           </div>
           {photoswipe()}

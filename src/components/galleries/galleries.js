@@ -8,7 +8,7 @@ import { toastActions } from 'core/toast';
 import * as utils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
-import lightbox from './lightbox';
+import Lightbox from './lightbox';
 import Masonry from 'react-masonry-component';
 
 const masonryOptions = {
@@ -83,7 +83,7 @@ export class Galleries extends Component {
                 {galleryImages({gallery, scope: this})}
             </Masonry>
           </div>
-          {lightbox()}
+          <Lightbox/>
         </div>
       </div>
     );

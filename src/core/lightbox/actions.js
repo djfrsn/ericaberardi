@@ -1,5 +1,5 @@
 import {
-  INIT_LIGHTBOX,
+  INIT_LIGHTBOX
 } from './action-types';
 // photoswipe strategy
 // on link click dispatch id to initPhotoswipe
@@ -7,7 +7,6 @@ import {
 // iniy photoswipe w/ array of current gallery & index of given img/id
 
 export function showLightbox(opts) {
-  // const photoswipe = new Photoswipe();
   debugger
   return dispatch => {
     dispatch({

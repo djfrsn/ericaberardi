@@ -1,6 +1,5 @@
-.gallery__container {
-  border-top: 1px solid $colors-black;
-}
+// .gallery__container {
+// }
 
 .galleries__links {
   margin-top: 30px;
@@ -26,6 +25,10 @@
 
 .gallery {
   margin-top: 25px;
+}
+
+.gallery__navigation {
+  border-top: 1px solid $colors-gray;
 }
 
 .gallery__masonry {

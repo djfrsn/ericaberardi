@@ -22,5 +22,8 @@ export default {
 
     var store = localStorage.getItem(namespace);
     return (store && JSON.parse(store)) || [];
+  },
+  randomInt: function( min, max ) {
+    return Math.floor( Math.random() * max + min );
   }
 };

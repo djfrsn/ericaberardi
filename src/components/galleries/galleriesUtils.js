@@ -95,10 +95,6 @@ export function resizeGallery(scope) {
     this.setGallery(scope.props, scope);
   }
 }
-
-// function randomInt( min, max ) {
-//   return Math.floor( Math.random() * max + min );
-// }
 // http://cloudinary.com/documentation/image_transformations#image_optimization
 export function cloudinaryTransform( opts ) {
   let containerWidth = 100; // mobile defaults

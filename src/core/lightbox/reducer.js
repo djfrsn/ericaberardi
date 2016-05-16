@@ -5,7 +5,9 @@ import {
 
 
 export const initialState = {
-  slides: {}
+  slides: {},
+  meta: {},
+  show: false
 };
 
 

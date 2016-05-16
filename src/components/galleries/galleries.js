@@ -7,6 +7,7 @@ import { toastActions } from 'core/toast';
 import * as utils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
+import photoswipe from './photoswipe';
 import Masonry from 'react-masonry-component';
 
 const masonryOptions = {
@@ -76,6 +77,7 @@ export class Galleries extends Component {
                 {galleryImages(gallery)}
             </Masonry>
           </div>
+          {photoswipe()}
         </div>
       </div>
     );

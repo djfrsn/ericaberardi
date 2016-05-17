@@ -12,16 +12,23 @@ export default class Lightbox extends Component {
     //const cloud = gUtils.cloudinaryTransform({ type: 'gallery-preview', src: element.src }) || {};
     const lbxclass = 'gllry-lightbox';
     const lightboxClass = show ? `${lbxclass} show` : lbxclass;
+    const gllryImages = slides.length > 0 ? slides.map(slide => {
+      const gllryImgClass = 'gllry-img';
+      const imgClass = slide.active ? gllryImgClass : `${gllryImgClass} hide`;
+      return (
+        <div key={slide.id} className={imgClass}>
+          <img src={slide.src}/>
+        </div>
+      );
+    }) : null;
     // strategy
     // show lightbox val is true
     // slides has active slide true and others active false
     return (
       <div className={lightboxClass}>
         <div className="gllry-content">
-          <div className="gllry-controls"><span className="gllry-controls-left">left</span><span className="gllry-controls-right">right</span></div>
-          <div className="gllry-img">
-            <img src={"cloud.src"}/>
-          </div>
+          <div className="gllry-controls"><span className="gllry-controls-close">X</span><span className="gllry-controls-left">{"<"}</span><span className="gllry-controls-right">{">"}</span></div>
+            {gllryImages}
         </div>
       </div>
     );

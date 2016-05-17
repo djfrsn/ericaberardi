@@ -1,0 +1,16 @@
+.gllry-lightbox {
+  position: fixed;
+  display: none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: black;
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+
+  &.show {
+    display: block;
+    opacity: 0.5;
+  }
+}

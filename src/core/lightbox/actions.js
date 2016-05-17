@@ -7,7 +7,6 @@ import {
 // iniy photoswipe w/ array of current gallery & index of given img/id
 
 export function showLightbox(opts) {
-  debugger
   return dispatch => {
     dispatch({
       type: INIT_LIGHTBOX,

@@ -99,11 +99,13 @@ export function resizeGallery(scope) {
 export function cloudinaryTransform( opts ) {
   let containerWidth = 100; // mobile defaults
   let srcWidth = 275;
+  let srcHeight;
+  const windowHeight =  window.innerHeight;
   const mqt = mq();
   const url = opts.src.split('d/v');
   const defaults = 'f_auto,c_scale';
-  const getUrl = w => {
-    return `${url[0]}d/${defaults},w_${w}/v${url[1]}`;
+  const getUrl = (w, h) => {
+    return !h ? `${url[0]}d/${defaults},w_${w}/v${url[1]}` : `${url[0]}d/${defaults},h_${h}/v${url[1]}`;
   };
   // ar_4:3 http://cloudinary.com/documentation/image_transformations#aspect_ratio_based_cropping
   // f_auto auto deliver best file format
@@ -128,6 +130,7 @@ export function cloudinaryTransform( opts ) {
       }
       break;
     case 'gallery-expanded':
+      srcHeight = windowHeight - Math.round(10 / 100 * windowHeight);
       break;
     default:
   }
@@ -135,7 +138,7 @@ export function cloudinaryTransform( opts ) {
   // transform a given src to cloudinary format based on the window.width
   return {
     containerWidth: containerWidth,
-    src: opts.src.includes('lorempixel') ? opts.src : getUrl(srcWidth)
+    src: opts.src.includes('lorempixel') ? opts.src : getUrl(srcWidth, srcHeight)
   };
 }
 // TODO: set random height widths for images

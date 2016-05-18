@@ -8,26 +8,25 @@ export default class Lightbox extends Component {
     lightbox: PropTypes.object.isRequired
   }
   render() {
-    const { slides, show } = this.props.lightbox || {};
-    //const cloud = gUtils.cloudinaryTransform({ type: 'gallery-preview', src: element.src }) || {};
-    const lbxclass = 'gllry-lightbox';
+    const { slides, show } = this.props.lightbox;
+    let activeSlideIndex = 0;
+    const lbxclass = 'lbx-container';
     const lightboxClass = show ? `${lbxclass} show` : lbxclass;
-    const gllryImages = slides.length > 0 ? slides.map(slide => {
-      const gllryImgClass = 'gllry-img';
+    const gllryImages = slides.length > 0 ? slides.map((slide, key) => {
+      const cloud = gUtils.cloudinaryTransform({ type: 'gallery-expanded', src: slide.src }) || {};
+      const gllryImgClass = 'lbx-img';
+      if (slide.active) activeSlideIndex = key + 1;
       const imgClass = slide.active ? gllryImgClass : `${gllryImgClass} hide`;
       return (
         <div key={slide.id} className={imgClass}>
-          <img src={slide.src}/>
+          <img src={cloud.src}/>
         </div>
       );
     }) : null;
-    // strategy
-    // show lightbox val is true
-    // slides has active slide true and others active false
     return (
       <div className={lightboxClass}>
-        <div className="gllry-content">
-          <div className="gllry-controls"><span className="gllry-controls-close">X</span><span className="gllry-controls-left">{"<"}</span><span className="gllry-controls-right">{">"}</span></div>
+        <div className="lbx-content">
+          <div className="lbx-controls"><span className="lbx-slide__counter">{activeSlideIndex}/{slides.length}</span><span className="lbx-controls-share fa fa-share"></span><span className="lbx-controls-close fa fa-times"></span><span className="lbx-controls-left fa fa-arrow-left"></span><span className="lbx-controls-right fa fa-arrow-right"></span></div>
             {gllryImages}
         </div>
       </div>

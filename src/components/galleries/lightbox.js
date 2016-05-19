@@ -33,7 +33,6 @@ export default class Lightbox extends Component {
         <div className="lbx-content">
           <div className="lbx-controls">
             <span className="lbx-slide__counter">{activeSlideIndex}/{slides.length}</span>
-            <span className="lbx-controls-share fa fa-share"></span>
             <span onClick={this.props.onClose} className="lbx-controls-close fa fa-times"></span>
             <span onClick={this.onSwipe} data-direction="left" className="lbx-controls-left fa fa-arrow-left"></span>
             <span onClick={this.onSwipe} data-direction="right" className="lbx-controls-right fa fa-arrow-right"></span>
@@ -49,3 +48,5 @@ export default class Lightbox extends Component {
 export default connect(state => ({
   lightbox: state.lightbox
 }), Object.assign({}, lightboxActions))(Lightbox);
+
+// TODO: <span className="lbx-controls-share fa fa-share"></span>

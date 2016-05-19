@@ -9,7 +9,11 @@ export default class Lightbox extends Component {
     onClose: PropTypes.func.isRequired,
     onSwipe: PropTypes.func.isRequired
   }
-
+  onLightboxClick = e => {
+    if (e.target.dataset.closelightbox) {
+      this.props.onClose(); // detect click off lightbox img to close
+    }
+  }
   onSwipe = e => {
     this.props.onSwipe({ direction: e.currentTarget.dataset.direction });
   }
@@ -30,10 +34,10 @@ export default class Lightbox extends Component {
       );
     }) : null;
     return (
-      <div className={lightboxClass}>
-        <div className="lbx-content">
+      <div className={lightboxClass} data-closelightbox="true" onClick={this.onLightboxClick}>
+        <div className="lbx-content" data-closelightbox="true">
           <div className="lbx-controls">
-            <span className="lbx-slide__counter">{activeSlideIndex}/{slides.length}</span>
+            <span className="lbx-slide__counter" data-closelightbox="true">{activeSlideIndex}/{slides.length}</span>
             <span onClick={this.props.onClose} className="lbx-controls-close fa fa-times"></span>
             <span onClick={this.onSwipe} data-direction="left" className="lbx-controls-left fa fa-arrow-left"></span>
             <span onClick={this.onSwipe} data-direction="right" className="lbx-controls-right fa fa-arrow-right"></span>

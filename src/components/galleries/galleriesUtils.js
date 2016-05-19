@@ -100,7 +100,7 @@ export function cloudinaryTransform( opts ) {
   let containerWidth = 100; // mobile defaults
   let srcWidth = 275;
   let srcHeight;
-  const windowHeight =  window.innerHeight;
+  const windowHeight = window.innerHeight;
   const mqt = mq();
   const url = opts.src.split('d/v');
   const defaults = 'f_auto,c_scale';

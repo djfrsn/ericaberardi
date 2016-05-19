@@ -1,5 +1,5 @@
 import {
-  INIT_PHOTOSWIPE,
+  INIT_PHOTOSWIPE
 } from './action-types';
 
 // photoswipe strategy

@@ -16,11 +16,12 @@
 }
 
 .lbx-content {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+  display: flex;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
 }
 
 .lbx-controls-left,
@@ -75,8 +76,8 @@ $control-margin: 40px;
 }
 
 .lbx-img {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  margin: 2.7% auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
 }

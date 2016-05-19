@@ -5,7 +5,7 @@ import { authActions } from 'core/auth';
 import { galleryActions } from 'core/galleries';
 import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
-import * as utils from './galleriesUtils';
+import * as gUtils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
 import Lightbox from './lightbox';
@@ -36,7 +36,7 @@ export class Galleries extends Component {
   }
   componentDidMount() {
     window.onresize = () => {
-      utils.resizeGallery(this); // handle responsive columns and image width/height on resizes
+      gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     };
     this.loadImagesSeq();
   }
@@ -56,11 +56,11 @@ export class Galleries extends Component {
     this.props.showLightbox({e, id: e.currentTarget.parentElement.id, scope: this});
   }
   setGallery = props => {
-    utils.setGallery(props, this); // set current gallery images src attr
+    gUtils.setGallery(props, this); // set current gallery images src attr
   }
   loadImagesSeq = () => {
     if (this.state.loadImagesSeq) {
-      utils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
+      gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
   render() {

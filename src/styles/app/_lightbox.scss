@@ -51,16 +51,34 @@
 
 $control-margin: 40px;
 
+.lbx-controls-left, .lbx-controls-right {
+  height: 100px;
+  width: 100px;
+  top: 42.5%;
+  padding: 10px;
+
+  &:before {
+    position: absolute;
+    top: 28px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.17);
+  }
+}
+
 .lbx-controls-left {
   left: 0;
-  top: 50%;
-  margin-left: $control-margin;
+
+  &:before {
+    left: 29px;
+  }
 }
 
 .lbx-controls-right {
   right: 0;
-  top: 50%;
-  margin-right: $control-margin;
+
+  &:before {
+    right: 29px;
+  }
 }
 
 .lbx-controls-share {

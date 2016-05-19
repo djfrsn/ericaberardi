@@ -9,6 +9,7 @@ export default class Lightbox extends Component {
     onClose: PropTypes.func.isRequired,
     onSwipe: PropTypes.func.isRequired
   }
+
   onSwipe = e => {
     this.props.onSwipe({ direction: e.currentTarget.dataset.direction });
   }

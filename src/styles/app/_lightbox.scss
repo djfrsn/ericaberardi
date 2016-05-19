@@ -31,9 +31,19 @@
   position: absolute;
   font-size: 1.5em;
   font-weight: bold;
+  color: white;
+}
+.lbx-controls-left,
+.lbx-controls-right,
+.lbx-controls-share,
+.lbx-controls-close {
+  &:hover {
+    cursor: pointer;
+  }
 }
 
 .lbx-slide__counter {
+  font-family: $alt-font-family;
   top: 25px;
   left: 30px;
 }

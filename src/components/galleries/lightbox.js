@@ -5,7 +5,12 @@ import * as gUtils from './galleriesUtils';
 
 export default class Lightbox extends Component {
   static propTypes = {
-    lightbox: PropTypes.object.isRequired
+    lightbox: PropTypes.object.isRequired,
+    onClose: PropTypes.func.isRequired,
+    onSwipe: PropTypes.func.isRequired
+  }
+  onSwipe = e => {
+    this.props.onSwipe({ direction: e.currentTarget.dataset.direction });
   }
   render() {
     const { slides, show } = this.props.lightbox;
@@ -26,7 +31,13 @@ export default class Lightbox extends Component {
     return (
       <div className={lightboxClass}>
         <div className="lbx-content">
-          <div className="lbx-controls"><span className="lbx-slide__counter">{activeSlideIndex}/{slides.length}</span><span className="lbx-controls-share fa fa-share"></span><span className="lbx-controls-close fa fa-times"></span><span className="lbx-controls-left fa fa-arrow-left"></span><span className="lbx-controls-right fa fa-arrow-right"></span></div>
+          <div className="lbx-controls">
+            <span className="lbx-slide__counter">{activeSlideIndex}/{slides.length}</span>
+            <span className="lbx-controls-share fa fa-share"></span>
+            <span onClick={this.props.onClose} className="lbx-controls-close fa fa-times"></span>
+            <span onClick={this.onSwipe} data-direction="left" className="lbx-controls-left fa fa-arrow-left"></span>
+            <span onClick={this.onSwipe} data-direction="right" className="lbx-controls-right fa fa-arrow-right"></span>
+          </div>
             {gllryImages}
         </div>
       </div>

@@ -38,6 +38,12 @@ export function setGallery(props, scope) {
   }
 }
 
+export function unbindImagesLoaded(element) {
+  const imgLoad = imagesLoaded(element);
+
+  imgLoad.off( 'progress', () => { console.log('word') } );
+}
+
 // TODO: sequential loading
 // http://masonry.desandro.com/extras.html
 // https://github.com/desandro/imagesloaded
@@ -50,7 +56,7 @@ export function seqImagesLoaded(element, scope) {
     if (scope.state.loadImagesSeq) {
       scope.setState({...scope.state, loadImagesSeq: false });
     }
-    if (loaded) {
+    if (loaded && !scope.unbindImagesLoaded) {
       const img = image.img;
       const id = img.parentElement.parentElement.id;
 

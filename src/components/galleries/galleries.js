@@ -33,6 +33,7 @@ export class Galleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
     this.setGallery(this.props);
   }
@@ -52,6 +53,8 @@ export class Galleries extends Component {
   }
   componentWillUnmount() {
     this.props.highlightGalleriesLink(false);
+    this.unbindImagesLoaded = true;
+    gUtils.unbindImagesLoaded(this.galleryContainer);
     window.onresize = () => {}; // remove listener
   }
   showLightbox = e => {

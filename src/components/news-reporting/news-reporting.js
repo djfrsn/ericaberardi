@@ -7,8 +7,13 @@ export class NewsReporting extends Component {
     return (
       <div className="g-row">
         <div className="g-col" >
-          <div className="under__construction">
-          [ Under Construction ]
+          <div className="articles__construction">
+            <div className="article">
+              <h2>Title</h2>
+              <h4>Company</h4>
+              <p className="article__content">...</p>
+              <a href="#" className="article__link">Read Full Story</a>
+            </div>
           </div>
         </div>
       </div>

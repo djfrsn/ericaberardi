@@ -41,7 +41,7 @@ export function setGallery(props, scope) {
 export function unbindImagesLoaded(element) {
   const imgLoad = imagesLoaded(element);
 
-  imgLoad.off( 'progress', () => { console.log('word') } );
+  imgLoad.off( 'progress' );
 }
 
 // TODO: sequential loading

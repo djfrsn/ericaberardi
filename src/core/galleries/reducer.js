@@ -10,6 +10,7 @@ import {
   SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR,
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
   SUBMIT_GALLERY_IMAGE_UPDATE_ERROR,
+  HIGHLIGHT_GALLERIES_LINK,
   TOGGLE_GALLERY_EDIT
 } from './action-types';
 
@@ -21,6 +22,7 @@ export const initialState = {
   editing: {},
   placeholderImages: [],
   toast: {},
+  highlightGalleriesLink: false,
   imageResetMeta: {}
 };
 
@@ -98,6 +100,12 @@ export function galleriesReducer(state = initialState, action) {
       return {
         ...state,
         toast: errorToast
+      };
+
+    case HIGHLIGHT_GALLERIES_LINK:
+      return {
+        ...state,
+        highlightGalleriesLink: action.payload
       };
 
     case TOGGLE_GALLERY_EDIT:

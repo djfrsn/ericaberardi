@@ -1,7 +1,9 @@
 import React, { Component, PropTypes } from 'react';
+import ReactDOM from 'react-dom';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
+import { galleryActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 const toastr = require('react-toastr-redux/lib');
 
@@ -9,13 +11,22 @@ const {ToastContainer} = toastr;
 const ToastMessageFactory = React.createFactory(toastr.ToastMessage.animation);
 
 export class Header extends Component {
+  static contextTypes = {
+    history: React.PropTypes.object.isRequired
+  };
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    galleries: PropTypes.object.isRequired,
     signOut: PropTypes.func.isRequired,
     toast: PropTypes.object.isRequired
-  };
+  }
+
   componentWillReceiveProps(nextProps) {
     this.toast(nextProps);
+    const highlightGalleriesLink = nextProps.galleries.highlightGalleriesLink;
+    if (highlightGalleriesLink !== this.props.galleries.highlightGalleriesLink) {
+      this.toggleHighlightGalleriesLink(highlightGalleriesLink);
+    }
   }
   toast = nextProps => {
     if (nextProps.toast.toastType) {
@@ -27,6 +38,11 @@ export class Header extends Component {
         }
       );
     }
+  }
+  toggleHighlightGalleriesLink = on => {
+    let link = ReactDOM.findDOMNode(this.galleriesLink);
+    const hdrLink = 'header__link';
+    link.className = on ? `${hdrLink} active` : hdrLink;
   }
   reRender = () => {
     this.forceUpdate(); // ugly hack since activeClassName only works on page refresh
@@ -42,7 +58,7 @@ export class Header extends Component {
               <h2 className="header__sub_title">Photography <span>LLC</span></h2>
             </Link>
             <ul className="header__links">
-              <li><Link to="galleries" className="header__link" onClick={this.reRender} activeClassName="active">Galleries</Link></li>
+              <li><Link to="galleries" className="header__link" onClick={this.reRender} activeClassName="active" ref={ref => { this.galleriesLink = ref; }}>Galleries</Link></li>
               <li><Link to="news-reporting" className="header__link" onClick={this.reRender} activeClassName="active">News Reporting</Link></li>
               <li><Link to="pricing" className="header__link" onClick={this.reRender} activeClassName="active">Pricing</Link></li>
               <li><Link to="about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>
@@ -60,5 +76,6 @@ export class Header extends Component {
 
 export default connect(state => ({
   auth: state.auth,
+  galleries: state.galleries,
   toast: state.toast
-}), Object.assign({}, authActions, toastActions))(Header);
+}), Object.assign({}, authActions, galleryActions, toastActions))(Header);

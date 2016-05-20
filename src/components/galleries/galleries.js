@@ -23,6 +23,7 @@ export class Galleries extends Component {
 
   static propTypes = {
     galleries: PropTypes.object.isRequired,
+    highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     showLightbox: PropTypes.func.isRequired
   }
@@ -32,6 +33,7 @@ export class Galleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    this.props.highlightGalleriesLink(true);
     this.setGallery(this.props);
   }
   componentDidMount() {
@@ -49,6 +51,7 @@ export class Galleries extends Component {
     this.loadImagesSeq();
   }
   componentWillUnmount() {
+    this.props.highlightGalleriesLink(false);
     window.onresize = () => {}; // remove listener
   }
   showLightbox = e => {

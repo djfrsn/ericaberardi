@@ -49,7 +49,6 @@ export default class Lightbox extends Component {
   }
 }
 
-
 export default connect(state => ({
   lightbox: state.lightbox
 }), Object.assign({}, lightboxActions))(Lightbox);

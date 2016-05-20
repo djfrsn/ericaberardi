@@ -6,6 +6,7 @@ import {
   INIT_GALLERIES,
   TOGGLE_GALLERY_EDIT,
   CLEAR_IMAGE_RESET_META,
+  HIGHLIGHT_GALLERIES_LINK,
   SUBMIT_NEW_GALLERY_IMAGE_UPDATE_SUCCESS,
   SUBMIT_NEW_GALLERY_IMAGE_UPDATE_ERROR,
   SUBMIT_GALLERY_IMAGE_UPDATE_SUCCESS,
@@ -71,6 +72,15 @@ export function clearImageResetMeta() {
   return dispatch => {
     dispatch({
       type: CLEAR_IMAGE_RESET_META
+    });
+  };
+}
+
+export function highlightGalleriesLink(toggle) {
+  return dispatch => {
+    dispatch({
+      type: HIGHLIGHT_GALLERIES_LINK,
+      payload: toggle
     });
   };
 }

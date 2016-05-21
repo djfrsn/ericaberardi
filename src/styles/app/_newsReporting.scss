@@ -8,6 +8,10 @@
 .article {
   margin-bottom: 100px;
 
+  h2 {
+    color: $colors-alt-black;
+  }
+
   h4 {
     color: $colors-gray;
     font-weight: bold;

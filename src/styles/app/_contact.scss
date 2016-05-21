@@ -1,0 +1,9 @@
+.contact__form {
+
+  textarea {
+    resize: none;
+    &:focus {
+      outline: none;
+    }
+  }
+}

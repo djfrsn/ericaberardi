@@ -60,6 +60,7 @@ export class Galleries extends Component {
   showLightbox = e => {
     e.preventDefault();
     this.props.showLightbox({e, id: e.currentTarget.parentElement.id, scope: this});
+    document.querySelector('body').className = 'no-scroll';
   }
   setGallery = props => {
     gUtils.setGallery(props, this); // set current gallery images src attr

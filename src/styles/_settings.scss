@@ -39,3 +39,9 @@ $grid-max-width: 70% !default;
 .link-border {
   border-bottom: 1px solid $ericaYellow;
 }
+//===============================================
+//  EXTENDS
+//===============================================
+.no-scroll {
+  overflow: hidden;
+}

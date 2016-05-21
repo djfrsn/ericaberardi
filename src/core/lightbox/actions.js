@@ -28,6 +28,7 @@ export function onSwipe(direction) {
 
 
 export function onClose() {
+  document.querySelector('body').className = '';
   return dispatch => {
     dispatch({
       type: ON_CLOSE

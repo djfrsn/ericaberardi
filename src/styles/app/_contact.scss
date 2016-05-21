@@ -1,6 +1,26 @@
+.contact__container {
+  display: flex;
+
+   > div {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    flex-flow: column wrap;
+    width: 50%;
+    padding: 10px;
+  }
+
+  > div:first-child {
+    margin-right: 20px;
+  }
+}
+
 .contact__form {
 
   textarea {
+    margin-top: 30px;
     resize: none;
     &:focus {
       outline: none;

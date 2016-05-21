@@ -6,10 +6,6 @@
   padding-bottom: 120px;
 }
 
-::-webkit-scrollbar {
-  width: 2px;
-}
-
 a {
   color: $colors-black;
 }
@@ -35,4 +31,19 @@ footer {
       @extend .link-border-style;
     }
   }
+}
+
+::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $ericaYellow;
+  border: 0px none $ericaYellow;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }

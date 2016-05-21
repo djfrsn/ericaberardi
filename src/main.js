@@ -9,6 +9,7 @@ import { Root } from 'components/root';
 import { authActions /* , authRouteResolver */ } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleryActions } from 'core/galleries';
+import { newsReportingActions } from 'core/newsReporting';
 import { FIREBASE_URL } from './config';
 import configureStore from './store';
 
@@ -23,22 +24,16 @@ store.dispatch(authActions.initAuth());
 
 store.dispatch(adminActions.initAdmin());
 
-let homeGalleryOne = new Firebase(`${FIREBASE_URL}/homeGalleryOne`);
-
-homeGalleryOne.on('value', snapshot => {
-  store.dispatch(galleryActions.initHomeGalleryOne(snapshot.val()));
-});
-
-let homeGalleryTwo = new Firebase(`${FIREBASE_URL}/homeGalleryTwo`);
-
-homeGalleryTwo.on('value', snapshot => {
-  store.dispatch(galleryActions.initHomeGalleryTwo(snapshot.val()));
-});
-
 let galleries = new Firebase(`${FIREBASE_URL}/galleries`);
 
 galleries.on('value', snapshot => {
   store.dispatch(galleryActions.initGalleries(snapshot.val()));
+});
+
+let newsReporting = new Firebase(`${FIREBASE_URL}/newsReporting`);
+
+newsReporting.on('value', snapshot => {
+  store.dispatch(newsReportingActions.initNewsReporting(snapshot.val()));
 });
 
 ReactDOM.render((

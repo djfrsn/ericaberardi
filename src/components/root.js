@@ -9,7 +9,7 @@ import { LOGIN_PATH, CHANGE_PASSWORD_PATH, DASHBOARD_PATH, HOME_PATH, GALLERIES_
 import App from './app/app';
 import Home from './home/home';
 import Galleries from './galleries/galleries';
-import NewsReporting from './news-reporting/news-reporting';
+import NewsReporting from './newsReporting/newsReporting';
 import Pricing from './pricing/pricing';
 import About from './about/about';
 import Contact from './contact/contact';

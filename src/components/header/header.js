@@ -45,7 +45,7 @@ export class Header extends Component {
     link.className = on ? `${hdrLink} active` : hdrLink;
   }
   reRender = () => {
-    this.forceUpdate(); // ugly hack since activeClassName only works on page refresh
+    this.forceUpdate(); // ugly hack since activeClassName works interminttenly
   }
   render() {
     const { auth } = this.props;
@@ -58,11 +58,11 @@ export class Header extends Component {
               <h2 className="header__sub_title">Photography <span>LLC</span></h2>
             </Link>
             <ul className="header__links">
-              <li><Link to="galleries" className="header__link" onClick={this.reRender} activeClassName="active" ref={ref => { this.galleriesLink = ref; }}>Galleries</Link></li>
-              <li><Link to="news-reporting" className="header__link" onClick={this.reRender} activeClassName="active">News Reporting</Link></li>
-              <li><Link to="pricing" className="header__link" onClick={this.reRender} activeClassName="active">Pricing</Link></li>
-              <li><Link to="about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>
-              <li><Link to="contact" className="header__link" onClick={this.reRender} activeClassName="active">Contact</Link></li>
+              <li><Link to="/galleries" className="header__link" onClick={this.reRender} activeClassName="active" ref={ref => { this.galleriesLink = ref; }}>Galleries</Link></li>
+              <li><Link to="/news-reporting" className="header__link" onClick={this.reRender} activeClassName="active">News Reporting</Link></li>
+              <li><Link to="/pricing" className="header__link" onClick={this.reRender} activeClassName="active">Pricing</Link></li>
+              <li><Link to="/about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>
+              <li><Link to="/contact" className="header__link" onClick={this.reRender} activeClassName="active">Contact</Link></li>
               {auth.authenticated ? <li><Link to="dashboard" className="header__link" onClick={this.reRender} activeClassName="active">Dashboard</Link></li> : null}
               {auth.authenticated ? <li><Link to="/" className="header__link" onClick={this.props.signOut} >Sign out</Link></li> : null}
             </ul>

@@ -13,7 +13,7 @@ $alt-font-family: Marvel, 'sans-serif';
 $colors-gray: #999;
 $colors-black: black;
 $colors-white: white;
-
+$ericaYellow: #FFEA00;
 //===============================================
 //  GRID
 //===============================================
@@ -36,5 +36,5 @@ $grid-max-width: 70% !default;
 }
 
 .link-border {
-  border-bottom: 1px solid #FFEA00;
+  border-bottom: 1px solid $ericaYellow;
 }

@@ -1,0 +1,39 @@
+.articles__container {
+  width: 70%;
+  margin: 60px auto 0;
+  font-family: $alt-font-family;
+  font-size: 1.4rem;
+}
+
+.article {
+  margin-bottom: 100px;
+
+  h4 {
+    color: $colors-gray;
+    font-weight: bold;
+  }
+
+  a {
+    float: right;
+    text-decoration: none;
+    padding-top: 10px;
+    border-bottom: 1px solid black;
+    transition: border 0.5s ease;
+    &:hover {
+          border-bottom: 1px solid $ericaYellow;
+    }
+  }
+}
+
+@media (max-width: 960px) {
+  .articles__container {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .articles__container {
+    width: 100%;
+    font-size: 1.2rem;
+  }
+}

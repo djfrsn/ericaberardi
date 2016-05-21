@@ -37,7 +37,7 @@ export default opts => {
                 <Link to={`galleries/${category.toLowerCase()}`} className="gallery__link" >
                   <div className="overlay">
                     <div className="overlay__content">
-                      <div><p className="gallery-image-text">{category}</p></div>
+                      <div className="gallery-image-text">{category}</div>
                     </div>
                   </div>
                 </Link>

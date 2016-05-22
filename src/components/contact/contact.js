@@ -55,7 +55,6 @@ export class Contact extends Component {
   }
   onEmailSuccess = () => {
     this.props.clearContactToast();
-    this.resetFormInputs();
     this.setState(initialState);
     this.props.showToast({
       firstLine: 'Success!',

@@ -1,5 +1,28 @@
+$contact-black: lighten($colors-alt-black, 10%);
+
+@mixin contact__placeholder-style() {
+  color: $contact-black;
+  text-align: center;
+}
+
+@mixin contact__placeholder-focus() {
+  color: $colors-gray;
+}
+
+@mixin contact__placeholder-textarea() {
+  line-height: 90px; // center text vertically
+}
+
+@mixin center__placeholder() {
+  color: red;
+}
+
 .contact__container {
   display: flex;
+  margin-top: 60px;
+  font-size: 2rem;
+  color: $contact-black;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 
    > div {
     display: flex;
@@ -17,13 +40,163 @@
   }
 }
 
+.contact__social {
+  @include font-family($alt-font-family);
+
+  .contact__email-link {
+    @include quick-cubic-transition(color);
+    margin: 30px 0 20px;
+    color: $colors-gray-light;
+    text-decoration: none;
+
+    &:hover {
+      color: $contact-black;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .contact__social_link {
+    color: $contact-black;
+    margin-bottom: 20px;
+
+    i {
+      @include quick-cubic-transition(color);
+    }
+
+    &:hover {
+      color: $colors-gray-light;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+}
+
 .contact__form {
+  h2 {
+    @include font-family($alt-font-family);
+    font-weight: normal;
+    margin-bottom: 20px;
+  }
+  .contact__name, .contact__email, textarea {
+    @include font-family($alt-font-family);
+    font-size: 0.6em;
+    //background: lighten($colors-gray, 37%);
+    border-radius: 1px;
+    border: none;
+    border-bottom: 1px solid $colors-gray-light;
+  }
+
+  .contact__name, .contact__email {
+    width: 90%;
+    margin: 0 auto 20px;
+    height: 30px;
+
+    &:focus {
+      outline: none;
+      color: $colors-gray;
+    }
+  }
 
   textarea {
-    margin-top: 30px;
+    width: 90%;
+    height: 100px;
+    margin: 0 auto 20px;
     resize: none;
     &:focus {
       outline: none;
     }
+      ::-webkit-input-placeholder {
+      @include center__placeholder();
+    }
+
+    :-moz-placeholder { /* Firefox 18- */
+      @include center__placeholder();
+    }
+
+    ::-moz-placeholder {  /* Firefox 19+ */
+      @include center__placeholder();
+    }
+
+    :-ms-input-placeholder {
+      @include center__placeholder();
+    }
+  }
+
+  .contact__send {
+    @include button-base;
+    @include font-family($alt-font-family);
+    border: none;
+    width: 90%;
+    background: $ericaYellow;
+    border-radius: 2px;
+    font-size: 0.8em;
+    padding: 10px 20px;
+    @include quick-cubic-transition(all);
+
+    &:hover {
+      background: $colors-alt-black;
+      color: $colors-white;
+    }
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  ::-webkit-input-placeholder {
+    @include contact__placeholder-style();
+  }
+
+  input:focus::-webkit-input-placeholder {
+    @include contact__placeholder-focus();
+  }
+
+  textarea::-webkit-input-placeholder {
+    @include contact__placeholder-textarea();
+  }
+
+  textarea:focus::-webkit-input-placeholder {
+    @include contact__placeholder-focus();
+  }
+
+  :-moz-placeholder { /* Firefox 18- */
+    @include contact__placeholder-style();
+  }
+
+  textarea:focus:-moz-placeholder {
+    @include contact__placeholder-focus();
+  }
+
+  input:focus:-moz-placeholder {
+    @include contact__placeholder-focus();
+  }
+
+  ::-moz-placeholder {  /* Firefox 19+ */
+    @include contact__placeholder-style();
+  }
+
+  input:focus::-moz-placeholder {
+    @include contact__placeholder-focus();
+  }
+
+  textarea:focus::-moz-placeholder {
+    @include contact__placeholder-focus();
+  }
+
+  :-ms-input-placeholder {
+    @include contact__placeholder-style();
+  }
+
+  input:focus:-ms-input-placeholder {
+    @include contact__placeholder-focus();
+  }
+
+  textarea:focus:-ms-input-placeholder {
+    @include contact__placeholder-focus();
   }
 }

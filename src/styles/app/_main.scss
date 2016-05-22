@@ -34,13 +34,13 @@ footer {
 }
 
 ::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+  width: 5px;
+  height: 5px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: $ericaYellow;
-  border: 0px none $ericaYellow;
+  background: $colors-gray;
+  border: 0px none $colors-gray;
   border-radius: 50px;
 }
 

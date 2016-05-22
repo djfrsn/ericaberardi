@@ -10,9 +10,10 @@ $base-line-height: 24px !default;
 
 $alt-font-family: Marvel, 'sans-serif';
 
-$colors-gray: #999;
 $colors-black: black;
 $colors-alt-black: rgb(31, 31, 31);
+$colors-gray: #999;
+$colors-gray-light: lighten($colors-alt-black, 37%);
 $colors-white: white;
 $ericaYellow: #FFEA00;
 //===============================================
@@ -39,9 +40,16 @@ $grid-max-width: 70% !default;
 .link-border {
   border-bottom: 1px solid $ericaYellow;
 }
-//===============================================
-//  EXTENDS
-//===============================================
+
 .no-scroll {
   overflow: hidden;
+}
+//===============================================
+//  MIXINS
+//===============================================
+@mixin font-family($family: $base-font-family) {
+  font-family: $family;
+}
+@mixin quick-cubic-transition($prop: all) {
+  transition: $prop .4s cubic-bezier(0,0,.25,1);
 }

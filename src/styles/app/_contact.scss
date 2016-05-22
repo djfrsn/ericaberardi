@@ -75,7 +75,11 @@ $contact-black: lighten($colors-alt-black, 10%);
 
 .contact__social_icons {
   display: flex;
-  flex-flow: column wrap;
+    flex-flow: row wrap;
+
+    a {
+      margin: 15px;
+    }
 }
 
 .contact__form {
@@ -212,14 +216,6 @@ $contact-black: lighten($colors-alt-black, 10%);
     > div {
       flex: 1 0 235px;
       width: 100%;
-    }
-  }
-
-  .contact__social_icons {
-    flex-flow: row wrap;
-
-    a {
-      margin: 15px;
     }
   }
 }

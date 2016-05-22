@@ -99,6 +99,10 @@ $contact-black: lighten($colors-alt-black, 10%);
     }
   }
 
+  .contact__name {
+    text-transform: capitalize;
+  }
+
   textarea {
     width: 90%;
     height: 100px;

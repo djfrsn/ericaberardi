@@ -6,27 +6,43 @@ import {
 
 
 function validateString(str, min, max) {
-  return typeof str === 'string' && str.length >= min && str.length <= max;
+  let valid = false;
+  let errType;
+
+  if (typeof str === 'string') {
+    if (str.length < min) {
+      errType = 'min';
+    }
+    else if (str.length > max) {
+      errType = 'max';
+    }
+    valid = typeof errType === 'undefined' ? true : false;
+  }
+
+  return { valid, errType };
 }
 
 function validateEmail(email) {
   return /^([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x22([^\x0d\x22\x5c\x80-\xff]|\x5c[\x00-\x7f])*\x22))*\x40([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d)(\x2e([^\x00-\x20\x22\x28\x29\x2c\x2e\x3a-\x3c\x3e\x40\x5b-\x5d\x7f-\xff]+|\x5b([^\x0d\x5b-\x5d\x80-\xff]|\x5c[\x00-\x7f])*\x5d))*$/.test( email );
 }
 
+
 function validateEmailInputs(data) {
   let success = true;
   let err = [];
+  let validate;
 
   for (let prop in data) {
     if (prop.length > 0) {
       const dataCached = data[prop];
       switch (prop) {
         case 'contactName':
-          if (!validateString(dataCached, 2, 150)) {
+          validate = validateString(dataCached, 2, 150);
+          if (!validate.valid) {
             success = false;
             err.push({
               firstLine: 'Error!',
-              secondLine: 'Your name is either too long or too short!.',
+              secondLine: validate.errType === 'min' ? 'Your name is too short!.' : 'Your name is too long!.',
               type: 'error'
             });
           }
@@ -44,11 +60,12 @@ function validateEmailInputs(data) {
           break;
 
         case 'contactMessage':
-          if (!validateString(dataCached, 20, 2000)) {
+          validate = validateString(dataCached, 20, 2000);
+          if (!validate.valid) {
             success = false;
             err.push({
               firstLine: 'Error!',
-              secondLine: 'Your message is either too long or too short!.',
+              secondLine: validate.errType === 'min' ? 'Your message is too short!.' : 'Your message is too long!.',
               type: 'error'
             });
           }

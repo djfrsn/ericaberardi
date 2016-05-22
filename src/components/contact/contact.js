@@ -6,13 +6,34 @@ import { contactActions } from 'core/contact';
 
 export class Contact extends Component {
   static propTypes = {
+    clearContactToast: PropTypes.func.isRequired,
     contact: PropTypes.object.isRequired,
-    sendEmail: PropTypes.func.isRequired
+    sendEmail: PropTypes.func.isRequired,
+    showToast: PropTypes.func.isRequired
   }
   state = {
     contactName: '',
     contactEmail: '',
     contactMessage: ''
+  }
+  componentWillReceiveProps(nextProps) {
+    const { err } = nextProps.contact.email;
+    if (nextProps.contact.email.success) {
+      this.props.clearContactToast();
+      this.props.showToast({
+        firstLine: 'Success!',
+        secondLine: 'Erica will be receiving your email shortly, thank you!.',
+        type: 'success'
+      });
+    }
+    if (err.length > 0) {
+      this.props.clearContactToast();
+      err.forEach(toast => {
+        setTimeout(() => {
+          this.props.showToast(toast);
+        }, 150);
+      });
+    }
   }
   handleChange = e => {
     this.setState({...this.state, [`contact${e.target.dataset.contactType}`]: e.target.value});

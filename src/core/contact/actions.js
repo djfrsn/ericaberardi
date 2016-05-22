@@ -1,6 +1,7 @@
 import {
   SEND_EMAIL_SUCCESS,
-  SEND_EMAIL_ERROR
+  SEND_EMAIL_ERROR,
+  CLEAR_EMAIL_DATA
 } from './action-types';
 
 
@@ -13,7 +14,7 @@ function validateEmail(email) {
 }
 
 function validateEmailInputs(data) {
-  let valid = true;
+  let success = true;
   let err = [];
 
   for (let prop in data) {
@@ -21,40 +22,34 @@ function validateEmailInputs(data) {
       const dataCached = data[prop];
       switch (prop) {
         case 'contactName':
-          if (!validateString(dataCached, 1, 150)) {
-            valid = false;
+          if (!validateString(dataCached, 2, 150)) {
+            success = false;
             err.push({
-              toast: {
-                firstLine: 'Error!',
-                secondLine: 'Your name is either too long or too short!.',
-                type: 'error'
-              }
+              firstLine: 'Error!',
+              secondLine: 'Your name is either too long or too short!.',
+              type: 'error'
             });
           }
           break;
 
         case 'contactEmail':
           if (!validateEmail(dataCached)) {
-            valid = false;
+            success = false;
             err.push({
-              toast: {
-                firstLine: 'Error!',
-                secondLine: 'Please enter a valid email address!.',
-                type: 'error'
-              }
+              firstLine: 'Error!',
+              secondLine: 'Please enter a valid email address!.',
+              type: 'error'
             });
           }
           break;
 
         case 'contactMessage':
-          if (!validateString(dataCached, 1, 2000)) {
-            valid = false;
+          if (!validateString(dataCached, 20, 2000)) {
+            success = false;
             err.push({
-              toast: {
-                firstLine: 'Error!',
-                secondLine: 'Your message is either too long or too short!.',
-                type: 'error'
-              }
+              firstLine: 'Error!',
+              secondLine: 'Your message is either too long or too short!.',
+              type: 'error'
             });
           }
           break;
@@ -64,27 +59,32 @@ function validateEmailInputs(data) {
     }
   }
 
-  return { valid, err };
+  return { success, err };
 }
 
 export function sendEmail(data) {
   return dispatch => {
     const validation = validateEmailInputs(data);
-    let dispatchVal = () => {};
 
     if (!validation.valid) {
-      dispatchVal = dispatch({
+      dispatch({
         type: SEND_EMAIL_ERROR,
-        payload: validation
+        payload: { validation }
       });
     }
     else {
-      dispatchVal = dispatch({
+      dispatch({
         type: SEND_EMAIL_SUCCESS,
-        payload: data
+        payload: { data: data, validation }
       });
     }
+  };
+}
 
-    return dispatchVal;
+export function clearContactToast() {
+  return dispatch => {
+    dispatch({
+      type: CLEAR_EMAIL_DATA
+    });
   };
 }

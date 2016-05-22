@@ -90,7 +90,7 @@ $contact-black: lighten($colors-alt-black, 10%);
   }
 
   .contact__name, .contact__email, .contact__textarea {
-    @include quick-cubic-transition(border);
+    @include quick-cubic-transition();
     @include font-family($alt-font-family);
     font-size: 0.6em;
     //background: lighten($colors-gray, 37%);

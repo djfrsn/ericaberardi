@@ -43,13 +43,11 @@ export class Contact extends Component {
     this.props.clearContactToast(); // toast must be cleared before showToast is called...
     let errors = {};
     err.forEach(toast => {
-      // set errors
-      debugger
       errors[`${toast.errName}Error`] = true;
       setTimeout(() => { // avoid overloading the toast plugin w/ setTimeout
         this.props.showToast(toast);
       }, 150);
-    });debugger
+    });
     this.setState({ ...this.state, ...errors});
     setTimeout(() => { // clear errors
       this.setState({ ...this.state, ...intialErrorsState});

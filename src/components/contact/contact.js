@@ -3,11 +3,19 @@ import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { toastActions } from 'core/toast';
 import { contactActions } from 'core/contact';
+import classNames from 'classnames';
+
+const intialErrorsState = {
+  nameError: false,
+  emailError: false,
+  textareaError: false
+};
 
 const initialState = {
   contactName: '',
   contactEmail: '',
-  contactMessage: ''
+  contactMessage: '',
+  ...intialErrorsState
 };
 
 export class Contact extends Component {
@@ -33,11 +41,19 @@ export class Contact extends Component {
   }
   onEmailError = err => {
     this.props.clearContactToast(); // toast must be cleared before showToast is called...
+    let errors = {};
     err.forEach(toast => {
-      setTimeout(() => {
+      // set errors
+      debugger
+      errors[`${toast.errName}Error`] = true;
+      setTimeout(() => { // avoid overloading the toast plugin w/ setTimeout
         this.props.showToast(toast);
       }, 150);
-    });
+    });debugger
+    this.setState({ ...this.state, ...errors});
+    setTimeout(() => { // clear errors
+      this.setState({ ...this.state, ...intialErrorsState});
+    }, 7000);
   }
   onEmailSuccess = () => {
     this.props.clearContactToast();
@@ -54,15 +70,19 @@ export class Contact extends Component {
     this.props.sendEmail({ contactName, contactEmail, contactMessage});
   }
   render() {
+    const { nameError, emailError, textareaError } = this.state;
+    const contactNameClass = classNames({ ['contact__name']: true, ['contact__input_error']: nameError });
+    const contactEmailClass = classNames({ ['contact__email']: true, ['contact__input_error']: emailError });
+    const contactTextAreaClass = classNames({ ['contact__textarea']: true, ['contact__input_error']: textareaError });
     return (
       <div className="g-row">
         <div className="g-col" >
           <div className="contact__container">
             <div className="contact__form">
               <h2 className="contact__form_title">Nice to meet you!</h2>
-              <input data-contact-type="Name" type="text" placeholder="Name" className="contact__name" value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
-              <input data-contact-type="Email" type="text" placeholder="Email" className="contact__email" value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
-              <textarea data-contact-type="Message" name="message" placeholder="Message" className="contact__textarea" value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
+              <input data-contact-type="Name" type="text" placeholder="Name" className={contactNameClass} value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
+              <input data-contact-type="Email" type="text" placeholder="Email" className={contactEmailClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
+              <textarea data-contact-type="Message" name="message" placeholder="Message" className={contactTextAreaClass} value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
               <button onClick={this.sendEmail} className="contact__send">Send</button>
             </div>
             <div className="contact__social">

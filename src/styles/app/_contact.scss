@@ -98,7 +98,8 @@ $contact-black: lighten($colors-alt-black, 10%);
     border: none;
     border-bottom: 1px solid $colors-gray-light;
 
-    &.contact__email__error {
+    &.contact__input_error {
+      @include shake-animation();
       border-bottom-color: red;
     }
   }

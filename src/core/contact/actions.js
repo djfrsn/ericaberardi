@@ -34,39 +34,41 @@ function validateEmailInputs(data) {
 
   for (let prop in data) {
     if (prop.length > 0) {
-      const dataCached = data[prop];
       switch (prop) {
         case 'contactName':
-          validate = validateString(dataCached, 2, 150);
+          validate = validateString(data[prop], 2, 150);
           if (!validate.valid) {
             success = false;
             err.push({
               firstLine: 'Error!',
               secondLine: validate.errType === 'min' ? 'Your name is too short!.' : 'Your name is too long!.',
-              type: 'error'
+              type: 'error',
+              errName: 'name'
             });
           }
           break;
 
         case 'contactEmail':
-          if (!validateEmail(dataCached)) {
+          if (!validateEmail(data[prop])) {
             success = false;
             err.push({
               firstLine: 'Error!',
               secondLine: 'Please enter a valid email address!.',
-              type: 'error'
+              type: 'error',
+              errName: 'email'
             });
           }
           break;
 
         case 'contactMessage':
-          validate = validateString(dataCached, 20, 2000);
+          validate = validateString(data[prop], 20, 2000);
           if (!validate.valid) {
             success = false;
             err.push({
               firstLine: 'Error!',
               secondLine: validate.errType === 'min' ? 'Your message is too short!.' : 'Your message is too long!.',
-              type: 'error'
+              type: 'error',
+              errName: 'textarea'
             });
           }
           break;
@@ -90,6 +92,7 @@ export function sendEmail(data) {
       });
     }
     else {
+      // mailgun pow!!!
       dispatch({
         type: SEND_EMAIL_SUCCESS,
         payload: { data: data, validation }

@@ -86,7 +86,7 @@ $contact-black: lighten($colors-alt-black, 10%);
   .contact__form_title {
     @include font-family($alt-font-family);
     font-weight: normal;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
   }
 
   .contact__name, .contact__email, .contact__textarea {

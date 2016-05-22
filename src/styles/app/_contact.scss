@@ -89,13 +89,18 @@ $contact-black: lighten($colors-alt-black, 10%);
     margin-bottom: 20px;
   }
 
-  .contact__name, .contact__email, textarea {
+  .contact__name, .contact__email, .contact__textarea {
+    @include quick-cubic-transition(border);
     @include font-family($alt-font-family);
     font-size: 0.6em;
     //background: lighten($colors-gray, 37%);
     border-radius: 1px;
     border: none;
     border-bottom: 1px solid $colors-gray-light;
+
+    &.contact__email__error {
+      border-bottom-color: red;
+    }
   }
 
   .contact__name, .contact__email {
@@ -113,7 +118,7 @@ $contact-black: lighten($colors-alt-black, 10%);
     text-transform: capitalize;
   }
 
-  textarea {
+  .contact__textarea {
     width: 90%;
     height: 100px;
     margin: 0 auto 20px;

@@ -62,7 +62,7 @@ export class Contact extends Component {
               <h2 className="contact__form_title">Nice to meet you!</h2>
               <input data-contact-type="Name" type="text" placeholder="Name" className="contact__name" value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
               <input data-contact-type="Email" type="text" placeholder="Email" className="contact__email" value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
-              <textarea data-contact-type="Message" name="message" placeholder="Message" value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
+              <textarea data-contact-type="Message" name="message" placeholder="Message" className="contact__textarea" value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
               <button onClick={this.sendEmail} className="contact__send">Send</button>
             </div>
             <div className="contact__social">

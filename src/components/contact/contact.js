@@ -4,6 +4,12 @@ import { authActions } from 'core/auth';
 import { toastActions } from 'core/toast';
 import { contactActions } from 'core/contact';
 
+const initialState = {
+  contactName: '',
+  contactEmail: '',
+  contactMessage: ''
+};
+
 export class Contact extends Component {
   static propTypes = {
     clearContactToast: PropTypes.func.isRequired,
@@ -11,32 +17,37 @@ export class Contact extends Component {
     sendEmail: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired
   }
-  state = {
-    contactName: '',
-    contactEmail: '',
-    contactMessage: ''
-  }
+  state = initialState
   componentWillReceiveProps(nextProps) {
     const { err } = nextProps.contact.email;
+
     if (nextProps.contact.email.success) {
-      this.props.clearContactToast();
-      this.props.showToast({
-        firstLine: 'Success!',
-        secondLine: 'Erica will be receiving your email shortly, thank you!.',
-        type: 'success'
-      });
+      this.onEmailSuccess();
     }
     if (err.length > 0) {
-      this.props.clearContactToast();
-      err.forEach(toast => {
-        setTimeout(() => {
-          this.props.showToast(toast);
-        }, 150);
-      });
+      this.onEmailError(err);
     }
   }
   handleChange = e => {
     this.setState({...this.state, [`contact${e.target.dataset.contactType}`]: e.target.value});
+  }
+  onEmailError = err => {
+    this.props.clearContactToast(); // toast must be cleared before showToast is called...
+    err.forEach(toast => {
+      setTimeout(() => {
+        this.props.showToast(toast);
+      }, 150);
+    });
+  }
+  onEmailSuccess = () => {
+    this.props.clearContactToast();
+    this.resetFormInputs();
+    this.setState(initialState);
+    this.props.showToast({
+      firstLine: 'Success!',
+      secondLine: 'Erica will be receiving your email shortly, thank you!.',
+      type: 'success'
+    });
   }
   sendEmail = () => {
     const { contactName, contactEmail, contactMessage } = this.state;

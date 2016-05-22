@@ -8,6 +8,7 @@
   height: 60px;
   overflow: hidden;
   line-height: 40px;
+  font-size: 1.5rem;
 }
 
 .home__link {
@@ -16,7 +17,7 @@
 
 .header__title {
   float: left;
-  font-size: rem(32px);
+  font-size: 1.5em;
   font-weight: 400;
   text-rendering: auto;
   transform: translate(0,0);
@@ -26,10 +27,10 @@
   color: $colors-gray;
   float: left;
   margin: 4px 0 0 3px;
-  font-size: rem(16px);
+  font-size: 0.8em;
 
   > span {
-    font-size: 14px;
+    font-size: 0.8em;
   }
 }
 

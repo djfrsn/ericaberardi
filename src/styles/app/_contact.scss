@@ -13,10 +13,6 @@ $contact-black: lighten($colors-alt-black, 10%);
   line-height: 90px; // center text vertically
 }
 
-@mixin center__placeholder() {
-  color: red;
-}
-
 .contact__container {
   display: flex;
   margin-top: 60px;
@@ -77,11 +73,12 @@ $contact-black: lighten($colors-alt-black, 10%);
 }
 
 .contact__form {
-  h2 {
+  .contact__form_title {
     @include font-family($alt-font-family);
     font-weight: normal;
     margin-bottom: 20px;
   }
+
   .contact__name, .contact__email, textarea {
     @include font-family($alt-font-family);
     font-size: 0.6em;
@@ -110,21 +107,6 @@ $contact-black: lighten($colors-alt-black, 10%);
     &:focus {
       outline: none;
     }
-      ::-webkit-input-placeholder {
-      @include center__placeholder();
-    }
-
-    :-moz-placeholder { /* Firefox 18- */
-      @include center__placeholder();
-    }
-
-    ::-moz-placeholder {  /* Firefox 19+ */
-      @include center__placeholder();
-    }
-
-    :-ms-input-placeholder {
-      @include center__placeholder();
-    }
   }
 
   .contact__send {
@@ -148,6 +130,7 @@ $contact-black: lighten($colors-alt-black, 10%);
     }
   }
 
+  // Placeholder Styles
   ::-webkit-input-placeholder {
     @include contact__placeholder-style();
   }
@@ -198,5 +181,27 @@ $contact-black: lighten($colors-alt-black, 10%);
 
   textarea:focus:-ms-input-placeholder {
     @include contact__placeholder-focus();
+  }
+}
+
+
+@media (max-width: 992px) {
+  .contact__container {
+  font-size: 1.7rem;
+  }
+
+  .contact__form_title {
+    font-size: 1.4em;
+  }
+}
+
+@media (max-width: 640px) {
+  .contact__container {
+    flex-wrap: wrap;
+
+    > div {
+      flex: 1 0 235px;
+      width: 100%;
+    }
   }
 }

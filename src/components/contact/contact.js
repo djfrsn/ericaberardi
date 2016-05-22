@@ -9,7 +9,7 @@ export class Contact extends Component {
         <div className="g-col" >
           <div className="contact__container">
             <div className="contact__form">
-              <h2>Nice to meet you!</h2>
+              <h2 className="contact__form_title">Nice to meet you!</h2>
               <input type="text" placeholder="Name" className="contact__name"/>
               <input type="text" placeholder="Email" className="contact__email"/>
               <textarea name="message" placeholder="Message" />

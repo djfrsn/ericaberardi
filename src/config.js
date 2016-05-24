@@ -4,7 +4,7 @@ export const FIREBASE_CONFIG = {
   apiKey: 'AIzaSyCxF2fuo32wrh2GbG7fLNl5Oybp0_gTDuQ',
   authDomain: 'ericaberardi.firebaseapp.com',
   databaseURL: 'https://ericaberardi.firebaseio.com',
-  storageBucket: 'gs://project-7692361988837988531.appspot.com'
+  storageBucket: 'project-7692361988837988531.appspot.com'
 };
 
 // Route paths

@@ -44,28 +44,22 @@ export function signInWithEmail(email, password) {
   return (dispatch, getState) => {
     const { firebase } = getState();
 
-    firebase.authWithPassword({
-      email: email,
-      password: password
-    }, function(error, authData) {
-      if (error) {
-        dispatch({
-          type: SIGN_IN_ERROR,
-          payload: error,
-          meta: {
-            timestamp: Date.now()
-          }
-        });
-      }
-      else {
-        dispatch({
-          type: SIGN_IN_SUCCESS,
-          payload: authData,
-          meta: {
-            timestamp: Date.now()
-          }
-        });
-      }
+    firebase.auth().signInWithEmailAndPassword(email, password).then(authData => {
+      dispatch({
+        type: SIGN_IN_SUCCESS,
+        payload: authData,
+        meta: {
+          timestamp: Date.now()
+        }
+      });
+    }).catch(function(error) {
+      dispatch({
+        type: SIGN_IN_ERROR,
+        payload: error,
+        meta: {
+          timestamp: Date.now()
+        }
+      });
     });
   };
 }

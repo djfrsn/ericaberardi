@@ -34,6 +34,17 @@ newsReporting.on('value', snapshot => {
   store.dispatch(newsReportingActions.initNewsReporting(snapshot.val()));
 });
 
+let storage = firebase.storage();
+var storageRef = storage.ref();
+storageRef.child('commercial/brilliancebalm.jpg').getDownloadURL().then(function(url) {
+  // Get the download URL for 'images/stars.jpg'
+  // This can be inserted into an <img> tag
+  // This can also be downloaded directly
+  debugger
+}).catch(function(error) {
+  // Handle any errors
+});
+
 ReactDOM.render((
   <Root history={history} /* onEnter={authRouteResolver(store.getState)} */ store={store}/>
 ), document.querySelector('.app-root'));

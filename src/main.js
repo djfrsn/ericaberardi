@@ -1,4 +1,3 @@
-import Firebase from 'firebase';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
@@ -10,12 +9,11 @@ import { authActions /* , authRouteResolver */ } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleryActions } from 'core/galleries';
 import { newsReportingActions } from 'core/newsReporting';
-import { FIREBASE_URL } from './config';
+import { FIREBASE_CONFIG } from './config';
 import configureStore from './store';
 
-
 const store = configureStore({
-  firebase: new Firebase(FIREBASE_URL)
+  firebase: firebase.initializeApp(FIREBASE_CONFIG)
 });
 
 const history = syncHistoryWithStore(browserHistory, store);
@@ -24,13 +22,13 @@ store.dispatch(authActions.initAuth());
 
 store.dispatch(adminActions.initAdmin());
 
-let galleries = new Firebase(`${FIREBASE_URL}/galleries`);
+let galleries = firebase.database().ref('dev/galleries');
 
 galleries.on('value', snapshot => {
   store.dispatch(galleryActions.initGalleries(snapshot.val()));
 });
 
-let newsReporting = new Firebase(`${FIREBASE_URL}/newsReporting`);
+let newsReporting = firebase.database().ref('dev/newsReporting');
 
 newsReporting.on('value', snapshot => {
   store.dispatch(newsReportingActions.initNewsReporting(snapshot.val()));

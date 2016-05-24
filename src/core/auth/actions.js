@@ -106,7 +106,7 @@ export function initAuth() {
     const { firebase } = getState();
     dispatch({
       type: INIT_AUTH,
-      payload: firebase.getAuth(),
+      payload: firebase.auth().currentUser,
       meta: {
         timestamp: Date.now()
       }

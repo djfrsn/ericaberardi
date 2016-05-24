@@ -1,5 +1,12 @@
 export const FIREBASE_URL = 'https://ericaberardi.firebaseio.com/dev';
 
+export const FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyCxF2fuo32wrh2GbG7fLNl5Oybp0_gTDuQ',
+  authDomain: 'ericaberardi.firebaseapp.com',
+  databaseURL: 'https://ericaberardi.firebaseio.com',
+  storageBucket: 'gs://project-7692361988837988531.appspot.com'
+};
+
 // Route paths
 export const LOGIN_PATH = '/login';
 export const CHANGE_PASSWORD_PATH = '/changepassword';

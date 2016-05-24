@@ -29,7 +29,7 @@ const loadPendingUpdates = dispatch => {
 export function initAdmin() {
   return (dispatch, getState) => {
     const { firebase } = getState();
-    if (firebase.getAuth()) {
+    if (firebase.auth().currentUser) {
       loadPendingUpdates(dispatch);
     }
   };

@@ -11,13 +11,14 @@ export class ChangePassword extends Component {
   };
   changePassword = e => {
     e.preventDefault();
-    this.props.changePassword(this.oldPassword.value, this.newPassword.value);
+    this.props.changePassword(this.newPassword.value);
   }
   render() {
     const { auth, resetAuthMessages } = this.props;
     let msg = null;
     if (auth.changePasswordError) {
-      msg = (<p className="change-password__error-msg">Invalid password combination.</p>);
+      let errMsg = auth.changePasswordErrorMsg;
+      msg = (<p className="change-password__error-msg">{errMsg ? errMsg : 'Error, please try again!'}</p>);
       resetAuthMessages();
     }
     else if (auth.changePasswordSuccess) {
@@ -28,7 +29,6 @@ export class ChangePassword extends Component {
     if (auth.authenticated) {
       component = (<div><h1 className="sign-in__heading">Change Password</h1>
         <form onSubmit={this.changePassword}>
-          <input type="password" placeholder="Old Password" ref={ref => this.oldPassword = ref}/>
           <input type="password" placeholder="New Password" ref={ref => this.newPassword = ref}/>
           <button type="submit" className="eb-button password-submit__button" onClick={this.changePassword}>Submit</button>
         </form>

@@ -57,7 +57,8 @@ export function authReducer(state = initialState, action) {
     case CHANGE_PASSWORD_ERROR:
       return {
         ...state,
-        changePasswordError: true
+        changePasswordError: true,
+        changePasswordErrorMsg: payload.message
       };
 
     case RESET_AUTH_MESSAGES:

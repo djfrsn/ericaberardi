@@ -9,7 +9,7 @@ import {
 } from './action-types';
 
 
-export function resetAuthMessages(timeout = 1250) {
+export function resetAuthMessages(timeout = 3250) {
   return dispatch => {
     setTimeout(() => {
       dispatch({
@@ -64,33 +64,27 @@ export function signInWithEmail(email, password) {
   };
 }
 
-export function changePassword(oldPassword, newPassword) {
+export function changePassword(newPassword) {
   return (dispatch, getState) => {
-    const { firebase, auth } = getState();
+    const { firebase } = getState();
+    const user = firebase.auth().currentUser;
 
-    firebase.changePassword({
-      email: auth.userEmail,
-      oldPassword: oldPassword,
-      newPassword: newPassword
-    }, function(error, res) {
-      if (error === null) {
-        dispatch({
-          type: CHANGE_PASSWORD_ERROR,
-          payload: error,
-          meta: {
-            timestamp: Date.now()
-          }
-        });
-      }
-      else {
-        dispatch({
-          type: CHANGE_PASSWORD_SUCCESS,
-          payload: res,
-          meta: {
-            timestamp: Date.now()
-          }
-        });
-      }
+    user.updatePassword(newPassword).then(function() {
+      dispatch({
+        type: CHANGE_PASSWORD_SUCCESS,
+        meta: {
+          timestamp: Date.now()
+        }
+      });
+    }, function(error) {
+      // An error happened.
+      dispatch({
+        type: CHANGE_PASSWORD_ERROR,
+        payload: error,
+        meta: {
+          timestamp: Date.now()
+        }
+      });
     });
   };
 }

@@ -16,11 +16,11 @@ export const initialState = {
 
 
 export function authReducer(state = initialState, action) {
-  const { meta, payload } = action;
+  const { payload } = action;
+  let authenticated = payload !== null;
 
   switch (action.type) {
     case INIT_AUTH:
-      let authenticated = payload !== null && (payload.expires * 1000) > meta.timestamp;
       return {
         authenticated,
         userEmail: authenticated && payload.password ? payload.password.email : null,

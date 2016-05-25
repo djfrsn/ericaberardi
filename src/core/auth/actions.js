@@ -127,9 +127,11 @@ export function signInWithTwitter() {
 export function signOut() {
   return (dispatch, getState) => {
     const { firebase } = getState();
-    firebase.unauth();
-    dispatch({
-      type: SIGN_OUT_SUCCESS
+    firebase.auth().signOut().then(function() {
+      // Sign-out successful.
+      dispatch({
+        type: SIGN_OUT_SUCCESS
+      });
     });
   };
 }

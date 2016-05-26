@@ -1,10 +1,9 @@
 .about__container {
   margin-top: 60px;
-  font-size: 2rem;
+  font-size: 1.4rem;
 }
 
 .about__content {
-  font-size: 0.7em;
 }
 
 .about__left_col, .about__right_col {
@@ -14,7 +13,6 @@
 
 .about__right_col {
   width: 30%;
-  float: left;
 }
 
 .about__image {
@@ -24,4 +22,26 @@
 
 .about__content__p {
   margin-bottom: 20px;
+}
+
+
+@media (max-width: 960px) {
+  .about__left_col, .about__right_col {
+    width: 100%;
+    float: none;
+  }
+  .about__right_col {
+    margin: 0 auto;
+    width: 50%;
+  }
+}
+
+@media (max-width: 480px) {
+  .about__right_col {
+    width: 100%;
+    margin: 0;
+  }
+  .about__image {
+    margin: 0;
+  }
 }

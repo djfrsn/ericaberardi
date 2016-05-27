@@ -22,7 +22,6 @@ const history = syncHistoryWithStore(browserHistory, store);
 firebase.auth().onAuthStateChanged(once(user => { // run once on login
   if (user) {
     store.dispatch(authActions.initAuth());
-
     store.dispatch(adminActions.initAdmin());
   }
 }));

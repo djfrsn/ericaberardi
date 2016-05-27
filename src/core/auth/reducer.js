@@ -17,13 +17,13 @@ export const initialState = {
 
 export function authReducer(state = initialState, action) {
   const { payload } = action;
+  let authenticated = payload !== null;
 
   switch (action.type) {
-    let authenticated = payload !== null;
     case INIT_AUTH:
       return {
         authenticated,
-        userEmail: authenticated && payload.password ? payload.password.email : null,
+        userEmail: authenticated ? payload.email : null,
         id: authenticated ? payload.uid : null
       };
 

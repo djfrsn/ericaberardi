@@ -83,7 +83,7 @@ export class Contact extends Component {
               <button onClick={this.sendEmail} className="contact__send">Send</button>
             </div>
             <div className="contact__social">
-              <a href="mailto:ericamarieowen@yahoo.com" className="contact__email-link">ericamarieowen@yahoo.com</a>
+              <a href="mailto:ericaberardiphotography@gmail.com" className="contact__email-link">ericaberardiphotography@gmail.com</a>
               <div className="contact__social_icons">
                 <a href="#" className="contact__social_link"><i className="fa fa-facebook-official" aria-hidden="true"></i></a>
                 <a href="#" className="contact__social_link"><i className="fa fa-twitter" aria-hidden="true"></i></a>

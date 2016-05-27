@@ -30,7 +30,7 @@ export class App extends Component {
 
     if (!auth.authenticated && nextProps.auth.authenticated) {
       router.replace(POST_LOGIN_PATH);
-      this.props.loadPendingAdminUpdates();
+      // this.props.loadPendingAdminUpdates();
     }
   }
 

@@ -18,10 +18,11 @@ export function setGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const defaultGallery = 'commercial';
-  const galleries = props.galleries.galleries;
+  const pendingGalleries = props.galleries.pendingGalleries;
+  const galleries = props.auth.authenticated && Object.keys(pendingGalleries).length > 0 ? pendingGalleries : props.galleries.galleries;
   const categories = Object.keys(galleries);
   const galleryPath = categories.includes(path) ? path : defaultGallery;
-  let galleryProp = props.galleries.galleries[galleryPath];
+  let galleryProp = galleries[galleryPath];
 
   if (path !== galleryPath) { // if needed correct browser url to show current category
     scope.context.router.replace(`/galleries/${galleryPath}`);

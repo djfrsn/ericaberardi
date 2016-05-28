@@ -18,7 +18,7 @@ export class Login extends Component {
     const errorMsg = auth.signInError ? (<p className="login__error-msg">Invalid email/password</p>) : null;
     let component = <button className="eb-button sign-in__button" onClick={this.props.signOut}>Sign Out</button>;
     if (!auth.authenticated) {
-      component = (<div><h1 className="sign-in__heading">Admin</h1>
+      component = (<div>
         <form onSubmit={this.onLogin}>
           <input type="text" placeholder="Email" ref={ref => this.email = ref}/>
           <input type="password" placeholder="Password" ref={ref => this.password = ref}/>
@@ -29,6 +29,7 @@ export class Login extends Component {
     return (
       <div className="g-row sign-in">
         <div className="g-col">
+          <h1 className="sign-in__heading">Admin</h1>
           {component}
         </div>
       </div>

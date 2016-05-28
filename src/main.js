@@ -26,16 +26,21 @@ firebase.auth().onAuthStateChanged(once(user => { // run once on login
   }
 }));
 
+firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes
+  if (user) {
+    let pendingGalleries = firebase.database().ref(`${ENV}/pendingGalleries`);
+
+    pendingGalleries.on('value', snapshot => {
+      store.dispatch(galleryActions.initPendingGalleries(snapshot.val()));
+    });
+  }
+});
+
 let galleries = firebase.database().ref(`${ENV}/galleries`);
-let pendingGalleries = firebase.database().ref(`${ENV}/pendingGalleries`);
 let newsReporting = firebase.database().ref(`${ENV}/newsReporting`);
 
 galleries.on('value', snapshot => {
   store.dispatch(galleryActions.initGalleries(snapshot.val()));
-});
-
-pendingGalleries.on('value', snapshot => {
-  store.dispatch(galleryActions.initPendingGalleries(snapshot.val()));
 });
 
 newsReporting.on('value', snapshot => {

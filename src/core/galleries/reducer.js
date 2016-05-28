@@ -11,6 +11,7 @@ import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
 
 export const initialState = {
   galleries: {},
+  pendingGalleries: {},
   toast: {},
   highlightGalleriesLink: false
 };
@@ -27,6 +28,12 @@ const errorToast = {
   type: 'error'
 };
 
+// merge published galleries pending galleries :)
+function mergeGalleries(state, action) {
+  const pendingGalleries = fObjectToObjectArray(action.payload);
+  return mergeObjectArrays(state.galleries, pendingGalleries);
+}
+
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
     case CLEAR_TOAST:
@@ -42,12 +49,9 @@ export function galleriesReducer(state = initialState, action) {
       };
 
     case INIT_PENDING_GALLERIES:
-      // merge published galleries pending galleries :)
-      const pendingGalleries = fObjectToObjectArray(action.payload);
-      const mergedGalleries = mergeObjectArrays(state.galleries, pendingGalleries);
       return {
         ...state,
-        galleries: mergedGalleries
+        pendingGalleries: mergeGalleries(state, action)
       };
 
     case UPLOAD_GALLERY_IMAGE_SUCCESS:

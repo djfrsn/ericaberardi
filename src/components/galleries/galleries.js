@@ -91,7 +91,7 @@ export class Galleries extends Component {
   }
   render() {
     const { gallery, categories } = this.state;
-    const galleryDropZoneClass = classNames({ ['gallery__dropzone']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images available
+    const galleryDropZoneClass = classNames({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     return (
       <div className="g-row gallery__container" ref={ref => { this.galleryContainer = ref; }}>
         <div className="g-col" >
@@ -101,7 +101,7 @@ export class Galleries extends Component {
             </ul>
           </div>
           <div className={galleryDropZoneClass}>
-            <Dropzone accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+            <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
               <div>Try dropping some files here, or click to select files to upload.</div>
             </Dropzone>
           </div>

@@ -44,7 +44,6 @@ export function unbindImagesLoaded(element) {
   imgLoad.off( 'progress' );
 }
 
-// TODO: sequential loading
 // http://masonry.desandro.com/extras.html
 // https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element, scope) {
@@ -75,7 +74,7 @@ export function seqImagesLoaded(element, scope) {
 }
 
 
-// return type for media queries
+// media queries
 export function mq() {
   let mqt = 'mobile'; // default media query type
   const width = window.innerWidth

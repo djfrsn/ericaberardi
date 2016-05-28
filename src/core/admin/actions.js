@@ -17,13 +17,13 @@ export function clearToast() {
 }
 
 const loadPendingUpdates = dispatch => {
-  let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
-  pendingAdminChanges.on('value', snapshot => {
-    dispatch({
-      type: LOAD_PENDING_UPDATES,
-      payload: snapshot.val()
-    });
-  });
+  // let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
+  // pendingAdminChanges.on('value', snapshot => {
+  //   dispatch({
+  //     type: LOAD_PENDING_UPDATES,
+  //     payload: snapshot.val()
+  //   });
+  // });
 };
 
 export function initAdmin() {

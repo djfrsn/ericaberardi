@@ -27,12 +27,11 @@ firebase.auth().onAuthStateChanged(once(user => { // run once on login
 }));
 
 let galleries = firebase.database().ref('dev/galleries');
+let newsReporting = firebase.database().ref('dev/newsReporting');
 
 galleries.on('value', snapshot => {
   store.dispatch(galleryActions.initGalleries(snapshot.val()));
 });
-
-let newsReporting = firebase.database().ref('dev/newsReporting');
 
 newsReporting.on('value', snapshot => {
   store.dispatch(newsReportingActions.initNewsReporting(snapshot.val()));

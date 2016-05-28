@@ -1,5 +1,10 @@
+// Vendor
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import classNames from 'classnames';
+import Dropzone from 'react-dropzone';
+import Masonry from 'react-masonry-component';
+// App Specific
 import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
 import { galleryActions } from 'core/galleries';
@@ -9,8 +14,6 @@ import * as gUtils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
 import Lightbox from './lightbox';
-import Masonry from 'react-masonry-component';
-import Dropzone from 'react-dropzone';
 
 const masonryOptions = {
   transitionDuration: 500,
@@ -26,11 +29,13 @@ export class Galleries extends Component {
     galleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
+    uploadGalleryImage: PropTypes.func.isRequired,
     showLightbox: PropTypes.func.isRequired
   }
   state = {
     gallery: [],
     categories: [],
+    currentCategory: '',
     files: [],
     loadImagesSeq: true
   }
@@ -44,6 +49,8 @@ export class Galleries extends Component {
       gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     };
     this.loadImagesSeq();
+    const { pathname } = this.props.location;
+    this.path = gUtils.parsePath(pathname).path;
   }
   componentWillReceiveProps(nextProps) {
     if (Object.keys(nextProps.galleries.galleries).length > 0) {
@@ -60,16 +67,12 @@ export class Galleries extends Component {
     window.onresize = () => {}; // remove listener
   }
   onDrop(files) {
-    console.log('Received files: ', this.state.isDragReject);
     if (!this.state.isDragReject) {
-      this.props.onDropAccept(files);
+      this.props.onDropAccept(files); // eslint-disable-line react/prop-types
     }
   }
   onDropAccept = files => {
-    this.setState({
-      ...this.state,
-      files: files
-    });
+    this.props.uploadGalleryImage({ files, category: this.path });
   }
   showLightbox = e => {
     e.preventDefault();
@@ -77,7 +80,7 @@ export class Galleries extends Component {
     document.querySelector('body').className = 'no-scroll';
   }
   setGallery = props => {
-    gUtils.setGallery(props, this); // set current gallery images src attr
+    gUtils.setGallery(props, this); // set current gallery images src
   }
   loadImagesSeq = () => {
     if (this.state.loadImagesSeq) {
@@ -86,13 +89,23 @@ export class Galleries extends Component {
   }
   render() {
     const { gallery, categories } = this.state;
+    const galleryDropZoneClass = classNames({ ['gallery__dropzone']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images available
     return (
       <div className="g-row gallery__container" ref={ref => { this.galleryContainer = ref; }}>
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              {galleryCategories( { categories, props: this.props })}
+              {galleryCategories( { categories, props: this.props, path: this.path })}
             </ul>
+          </div>
+          <div className={galleryDropZoneClass}>
+            <Dropzone accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+              <div>Try dropping some files here, or click to select files to upload.</div>
+            </Dropzone>
+            {this.state.files.length > 0 ? <div>
+              <h2>Uploading {this.state.files.length} files...</h2>
+              <div>{this.state.files.map((file) => <img src={file.preview} /> )}</div>
+            </div> : null}
           </div>
           <div className="gallery">
             <Masonry
@@ -103,15 +116,6 @@ export class Galleries extends Component {
               >
                 {galleryImages({gallery, scope: this})}
             </Masonry>
-          </div>
-          <div className="gallery__dropzone">
-            <Dropzone accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
-              <div>Try dropping some files here, or click to select files to upload.</div>
-            </Dropzone>
-            {this.state.files.length > 0 ? <div>
-                <h2>Uploading {this.state.files.length} files...</h2>
-                <div>{this.state.files.map((file) => <img src={file.preview} /> )}</div>
-                </div> : null}
           </div>
           <Lightbox/>
         </div>

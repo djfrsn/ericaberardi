@@ -13,15 +13,16 @@ export function clearToast() {
   };
 }
 
-// const loadPendingUpdates = dispatch => {
-//   // let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
-//   // pendingAdminChanges.on('value', snapshot => {
-//   //   dispatch({
-//   //     type: LOAD_PENDING_UPDATES,
-//   //     payload: snapshot.val()
-//   //   });
-//   // });
-// };
+const loadPendingUpdates = dispatch => {
+  // let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
+  // pendingAdminChanges.on('value', snapshot => {
+  //   dispatch({
+  //     type: LOAD_PENDING_UPDATES,
+  //     payload: snapshot.val()
+  //   });
+  // });
+  return dispatch;
+};
 
 export function initAdmin() {
   return (dispatch, getState) => {

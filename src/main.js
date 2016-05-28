@@ -11,7 +11,6 @@ import { galleryActions } from 'core/galleries';
 import { newsReportingActions } from 'core/newsReporting';
 import { ENV, FIREBASE_CONFIG } from './config';
 import configureStore from './store';
-import once from 'lodash.once';
 
 const store = configureStore({
   firebase: firebase.initializeApp(FIREBASE_CONFIG)
@@ -19,15 +18,10 @@ const store = configureStore({
 
 const history = syncHistoryWithStore(browserHistory, store);
 
-firebase.auth().onAuthStateChanged(once(user => { // run once on login
-  if (user) {
-    store.dispatch(authActions.initAuth());
-    store.dispatch(adminActions.initAdmin());
-  }
-}));
-
 firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes
   if (user) {
+    store.dispatch(authActions.initAuth());
+
     let pendingGalleries = firebase.database().ref(`${ENV}/pendingGalleries`);
 
     pendingGalleries.on('value', snapshot => {

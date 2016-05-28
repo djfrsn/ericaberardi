@@ -5,7 +5,6 @@ import {
 import {
   CLEAR_TOAST,
   INIT_ADMIN,
-  LOAD_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
   CLEAR_UPDATES_ERROR,
@@ -32,19 +31,6 @@ export function adminReducer(state = initialState, action) {
     case INIT_ADMIN:
       return {
         ...state
-      };
-
-    case LOAD_PENDING_UPDATES:
-      let pendingUpdates = [];
-      for (let name in action.payload) {
-        if (name) {
-          pendingUpdates.push({ name, data: action.payload[name]});
-        }
-      }
-      return {
-        ...state,
-        pendingUpdates: pendingUpdates,
-        pendingUpdatesRaw: action.payload || []
       };
 
     case PUBLISH_SUCCESS:

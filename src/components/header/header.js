@@ -63,7 +63,7 @@ export class Header extends Component {
               <li><Link to="/pricing" className="header__link" onClick={this.reRender} activeClassName="active">Pricing</Link></li>
               <li><Link to="/about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>
               <li><Link to="/contact" className="header__link" onClick={this.reRender} activeClassName="active">Contact</Link></li>
-              {auth.authenticated ? <li><Link to="dashboard" className="header__link" onClick={this.reRender} activeClassName="active">Dashboard</Link></li> : null}
+              {auth.authenticated ? <li><Link to="/dashboard" className="header__link" onClick={this.reRender} activeClassName="active">Dashboard</Link></li> : null}
               {auth.authenticated ? <li><Link to="/" className="header__link" onClick={this.props.signOut} >Sign out</Link></li> : null}
             </ul>
           </div>

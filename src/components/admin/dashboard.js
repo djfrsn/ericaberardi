@@ -32,7 +32,7 @@ export class DashBoard extends Component {
   }
   render() {
     const { auth, admin } = this.props;
-    let component = <p style={{textAlign: 'center'}}><a href="/admin">Login</a> to use the dashboard.</p>;
+    let component = <p style={{textAlign: 'center'}}><a href="/login">Login</a> to use the dashboard.</p>;
     if (auth.authenticated) {
       const pendingUpdatesCount = admin.pendingUpdates.length;
       const pendingUpdatesTitle = pendingUpdatesCount >= 1 ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;

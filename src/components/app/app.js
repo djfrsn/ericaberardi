@@ -15,7 +15,6 @@ export class App extends Component {
     auth: PropTypes.object.isRequired,
     children: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
-    loadPendingAdminUpdates: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired
   };
 
@@ -30,7 +29,6 @@ export class App extends Component {
 
     if (!auth.authenticated && nextProps.auth.authenticated) {
       // router.replace(POST_LOGIN_PATH);
-      // this.props.loadPendingAdminUpdates();
     }
   }
 

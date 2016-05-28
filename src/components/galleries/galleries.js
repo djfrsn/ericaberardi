@@ -29,8 +29,8 @@ export class Galleries extends Component {
     galleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
-    uploadGalleryImage: PropTypes.func.isRequired,
-    showLightbox: PropTypes.func.isRequired
+    showLightbox: PropTypes.func.isRequired,
+    uploadGalleryImage: PropTypes.func.isRequired
   }
   state = {
     gallery: [],

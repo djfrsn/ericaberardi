@@ -2,6 +2,7 @@ import {
   CREATE_PLACEHOLDER_IMAGES,
   CLEAR_TOAST,
   INIT_GALLERIES,
+  INIT_PENDING_GALLERIES,
   TOGGLE_GALLERY_EDIT,
   HIGHLIGHT_GALLERIES_LINK,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
@@ -35,6 +36,17 @@ export function initGalleries(data) {
   };
 }
 
+
+export function initPendingGalleries(data) {
+  return dispatch => {
+    // TODO: merge w/ galleries
+    dispatch({
+      type: INIT_PENDING_GALLERIES,
+      payload: data
+    });
+  };
+}
+
 export function toggleGalleryEdit(data) {
   return dispatch => {
     dispatch({
@@ -54,15 +66,8 @@ export function highlightGalleriesLink(toggle) {
 }
 
 export function pushImageData(dispatch, firebase, imageData) {
-    debugger
-    // dispatch({
-    //   type: UPLOAD_GALLERY_IMAGE_ERROR,
-    //   payload: error
-    // });
-    // dispatch({
-    //   type: UPLOAD_GALLERY_IMAGE_SUCCESS,
-    //   payload: { id: data.id, type: data.type }
-    // });
+  const database = firebase.database();
+  database.ref(`dev/pendingGalleries/${imageData.category}`).push(imageData);
 }
 
 export function uploadGalleryImage(data) {
@@ -90,9 +95,10 @@ export function uploadGalleryImage(data) {
         const id = utils.uuid();
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
+        const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
         // TODO: push imageData to pendingGalleryImages/category
         // set listener in main.js to call mergePendingImages galleries action
-        const imageData = { id, src, imageMeta, category, pending: true };
+        const imageData = { id, src, category, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 
         pushImageData(dispatch, firebase, imageData);
       });

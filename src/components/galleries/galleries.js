@@ -26,6 +26,7 @@ export class Galleries extends Component {
   };
 
   static propTypes = {
+    auth: PropTypes.object.isRequired,
     galleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
@@ -92,6 +93,11 @@ export class Galleries extends Component {
   render() {
     const { gallery, categories } = this.state;
     const galleryDropZoneClass = classNames({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
+      <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+        <div>Try dropping some files here, or click to select files to upload.</div>
+      </Dropzone>
+    </div>) : null;
     return (
       <div className="g-row gallery__container" ref={ref => { this.galleryContainer = ref; }}>
         <div className="g-col" >
@@ -100,11 +106,7 @@ export class Galleries extends Component {
               {galleryCategories( { categories, props: this.props, path: this.path })}
             </ul>
           </div>
-          <div className={galleryDropZoneClass}>
-            <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
-              <div>Try dropping some files here, or click to select files to upload.</div>
-            </Dropzone>
-          </div>
+          {galleryDropZone}
           <div className="gallery">
             <Masonry
               ref={ref => { this.masonry = ref; }}

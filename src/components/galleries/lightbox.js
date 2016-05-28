@@ -23,13 +23,17 @@ export default class Lightbox extends Component {
     const lbxclass = 'lbx-container';
     const lightboxClass = show ? `${lbxclass} show` : lbxclass;
     const gllryImages = slides.length > 0 ? slides.map((slide, key) => {
-      const cloud = gUtils.cloudinaryTransform({ type: 'gallery-expanded', src: slide.src }) || {};
+      let cloud;
+      if (slide.src.includes('cloudinary')) {
+        cloud = gUtils.cloudinaryTransform({ type: 'gallery-expanded', src: slide.src }) || {};
+      }
+      const src = cloud ? cloud.src : slide.src;
       const gllryImgClass = 'lbx-img';
       if (slide.active) activeSlideIndex = key + 1;
       const imgClass = slide.active ? gllryImgClass : `${gllryImgClass} hide`;
       return (
         <div key={slide.id} className={imgClass}>
-          <img src={cloud.src}/>
+          <img src={src}/>
         </div>
       );
     }) : null;

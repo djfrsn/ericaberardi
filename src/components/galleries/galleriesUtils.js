@@ -101,6 +101,35 @@ export function resizeGallery(scope) {
   }
 }
 // http://cloudinary.com/documentation/image_transformations#image_optimization
+export function getContainerWidth( opts ) {
+  let containerWidth = 100; // mobile defaults
+  const mqt = mq();
+
+  switch (opts.type) {
+    case 'gallery-preview':
+      if (mqt === 'mobile') {
+        containerWidth = 100;
+      }
+      else if (mqt === 'tablet') {
+        containerWidth = 50;
+      }
+      else if (mqt === 'laptop') {
+        containerWidth = 33.33333333;
+      }
+      else if (mqt === 'desktop') {
+        containerWidth = 25;
+      }
+      break;
+    default:
+  }
+  // return containerWidth as a percentage to control column count
+  // transform a given src to cloudinary format based on the window.width
+  return {
+    containerWidth: containerWidth
+  };
+}
+
+// http://cloudinary.com/documentation/image_transformations#image_optimization
 export function cloudinaryTransform( opts ) {
   let containerWidth = 100; // mobile defaults
   let srcWidth = 275;

@@ -39,7 +39,6 @@ export function initGalleries(data) {
 
 export function initPendingGalleries(data) {
   return dispatch => {
-    // TODO: merge w/ galleries
     dispatch({
       type: INIT_PENDING_GALLERIES,
       payload: data

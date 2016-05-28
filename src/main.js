@@ -29,16 +29,16 @@ firebase.auth().onAuthStateChanged(once(user => { // run once on login
 let galleries = firebase.database().ref('dev/galleries');
 // TODO do these refs cause all data to be piped on every change or is only what changed pass?
 // check the network panel to see data usage on upload for abnormal transfer amounts
-// let pendingGalleries = firebase.database().ref('dev/pendingGalleries');
+let pendingGalleries = firebase.database().ref('dev/pendingGalleries');
 let newsReporting = firebase.database().ref('dev/newsReporting');
 
 galleries.on('value', snapshot => {
   store.dispatch(galleryActions.initGalleries(snapshot.val()));
 });
 
-// pendingGalleries.on('value', snapshot => {
-//   store.dispatch(galleryActions.initPendingGalleries(snapshot.val()));
-// });
+pendingGalleries.on('value', snapshot => {
+  store.dispatch(galleryActions.initPendingGalleries(snapshot.val()));
+});
 
 newsReporting.on('value', snapshot => {
   store.dispatch(newsReportingActions.initNewsReporting(snapshot.val()));

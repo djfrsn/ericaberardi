@@ -53,6 +53,8 @@ export class Galleries extends Component {
     this.path = gUtils.parsePath(pathname).path;
   }
   componentWillReceiveProps(nextProps) {
+    const { pathname } = nextProps.location;
+    this.path = gUtils.parsePath(pathname).path;
     if (Object.keys(nextProps.galleries.galleries).length > 0) {
       this.setGallery(nextProps);
     }
@@ -102,10 +104,6 @@ export class Galleries extends Component {
             <Dropzone accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
               <div>Try dropping some files here, or click to select files to upload.</div>
             </Dropzone>
-            {this.state.files.length > 0 ? <div>
-              <h2>Uploading {this.state.files.length} files...</h2>
-              <div>{this.state.files.map((file) => <img src={file.preview} /> )}</div>
-            </div> : null}
           </div>
           <div className="gallery">
             <Masonry

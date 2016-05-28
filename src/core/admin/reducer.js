@@ -4,7 +4,7 @@ import {
 
 import {
   CLEAR_TOAST,
-  INIT_ADMIN,
+  SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
   CLEAR_UPDATES_ERROR,
@@ -14,8 +14,8 @@ import {
 
 
 export const initialState = {
-  pendingUpdates: [],
-  pendingUpdatesRaw: [],
+  pendingUpdates: {},
+  setPendingUpdatesDone: false,
   toast: {}
 };
 
@@ -28,9 +28,11 @@ export function adminReducer(state = initialState, action) {
         toast: {}
       };
 
-    case INIT_ADMIN:
+    case SET_PENDING_UPDATES:
       return {
-        ...state
+        ...state,
+        pendingUpdates: action.payload,
+        setPendingUpdatesDone: true
       };
 
     case PUBLISH_SUCCESS:

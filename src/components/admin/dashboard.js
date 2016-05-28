@@ -3,7 +3,9 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
+import { galleryActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
+import pendingUpdatesList from './pendingUpdatesList';
 
 export class DashBoard extends Component {
   static propTypes = {
@@ -12,7 +14,9 @@ export class DashBoard extends Component {
     clearPublishUpdates: PropTypes.func.isRequired,
     clearToast: PropTypes.func.isRequired,
     deletePublishUpdates: PropTypes.func.isRequired,
+    galleries: PropTypes.object.isRequired,
     publishUpdates: PropTypes.func.isRequired,
+    setPendingUpdates: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
@@ -22,6 +26,9 @@ export class DashBoard extends Component {
     if (nextProps.admin.toast.type) {
       this.props.clearToast();
       this.props.showToast(nextProps.admin.toast);
+    }
+    if (Object.keys(nextProps.galleries.mergedGalleries).length > 0 && !nextProps.admin.setPendingUpdatesDone) {
+      this.props.setPendingUpdates('galleries', nextProps);
     }
   }
   onPublish = () => {
@@ -34,19 +41,16 @@ export class DashBoard extends Component {
     const { auth, admin } = this.props;
     let component = <p style={{textAlign: 'center'}}><a href="/login">Login</a> to use the dashboard.</p>;
     if (auth.authenticated) {
-      const pendingUpdatesCount = admin.pendingUpdates.length;
+      const pendingUpdatesCount = Object.keys(admin.pendingUpdates).length;
       const pendingUpdatesTitle = pendingUpdatesCount >= 1 ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
-      const pendingUpdatesList = pendingUpdatesCount >= 1 ? admin.pendingUpdates.map((update, index) => {
-        return (<ul key={index} className="admin-pending_count"><li >{update.name} - {Object.keys(update.data).length}</li></ul>);
-      }) : null;
-      const publishButton = admin.pendingUpdates.length >= 1 ? (<button className="eb-button pending-changes__publish" onClick={this.onPublish}>Publish</button>) : null;
-      const clearEditsButton = admin.pendingUpdates.length >= 1 ? (<button className="eb-button pending-changes__clear" onClick={this.onClear}>Undo Edits</button>) : null;
+      const publishButton = pendingUpdatesCount >= 1 ? (<button className="eb-button pending-changes__publish" onClick={this.onPublish}>Publish</button>) : null;
+      const clearEditsButton = pendingUpdatesCount >= 1 ? (<button className="eb-button pending-changes__clear" onClick={this.onClear}>Undo Edits</button>) : null;
       component = (<div><h1 className="sign-in__heading">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
           <Link to="changepassword" className="change-password__link" >Change Password</Link>
           <div className="pending-changes__wrapper">
             {pendingUpdatesTitle}
-            {pendingUpdatesList}
+            {pendingUpdatesList({ pendingUpdates: admin.pendingUpdates, scope: this })}
             {clearEditsButton}
             {publishButton}
           </div>
@@ -63,7 +67,15 @@ export class DashBoard extends Component {
   }
 }
 
+// strategy
+// bring in galleries state
+// see if updates exist
+// if so show the affected galleries and list of images, size, & count for each category
+// also show the publish button
+// confirm with modal before allowing publish.....use animations.css or something similar for modal animation
+
 export default connect(state => ({
   auth: state.auth,
-  admin: state.admin
-}), Object.assign({}, authActions, adminActions, toastActions))(DashBoard);
+  admin: state.admin,
+  galleries: state.galleries
+}), Object.assign({}, authActions, adminActions, galleryActions, toastActions))(DashBoard);

@@ -1,9 +1,12 @@
 import {
   CLEAR_TOAST,
+  SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
   CLEAR_UPDATES_ERROR
 } from './action-types';
+import forIn from 'lodash.forin';
+import filter from 'lodash.filter';
 
 export function clearToast() {
   return dispatch => {
@@ -13,14 +16,37 @@ export function clearToast() {
   };
 }
 
-// export function initAdmin() {
-//   return (dispatch, getState) => {
-//     const { firebase } = getState();
-//     if (firebase.auth().currentUser) {
-//
-//     }
-//   };
-// }
+// Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
+// each key/value pair contains all pending updates for each route
+function dispatchPendingUpdates(dispatch, childUrl, props, pendingData) {
+  let pendingUpdates = { ...props.admin.pendingUpdates };
+
+  pendingUpdates[childUrl] = {}; // pending updates to be set here
+
+  forIn(pendingData, (prop, key) => {
+    var pendingProp = filter(prop, ['pending', true]);
+    if (pendingProp.length > 0) {
+      pendingUpdates[childUrl][key] = pendingProp; // update new pendingProp
+    }
+  });
+
+  dispatch({
+    type: SET_PENDING_UPDATES,
+    payload: pendingUpdates
+  });
+}
+
+export function setPendingUpdates(childUrl, props) {
+  return dispatch => {
+    switch (childUrl) {
+      case 'galleries':
+        dispatchPendingUpdates(dispatch, childUrl, props, props.galleries.mergedGalleries);
+        break;
+
+      default:
+    }
+  };
+}
 
 const childUrl = (update, updateComputed) => { return update.name === 'homeGalleryOne' || update.name === 'homeGalleryTwo' ? update.name : `${update.name}/${updateComputed.id}`; };
 

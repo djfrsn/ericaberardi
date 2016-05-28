@@ -1,3 +1,5 @@
+export const ENV = 'qa';
+
 export const FIREBASE_URL = 'https://ericaberardi.firebaseio.com/dev';
 
 export const FIREBASE_CONFIG = {

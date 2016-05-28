@@ -8,6 +8,7 @@ import {
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR
 } from './action-types';
+import { ENV } from 'config';
 import utils from 'utils';
 
 export function clearToast() {
@@ -66,7 +67,7 @@ export function highlightGalleriesLink(toggle) {
 
 export function pushImageData(dispatch, firebase, imageData) {
   const database = firebase.database();
-  database.ref(`dev/pendingGalleries/${imageData.category}`).push(imageData);
+  database.ref(`${ENV}/pendingGalleries/${imageData.category}`).push(imageData);
 }
 
 export function uploadGalleryImage(data) {

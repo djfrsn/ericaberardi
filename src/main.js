@@ -9,7 +9,7 @@ import { authActions /* , authRouteResolver */ } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleryActions } from 'core/galleries';
 import { newsReportingActions } from 'core/newsReporting';
-import { FIREBASE_CONFIG } from './config';
+import { ENV, FIREBASE_CONFIG } from './config';
 import configureStore from './store';
 import once from 'lodash.once';
 
@@ -26,11 +26,9 @@ firebase.auth().onAuthStateChanged(once(user => { // run once on login
   }
 }));
 
-let galleries = firebase.database().ref('dev/galleries');
-// TODO do these refs cause all data to be piped on every change or is only what changed pass?
-// check the network panel to see data usage on upload for abnormal transfer amounts
-let pendingGalleries = firebase.database().ref('dev/pendingGalleries');
-let newsReporting = firebase.database().ref('dev/newsReporting');
+let galleries = firebase.database().ref(`${ENV}/galleries`);
+let pendingGalleries = firebase.database().ref(`${ENV}/pendingGalleries`);
+let newsReporting = firebase.database().ref(`${ENV}/newsReporting`);
 
 galleries.on('value', snapshot => {
   store.dispatch(galleryActions.initGalleries(snapshot.val()));

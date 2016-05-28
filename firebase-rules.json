@@ -4,13 +4,31 @@
         ".read": true,
         ".write":"auth !== null"
     },
-    "pendingAdminChanges": {
+    "pendingGalleries": {
         ".read": "auth !== null",
         ".write": "auth !== null"
     },
+    "qa": {
+        ".write":"auth !== null",
+        "galleries": {
+            ".read": true,
+            ".write":"auth !== null"
+        },
+        "pendingGalleries": {
+            ".read": "auth !== null",
+            ".write": "auth !== null"
+        }
+    },
     "dev": {
-        ".read": true,
-        ".write":"auth !== null"
+        ".write":"auth !== null",
+        "galleries": {
+            ".read": true,
+            ".write":"auth !== null"
+        },
+        "pendingGalleries": {
+            ".read": "auth !== null",
+            ".write": "auth !== null"
+        }
     }
   }
 }

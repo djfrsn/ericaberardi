@@ -1,12 +1,9 @@
 import {
   CLEAR_TOAST,
-  LOAD_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
   CLEAR_UPDATES_ERROR
 } from './action-types';
-import Firebase from 'firebase';
-import { FIREBASE_URL } from '../../config';
 
 export function clearToast() {
   return dispatch => {
@@ -16,15 +13,15 @@ export function clearToast() {
   };
 }
 
-const loadPendingUpdates = dispatch => {
-  // let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
-  // pendingAdminChanges.on('value', snapshot => {
-  //   dispatch({
-  //     type: LOAD_PENDING_UPDATES,
-  //     payload: snapshot.val()
-  //   });
-  // });
-};
+// const loadPendingUpdates = dispatch => {
+//   // let pendingAdminChanges = new Firebase(`${FIREBASE_URL}/pendingAdminChanges`);
+//   // pendingAdminChanges.on('value', snapshot => {
+//   //   dispatch({
+//   //     type: LOAD_PENDING_UPDATES,
+//   //     payload: snapshot.val()
+//   //   });
+//   // });
+// };
 
 export function initAdmin() {
   return (dispatch, getState) => {

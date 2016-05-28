@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import Header from '../header/header';
 import { connect } from 'react-redux';
-import { POST_LOGIN_PATH } from 'config';
+// import { POST_LOGIN_PATH } from 'config';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
 
@@ -25,7 +25,7 @@ export class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { router } = this.context;
+    // const { router } = this.context;
     const { auth } = this.props;
 
     if (!auth.authenticated && nextProps.auth.authenticated) {

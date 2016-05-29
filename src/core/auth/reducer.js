@@ -1,5 +1,5 @@
 import {
-  INIT_AUTH,
+  HYDRATE_AUTH,
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
   SIGN_OUT_SUCCESS,
@@ -20,7 +20,7 @@ export function authReducer(state = initialState, action) {
   let authenticated = payload !== null;
 
   switch (action.type) {
-    case INIT_AUTH:
+    case HYDRATE_AUTH:
       return {
         authenticated,
         userEmail: authenticated ? payload.email : null,

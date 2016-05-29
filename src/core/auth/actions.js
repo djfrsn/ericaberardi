@@ -1,5 +1,5 @@
 import {
-  INIT_AUTH,
+  HYDRATE_AUTH,
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
   SIGN_OUT_SUCCESS,
@@ -8,6 +8,18 @@ import {
   RESET_AUTH_MESSAGES
 } from './action-types';
 
+export function hydrateAuth() {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    dispatch({
+      type: HYDRATE_AUTH,
+      payload: firebase.auth().currentUser,
+      meta: {
+        timestamp: Date.now()
+      }
+    });
+  };
+}
 
 export function resetAuthMessages(timeout = 3250) {
   return dispatch => {
@@ -88,20 +100,6 @@ export function changePassword(newPassword) {
     });
   };
 }
-
-export function initAuth() {
-  return (dispatch, getState) => {
-    const { firebase } = getState();
-    dispatch({
-      type: INIT_AUTH,
-      payload: firebase.auth().currentUser,
-      meta: {
-        timestamp: Date.now()
-      }
-    });
-  };
-}
-
 
 export function signInWithGithub() {
   return authenticate('github');

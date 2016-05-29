@@ -2,7 +2,7 @@
 // import moment from 'moment';
 
 // import {
-  // INIT_AUTH,
+  // HYDRATE_AUTH,
 //   SIGN_IN_SUCCESS,
 //   SIGN_OUT_SUCCESS
 // } from './action-types';
@@ -32,10 +32,10 @@
   // });
 
 
-  // describe('INIT_AUTH', () => {
+  // describe('HYDRATE_AUTH', () => {
   //   it('should return state as `authenticated` if token has NOT expired', () => {
   //     let state = authReducer(initialState, {
-  //       type: INIT_AUTH,
+  //       type: HYDRATE_AUTH,
   //       payload: {expires: future(), uid: '123'},
   //       meta: {timestamp: present()}
   //     });
@@ -48,7 +48,7 @@
 
   //   it('should return state as `unauthenticated` if token has expired', () => {
   //     let state = authReducer(initialState, {
-  //       type: INIT_AUTH,
+  //       type: HYDRATE_AUTH,
   //       payload: {expires: past(), uid: '123'},
   //       meta: {timestamp: present()}
   //     });
@@ -58,7 +58,7 @@
 
   //   it('should return state as `unauthenticated` when `authData` is `null`', () => {
   //     let state = authReducer(initialState, {
-  //       type: INIT_AUTH,
+  //       type: HYDRATE_AUTH,
   //       payload: null,
   //       meta: {timestamp: present()}
   //     });

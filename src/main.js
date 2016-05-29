@@ -18,9 +18,9 @@ const store = configureStore({
 
 const history = syncHistoryWithStore(browserHistory, store);
 
-firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes
+firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes to update protected data
   if (user) {
-    store.dispatch(authActions.initAuth());
+    store.dispatch(authActions.hydrateAuth());
 
     let pendingGalleries = firebase.database().ref(`${ENV}/pendingUpdates/galleries`);
 

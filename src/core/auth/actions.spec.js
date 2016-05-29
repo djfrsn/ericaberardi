@@ -6,13 +6,13 @@ import {
 } from 'test/utils';
 
 import {
-  INIT_AUTH,
+  HYDRATE_AUTH,
   SIGN_IN_SUCCESS,
   SIGN_OUT_SUCCESS
 } from './action-types';
 
 import {
-  initAuth,
+  hydrateAuth,
   signInWithGithub,
   signInWithGoogle,
   signInWithTwitter,
@@ -21,13 +21,13 @@ import {
 
 
 describe('Auth actions', () => {
-  describe('initAuth', () => {
-    it('should create INIT_AUTH when authenticated', done => {
+  describe('hydrateAuth', () => {
+    it('should create HYDRATE_AUTH when authenticated', done => {
       const authData = {uid: '123'};
       const firebase = new MockFirebase();
 
       const expectedActions = [action => {
-        return action.type === INIT_AUTH &&
+        return action.type === HYDRATE_AUTH &&
           action.payload === authData &&
           typeof action.meta.timestamp === 'number';
       }];
@@ -38,21 +38,21 @@ describe('Auth actions', () => {
       firebase.changeAuthState(authData);
       firebase.flush();
 
-      store.dispatch(initAuth());
+      store.dispatch(hydrateAuth());
     });
 
-    it('should create INIT_AUTH when not authenticted', done => {
+    it('should create HYDRATE_AUTH when not authenticted', done => {
       const firebase = new MockFirebase();
 
       const expectedActions = [action => {
-        return action.type === INIT_AUTH &&
+        return action.type === HYDRATE_AUTH &&
           action.payload === null &&
           typeof action.meta.timestamp === 'number';
       }];
 
       const store = createMockStore({firebase}, expectedActions, [thunk], done);
 
-      store.dispatch(initAuth());
+      store.dispatch(hydrateAuth());
     });
   });
 

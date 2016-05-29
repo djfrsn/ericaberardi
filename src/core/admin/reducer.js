@@ -4,6 +4,7 @@ import {
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
+  CLEAR_UPDATES_SUCCESS,
   CLEAR_UPDATES_ERROR
 } from './action-types';
 
@@ -39,7 +40,6 @@ export function adminReducer(state = initialState, action) {
     case PUBLISH_SUCCESS:
       return {
         ...state,
-        publishSuccess: true,
         pendingUpdates: {},
         pendingUpdatesCount: 0,
         toast: {
@@ -59,6 +59,19 @@ export function adminReducer(state = initialState, action) {
           type: 'error'
         }
       };
+
+    case CLEAR_UPDATES_SUCCESS:
+      return {
+        ...state,
+        pendingUpdates: {},
+        pendingUpdatesCount: 0,
+        toast: {
+          firstLine: 'Success!',
+          secondLine: 'Pending updates have been cleared!',
+          type: 'success'
+        }
+      };
+
     case CLEAR_UPDATES_ERROR:
       return {
         ...state,

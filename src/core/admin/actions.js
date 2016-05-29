@@ -2,7 +2,9 @@ import {
   CLEAR_ADMIN_TOAST,
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
-  PUBLISH_ERROR
+  PUBLISH_ERROR,
+  CLEAR_UPDATES_SUCCESS,
+  CLEAR_UPDATES_ERROR
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
@@ -145,7 +147,16 @@ export function undoPendingUpdates() {
     const { firebase, admin } = getState();
     if (Object.keys(admin.pendingUpdates).length >= 1) {
       const database = firebase.database();
-      database.ref(`${ENV}/pendingUpdates`).remove();
+      database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
+        dispatch({
+          type: CLEAR_UPDATES_SUCCESS
+        });
+      }).catch(error => {
+        dispatch({
+          type: CLEAR_UPDATES_ERROR,
+          payload: error
+        });
+      });
     }
   };
 }

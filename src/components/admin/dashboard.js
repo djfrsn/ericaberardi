@@ -23,12 +23,6 @@ export class DashBoard extends Component {
       this.props.showToast(nextProps.admin.toast);
     }
   }
-  publishPendingUpdates = () => {
-    this.props.publishPendingUpdates();
-  }
-  onUndoUpdates = () => {
-    this.props.undoPendingUpdates();
-  }
   render() {
     const { auth, admin } = this.props;
     let component = <p style={{textAlign: 'center'}}><a href="/login">Login</a> to use the dashboard.</p>;
@@ -36,8 +30,8 @@ export class DashBoard extends Component {
       const pendingUpdatesCount = Object.keys(admin.pendingUpdates).length;
       const hasPendingUpdates = pendingUpdatesCount >= 1;
       const pendingUpdatesTitle = hasPendingUpdates ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
-      const publishButton = hasPendingUpdates ? (<button className="eb-button pending-changes__publish" onClick={this.publishPendingUpdates}>Publish</button>) : null;
-      const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.undoPendingUpdates}>Undo Edits</button>) : null;
+      const publishButton = hasPendingUpdates ? (<button className="eb-button pending-changes__publish" onClick={this.props.publishPendingUpdates}>Publish</button>) : null;
+      const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.props.undoPendingUpdates}>Undo Edits</button>) : null;
       component = (<div><h1 className="sign-in__heading">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
           <Link to="changepassword" className="change-password__link" >Change Password</Link>

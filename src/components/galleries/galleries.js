@@ -27,10 +27,12 @@ export class Galleries extends Component {
 
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    clearGalleriesToast: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     showLightbox: PropTypes.func.isRequired,
+    showToast: PropTypes.func.isRequired,
     uploadGalleryImage: PropTypes.func.isRequired
   }
   state = {
@@ -58,6 +60,10 @@ export class Galleries extends Component {
     this.path = gUtils.parsePath(pathname).path;
     if (Object.keys(nextProps.galleries.galleries).length > 0) {
       this.setGallery(nextProps);
+    }
+    if (nextProps.galleries.toast.type) {
+      this.props.clearGalleriesToast();
+      this.props.showToast(nextProps.galleries.toast);
     }
   }
   componentDidUpdate() {

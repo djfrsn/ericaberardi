@@ -1,1 +1,0 @@
-export const INIT_PHOTOSWIPE = 'INIT_PHOTOSWIPE';

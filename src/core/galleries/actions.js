@@ -5,6 +5,7 @@ import {
   HYDRATE_PENDING_GALLERIES,
   TOGGLE_GALLERY_EDIT,
   HIGHLIGHT_GALLERIES_LINK,
+  UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR
 } from './action-types';
 import { ENV } from 'config';
@@ -77,7 +78,9 @@ export function uploadGalleryImage(data) {
     const storage = firebase.storage();
     const storageRef = storage.ref().child(category);
 
-    data.files.forEach(file => {
+    const filesLength = data.files.length - 1;
+
+    data.files.forEach((file, key) => {
 
       const imageRef = storageRef.child(file.name);
       const uploadImage = imageRef.put(file);
@@ -98,6 +101,12 @@ export function uploadGalleryImage(data) {
         // TODO: push imageData to pendingGalleryImages/category
         // set listener in main.js to call mergePendingImages galleries action
         const imageData = { id, src, category, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
+
+        if (filesLength === key) { // dispatch success message after last image is successfully uploaded
+          dispatch({
+            type: UPLOAD_GALLERY_IMAGE_SUCCESS
+          });
+        }
 
         pushImageData(dispatch, firebase, imageData);
       });

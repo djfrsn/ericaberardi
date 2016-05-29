@@ -4,7 +4,7 @@ import {
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
-  SUBMIT_GALLERY_IMAGE_ERROR,
+  UPLOAD_GALLERY_IMAGE_ERROR,
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
@@ -60,7 +60,7 @@ export function galleriesReducer(state = initialState, action) {
         toast: successToast
       };
 
-    case SUBMIT_GALLERY_IMAGE_ERROR:
+    case UPLOAD_GALLERY_IMAGE_ERROR:
       return {
         ...state,
         toast: errorToast

@@ -34,9 +34,15 @@
   color: red;
 }
 
+.sign-in, .change-password {
+  max-width: 300px;
+}
+.dashboard {
+  max-width: 60%;
+}
+
 .sign-in, .change-password, .dashboard {
   margin-top: 90px;
-  max-width: 60%;
   input {
     color: #999;
     border: none;

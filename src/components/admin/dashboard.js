@@ -5,6 +5,7 @@ import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleryActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
+import deepEqual from 'deep-equal';
 import pendingUpdatesList from './pendingUpdatesList';
 
 export class DashBoard extends Component {
@@ -27,7 +28,7 @@ export class DashBoard extends Component {
       this.props.clearToast();
       this.props.showToast(nextProps.admin.toast);
     }
-    if (Object.keys(nextProps.galleries.mergedGalleries).length > 0 && !nextProps.admin.setPendingUpdatesDone) {
+    if (Object.keys(nextProps.galleries.mergedGalleries).length > 0 && deepEqual(nextProps.admin.pendingUpdates, this.props.admin.pendingUpdates)) {
       this.props.setPendingUpdates('galleries', nextProps);
     }
   }

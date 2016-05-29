@@ -4,6 +4,7 @@ import {
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
+  PUBLISH_INAVLID,
   CLEAR_UPDATES_SUCCESS,
   CLEAR_UPDATES_ERROR
 } from './action-types';
@@ -56,6 +57,16 @@ export function adminReducer(state = initialState, action) {
         toast: {
           firstLine: 'Error!',
           secondLine: 'Publish failed! Please try again.',
+          type: 'error'
+        }
+      };
+
+    case PUBLISH_INAVLID:
+      return {
+        ...state,
+        toast: {
+          firstLine: 'Invalid content Updates!',
+          secondLine: 'Try adding more content before publishing.',
           type: 'error'
         }
       };

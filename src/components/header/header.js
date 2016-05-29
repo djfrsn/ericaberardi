@@ -49,8 +49,8 @@ export class Header extends Component {
     if (nextProps.toast.toastType && !nextProps.toast.toastComplete) {
       this.props.clearToast();
       this.toastContainer[nextProps.toast.toastType](
-        nextProps.toast.firstLine,
-        nextProps.toast.secondLine, {
+        nextProps.toast.secondLine,
+        nextProps.toast.firstLine, {
           timeOut: 7000,
           extendedTimeOut: 12000
         }

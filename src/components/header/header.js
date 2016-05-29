@@ -1,8 +1,10 @@
 import React, { Component, PropTypes } from 'react';
 import ReactDOM from 'react-dom';
+import classNames from 'classnames';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
+import { adminActions } from 'core/admin';
 import { galleryActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 const toastr = require('react-toastr-redux/lib');
@@ -15,6 +17,7 @@ export class Header extends Component {
     history: React.PropTypes.object.isRequired
   };
   static propTypes = {
+    admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     galleries: PropTypes.object.isRequired,
     signOut: PropTypes.func.isRequired,
@@ -48,7 +51,9 @@ export class Header extends Component {
     this.forceUpdate(); // ugly hack since activeClassName works interminttenly
   }
   render() {
-    const { auth } = this.props;
+    const { auth, admin } = this.props;
+    const pendingUpdatesCount = admin.pendingUpdatesCount;
+    const dashboardLinkClass = classNames({ ['header__link']: true, ['hasPendingUpdates']: pendingUpdatesCount > 0 });
     return (
       <header className="header">
         <div className="g-row">
@@ -63,7 +68,7 @@ export class Header extends Component {
               <li><Link to="/pricing" className="header__link" onClick={this.reRender} activeClassName="active">Pricing</Link></li>
               <li><Link to="/about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>
               <li><Link to="/contact" className="header__link" onClick={this.reRender} activeClassName="active">Contact</Link></li>
-              {auth.authenticated ? <li><Link to="/dashboard" className="header__link" onClick={this.reRender} activeClassName="active">Dashboard</Link></li> : null}
+              {auth.authenticated ? <li><Link to="/dashboard" className={dashboardLinkClass} onClick={this.reRender} activeClassName="active" data-pendingupdatescount={pendingUpdatesCount}>Dashboard</Link></li> : null}
               {auth.authenticated ? <li><Link to="/" className="header__link" onClick={this.props.signOut} >Sign out</Link></li> : null}
             </ul>
           </div>
@@ -76,6 +81,7 @@ export class Header extends Component {
 
 export default connect(state => ({
   auth: state.auth,
+  admin: state.admin,
   galleries: state.galleries,
   toast: state.toast
-}), Object.assign({}, authActions, galleryActions, toastActions))(Header);
+}), Object.assign({}, authActions, adminActions, galleryActions, toastActions))(Header);

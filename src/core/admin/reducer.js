@@ -15,6 +15,7 @@ import {
 
 export const initialState = {
   pendingUpdates: {},
+  pendingUpdatesCount: 0,
   setPendingUpdatesDone: false,
   toast: {}
 };
@@ -31,7 +32,8 @@ export function adminReducer(state = initialState, action) {
     case SET_PENDING_UPDATES:
       return {
         ...state,
-        pendingUpdates: action.payload,
+        pendingUpdates: action.payload.pendingUpdates,
+        pendingUpdatesCount: action.payload.pendingUpdatesCount,
         setPendingUpdatesDone: true
       };
 

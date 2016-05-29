@@ -16,6 +16,18 @@ export function clearToast() {
   };
 }
 
+function getPendingUpdatesCount(pendingUpdates) {
+  let pendingUpdatesCount = 0;
+
+  forIn(pendingUpdates, updates => {
+    forIn(updates, update => {
+      pendingUpdatesCount += update.length;
+    });
+  });
+  console.log('pendingUpdateCount', pendingUpdatesCount);
+  return pendingUpdatesCount;
+}
+
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
 // each key/value pair contains all pending updates for each route
 function dispatchPendingUpdates(dispatch, childUrl, props, pendingData) {
@@ -30,9 +42,11 @@ function dispatchPendingUpdates(dispatch, childUrl, props, pendingData) {
     }
   });
 
+  const pendingUpdatesCount = getPendingUpdatesCount(pendingUpdates);
+
   dispatch({
     type: SET_PENDING_UPDATES,
-    payload: pendingUpdates
+    payload: { pendingUpdates, pendingUpdatesCount }
   });
 }
 
@@ -53,6 +67,7 @@ const childUrl = (update, updateComputed) => { return update.name === 'homeGalle
 export function publishUpdates() {
   return (dispatch, getState) => {
     const { firebase, admin, galleries } = getState();
+    debugger
     admin.pendingUpdates.forEach(update => {
       const updateComputed = update.data[Object.keys(update.data)[0]];
       let data = galleries[update.name].map(gal => {

@@ -84,33 +84,44 @@ function setPendingStatus(status, pendingState) {
   return newPendingState;
 }
 
+function getPendingChangeMinimums(category) {
+  let minCategoryCount = 1;
+  let minChildCount = 1;
+
+  switch (category) {
+    case 'galleries':
+      minCategoryCount = 5;
+      minChildCount = 8;
+      break;
+
+    default:
+  }
+
+  return { minCategoryCount, minChildCount };
+}
+
 // Return true if pendingUpdate children meet minimum content count i.e there should always be atleast 5 gallery categories w/ atleast 8 photos each
 // This will prevent a user from deleting all of the content from the site :)
 function validatePendingChanges(category, pendingState) {
+  const { minCategoryCount, minChildCount } = getPendingChangeMinimums(category);
   let validChanges = false;
-  let minCategoryCount = 1;
-  let minSubCategoryCount = 1;
-
-  // set switch here to set minContentCount per category
-
-  // below forIn should check subCategories & children to ensure min counts are met
   // works work object arrays
   const categoryCount = Object.keys(pendingState).length;
   if (categoryCount >= minCategoryCount) {
     let pendingStateValid = true;
-    // works for objects with children that are objectArrays o nly
-    forIn(pendingState, subCategories => {
-      if (subCategories.length < minSubCategoryCount) {
+
+    forIn(pendingState, child => {
+      if (child.length < minChildCount) {
         pendingStateValid = false;
       }
     });
     validChanges = pendingStateValid;
   }
-  console.log(validChanges);
-  return false;
+
+  return validChanges;
 }
 
-// This method should work for any cateory
+// This method should work for any category
 function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
   const { firebase } = getState();
   const changesValidated = validatePendingChanges(category, pendingState);

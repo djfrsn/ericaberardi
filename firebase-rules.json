@@ -1,12 +1,19 @@
 {
   "rules": {
-    "galleries": {
-        ".read": true,
-        ".write":"auth !== null"
-    },
-    "pendingUpdates": {
-        ".read": "auth !== null",
-        ".write": "auth !== null"
+    "prod": {
+        ".write":"auth !== null",
+        "galleries": {
+            ".read": true,
+            ".write":"auth !== null"
+        },
+        "pendingUpdates": {
+            ".read": "auth !== null",
+            ".write": "auth !== null"
+        },
+        "newsReporting": {
+            ".read": true,
+            ".write": "auth !== null"
+        }
     },
     "qa": {
         ".write":"auth !== null",
@@ -16,6 +23,10 @@
         },
         "pendingUpdates": {
             ".read": "auth !== null",
+            ".write": "auth !== null"
+        },
+        "newsReporting": {
+            ".read": true,
             ".write": "auth !== null"
         }
     },
@@ -27,6 +38,10 @@
         },
         "pendingUpdates": {
             ".read": "auth !== null",
+            ".write": "auth !== null"
+        },
+        "newsReporting": {
+            ".read": true,
             ".write": "auth !== null"
         }
     }

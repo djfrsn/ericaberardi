@@ -52,8 +52,10 @@ export class DashBoard extends Component {
           <div className="pending-changes__wrapper">
             {pendingUpdatesTitle}
             {pendingUpdatesList({ pendingUpdates: admin.pendingUpdates, scope: this })}
-            {clearEditsButton}
-            {publishButton}
+            <div className="eb-button__container">
+              {clearEditsButton}
+              {publishButton}
+            </div>
           </div>
         </div>
       </div>);

@@ -36,7 +36,7 @@
 
 .sign-in, .change-password, .dashboard {
   margin-top: 90px;
-  max-width: 300px;
+  max-width: 60%;
   input {
     color: #999;
     border: none;
@@ -58,6 +58,11 @@
   text-align: center;
 }
 
+.eb-button__container {
+  width: 30%;
+  margin: 0 auto;
+}
+
 .eb-button {
   @include button-base;
   margin-bottom: 10px;
@@ -71,6 +76,10 @@
   line-height: 48px;
   color: #999;
   background: transparent;
+
+  &:first-of-type {
+    margin-right: 20px;
+  }
 
   &:hover {
     border: 2px solid #aaa;
@@ -89,7 +98,7 @@
 .pending-changes__publish, .pending-changes__clear {
   margin-top: 1em;
   color: black;
-  width: 50%;
+  width: 45%;
 }
 
 .login__error-msg {

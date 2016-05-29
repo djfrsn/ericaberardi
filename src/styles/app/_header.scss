@@ -77,8 +77,29 @@
       padding-left: 6px;
     }
   }
-}
 
+  &.doubledigits {
+    &:after {
+      top: -17px;
+      right: -17px;
+      width: 20px;
+      height: 20px;
+      padding-left: 4px;
+      font-size: 0.8em;
+    }
+  }
+  // style for when pendingUpdatesCount is more than a single digit
+  &.tripledigits {
+    &:after {
+      top: -17px;
+      right: -17px;
+      width: 20px;
+      height: 20px;
+      padding-left: 4px;
+      font-size: 0.6em;
+    }
+  }
+}
 
 .header__link--github {
   @include fa-icon(github);

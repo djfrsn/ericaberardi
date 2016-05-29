@@ -12,6 +12,19 @@ const toastr = require('react-toastr-redux/lib');
 const {ToastContainer} = toastr;
 const ToastMessageFactory = React.createFactory(toastr.ToastMessage.animation);
 
+function getDigits(digits) {
+  let digitsType = 'singledigits';
+
+  if (digits > 9) {
+    digitsType = 'doubledigits';
+  }
+  else if (digits > 99) {
+    digitsType = 'tripledigits';
+  }
+
+  return digitsType;
+}
+
 export class Header extends Component {
   static contextTypes = {
     history: React.PropTypes.object.isRequired
@@ -55,7 +68,8 @@ export class Header extends Component {
   render() {
     const { auth, admin } = this.props;
     const pendingUpdatesCount = admin.pendingUpdatesCount;
-    const dashboardLinkClass = classNames({ ['header__link']: true, ['hasPendingUpdates']: pendingUpdatesCount > 0 });
+    const digits = getDigits(pendingUpdatesCount);
+    const dashboardLinkClass = classNames({ ['header__link']: true, ['hasPendingUpdates']: pendingUpdatesCount > 0, [digits]: digits === 'singledigits' ? false : true });
     return (
       <header className="header">
         <div className="g-row">

@@ -84,29 +84,38 @@ function setPendingStatus(status, pendingState) {
   return newPendingState;
 }
 
-// Return true if we pendingUpdate children exist with 'pending: true'
-function hasPendingChanges(pendingState) {
-  let pendingChanges = false;
+// Return true if pendingUpdate children meet minimum content count i.e there should always be atleast 5 gallery categories w/ atleast 8 photos each
+// This will prevent a user from deleting all of the content from the site :)
+function validatePendingChanges(category, pendingState) {
+  let validChanges = false;
+  let minCategoryCount = 1;
+  let minSubCategoryCount = 1;
 
-  // works for objects with children that are objectArrays only
-  forIn(pendingState, subCategories => {
-    if (!pendingChanges) { // perf check to avoid executing after a single pending change is found
-      const pendingCategory = filter(subCategories, ['pending', true]);
-      if (pendingCategory.length > 0) {
-        pendingChanges = true;
+  // set switch here to set minContentCount per category
+
+  // below forIn should check subCategories & children to ensure min counts are met
+  // works work object arrays
+  const categoryCount = Object.keys(pendingState).length;
+  if (categoryCount >= minCategoryCount) {
+    let pendingStateValid = true;
+    // works for objects with children that are objectArrays o nly
+    forIn(pendingState, subCategories => {
+      if (subCategories.length < minSubCategoryCount) {
+        pendingStateValid = false;
       }
-    }
-  });
-
-  return pendingChanges;
+    });
+    validChanges = pendingStateValid;
+  }
+  console.log(validChanges);
+  return false;
 }
 
 // This method should work for any cateory
 function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
   const { firebase } = getState();
-  const changesPending = hasPendingChanges(pendingState);
+  const changesValidated = validatePendingChanges(category, pendingState);
 
-  if (changesPending) {
+  if (changesValidated) {
     const newState = setPendingStatus(false, pendingState); // set pending status of all children to false
     const database = firebase.database();
     database.ref(`${ENV}/${category}`).set(newState).then(() => {

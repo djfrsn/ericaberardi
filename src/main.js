@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { browserHistory } from 'react-router';
 import { syncHistoryWithStore } from 'react-router-redux';
-
+import * as firebase from 'firebase';
 import 'styles/styles.scss';
 import { Root } from 'components/root';
 import { authActions /* , authRouteResolver */ } from 'core/auth';

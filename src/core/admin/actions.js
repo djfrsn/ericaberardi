@@ -24,7 +24,7 @@ function getPendingUpdatesCount(pendingUpdates) {
       pendingUpdatesCount += update.length;
     });
   });
-  console.log('pendingUpdatesCount', pendingUpdatesCount);
+  // console.log('pendingUpdatesCount', pendingUpdatesCount);
   return pendingUpdatesCount;
 }
 
@@ -50,15 +50,17 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
   });
 }
 
-export function setPendingUpdates(category, pendingGalleries) {
+export function setPendingUpdates(category, snapshot) {
   return (dispatch, getState) => {
     const { admin } = getState();
-    switch (category) {
-      case 'galleries':
-        dispatchPendingUpdates(dispatch, category, admin, pendingGalleries);
-        break;
+    if (snapshot) {
+      switch (category) {
+        case 'galleries':
+          dispatchPendingUpdates(dispatch, category, admin, snapshot);
+          break;
 
-      default:
+        default:
+      }
     }
   };
 }

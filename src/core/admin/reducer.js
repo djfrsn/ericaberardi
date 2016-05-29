@@ -1,5 +1,6 @@
 import {
   CLEAR_ADMIN_TOAST,
+  CLEAR_ADMIN_SWAL,
   SET_PENDING_UPDATES_COUNT,
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
@@ -23,6 +24,11 @@ export function adminReducer(state = initialState, action) {
       return {
         ...state,
         toast: {}
+      };
+
+    case CLEAR_ADMIN_SWAL:
+      return {
+        ...state
       };
 
     case SET_PENDING_UPDATES_COUNT:

@@ -10,7 +10,6 @@ import {
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
 import filter from 'lodash.filter';
-import swal from 'sweetalert';
 
 export function clearAdminToast() {
   return dispatch => {
@@ -129,7 +128,6 @@ function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
   const changesValidated = validatePendingChanges(category, pendingState);
 
   if (changesValidated) {
-    // TODO: show confirmation dialog
     const newState = setPendingStatus(false, pendingState); // set pending status of all children to false
     const database = firebase.database();
     database.ref(`${ENV}/${category}`).set(newState).then(() => {

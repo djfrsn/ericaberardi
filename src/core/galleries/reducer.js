@@ -11,7 +11,7 @@ import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
 
 export const initialState = {
   galleries: {},
-  pendingGalleries: {},
+  ['pending-galleries']: {},
   toast: {},
   highlightGalleriesLink: false
 };
@@ -51,7 +51,7 @@ export function galleriesReducer(state = initialState, action) {
     case HYDRATE_PENDING_GALLERIES:
       return {
         ...state,
-        pendingGalleries: action.payload ? mergeGalleries(state, action) : {}
+        ['pending-galleries']: action.payload ? mergeGalleries(state, action) : {}
       };
 
     case UPLOAD_GALLERY_IMAGE_SUCCESS:

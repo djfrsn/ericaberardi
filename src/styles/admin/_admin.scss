@@ -94,14 +94,14 @@
   }
 }
 
-.pending-changes__clear {
+.pending-changes__undo {
   background: lighten(red, 20%);
 }
 .pending-changes__publish {
   background: #62F462;
 }
 
-.pending-changes__publish, .pending-changes__clear {
+.pending-changes__publish, .pending-changes__undo {
   margin-top: 1em;
   color: black;
   width: 45%;

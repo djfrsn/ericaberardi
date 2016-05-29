@@ -1,10 +1,8 @@
 import {
   CLEAR_TOAST,
-  SET_PENDING_UPDATES_COUNT,
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
-  PUBLISH_ERROR,
-  CLEAR_UPDATES_ERROR
+  PUBLISH_ERROR
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
@@ -26,21 +24,21 @@ function getPendingUpdatesCount(pendingUpdates) {
       pendingUpdatesCount += update.length;
     });
   });
-
+  console.log('pendingUpdatesCount', pendingUpdatesCount);
   return pendingUpdatesCount;
 }
 
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
 // each key/value pair contains all pending updates for each route
-function dispatchPendingUpdates(dispatch, childUrl, admin, pendingData) {
+function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
   let pendingUpdates = { ...admin.pendingUpdates };
 
-  pendingUpdates[childUrl] = {}; // pending updates to be set here
+  pendingUpdates[category] = {}; // pending updates to be set here
 
   forIn(pendingData, (prop, key) => {
     var pendingProp = filter(prop, ['pending', true]);
     if (pendingProp.length > 0) {
-      pendingUpdates[childUrl][key] = pendingProp; // update new pendingProp
+      pendingUpdates[category][key] = pendingProp; // update new pendingProp
     }
   });
 
@@ -52,12 +50,12 @@ function dispatchPendingUpdates(dispatch, childUrl, admin, pendingData) {
   });
 }
 
-export function setPendingUpdates(childUrl, pendingGalleries) {
+export function setPendingUpdates(category, pendingGalleries) {
   return (dispatch, getState) => {
     const { admin } = getState();
-    switch (childUrl) {
+    switch (category) {
       case 'galleries':
-        dispatchPendingUpdates(dispatch, childUrl, admin, pendingGalleries);
+        dispatchPendingUpdates(dispatch, category, admin, pendingGalleries);
         break;
 
       default:
@@ -65,33 +63,47 @@ export function setPendingUpdates(childUrl, pendingGalleries) {
   };
 }
 
-function publishGalleriesUpdates(getState, dispatch, childUrl) {
-  // TODO: set all pending galleries to pending false
-  const { firebase, admin, galleries } = getState();
-  debugger // check if pending changes actuall exist to protect unecessary publishing
-  const database = firebase.database();
-  database.ref(`${ENV}/${childUrl}`).set(galleries.pendingGalleries).then(() => {
-    dispatch({
-      type: PUBLISH_SUCCESS
-    });
-    database.ref(`${ENV}/pendingUpdates/${childUrl}`).remove();
-  }).catch(error => {
-    dispatch({
-      type: PUBLISH_ERROR,
-      payload: error
-    });
-  });
+function setPendingStatus(status, getState, category) {
+  debugger
 }
 
-export function publishUpdates() {
+function hasPendingChanges(getState, category) {
+  debugger
+
+  return false;
+}
+
+function publishGalleriesUpdates(getState, dispatch, category) {
+  const { firebase, galleries } = getState();
+  // TODO: set all pending galleries to pending false
+  setPendingStatus(false, getState, category);
+  // TODO: check if pending changes actuall exist to protect unecessary publishing
+  const changesPending = hasPendingChanges(getState, category);
+  if (changesPending) {
+    const database = firebase.database();
+    database.ref(`${ENV}/${category}`).set(galleries[`pending-${category}`]).then(() => {
+      dispatch({
+        type: PUBLISH_SUCCESS
+      });
+      database.ref(`${ENV}/pendingUpdates/${category}`).remove();
+    }).catch(error => {
+      dispatch({
+        type: PUBLISH_ERROR,
+        payload: error
+      });
+    });
+  }
+}
+
+export function publishPendingUpdates() {
   return (dispatch, getState) => {
     const { admin } = getState();
 
-    forIn(admin.pendingUpdates, (update, childUrl) => {
+    forIn(admin.pendingUpdates, (update, category) => {
     // loop through each pending update & set appropriate state to firebase
-      switch (childUrl) {
+      switch (category) {
         case 'galleries':
-          publishGalleriesUpdates(getState, dispatch, childUrl);
+          publishGalleriesUpdates(getState, dispatch, category);
           break;
 
         default:
@@ -100,33 +112,12 @@ export function publishUpdates() {
   };
 }
 
-const deleteAdminChanges = (firebase, update, dispatch) => {
-  firebase.child(`pendingAdminChanges/${''}`)
-    .remove(error => {
-      if (error) {
-        console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console
-        dispatch({
-          type: CLEAR_UPDATES_ERROR,
-          payload: error
-        });
-      }
-    });
-};
-
-export function clearPublishUpdates() {
+export function undoPendingUpdates() {
   return (dispatch, getState) => {
     const { firebase, admin } = getState();
-    if (admin.pendingUpdates.length >= 1) {
-      admin.pendingUpdates.forEach(update => {
-        deleteAdminChanges(firebase, update, dispatch);
-      });
+    if (Object.keys(admin.pendingUpdates).length >= 1) {
+      const database = firebase.database();
+      database.ref(`${ENV}/pendingUpdates`).remove();
     }
-  };
-}
-
-export function deletePublishUpdates(update) {
-  return (dispatch, getState) => {
-    const { firebase } = getState();
-    deleteAdminChanges(firebase, update, dispatch);
   };
 }

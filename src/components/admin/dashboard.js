@@ -11,13 +11,12 @@ export class DashBoard extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    clearPublishUpdates: PropTypes.func.isRequired,
     clearToast: PropTypes.func.isRequired,
     deletePublishUpdates: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
-    publishUpdates: PropTypes.func.isRequired,
-    setPendingUpdates: PropTypes.func.isRequired,
-    showToast: PropTypes.func.isRequired
+    publishPendingUpdates: PropTypes.func.isRequired,
+    showToast: PropTypes.func.isRequired,
+    undoPendingUpdates: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.admin.toast.type) {
@@ -25,20 +24,21 @@ export class DashBoard extends Component {
       this.props.showToast(nextProps.admin.toast);
     }
   }
-  onPublish = () => {
-    this.props.publishUpdates();
+  publishPendingUpdates = () => {
+    this.props.publishPendingUpdates();
   }
-  onClear = () => {
-    this.props.clearPublishUpdates();
+  onUndoUpdates = () => {
+    this.props.undoPendingUpdates();
   }
   render() {
     const { auth, admin } = this.props;
     let component = <p style={{textAlign: 'center'}}><a href="/login">Login</a> to use the dashboard.</p>;
     if (auth.authenticated) {
       const pendingUpdatesCount = Object.keys(admin.pendingUpdates).length;
-      const pendingUpdatesTitle = pendingUpdatesCount >= 1 ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
-      const publishButton = pendingUpdatesCount >= 1 ? (<button className="eb-button pending-changes__publish" onClick={this.onPublish}>Publish</button>) : null;
-      const clearEditsButton = pendingUpdatesCount >= 1 ? (<button className="eb-button pending-changes__clear" onClick={this.onClear}>Undo Edits</button>) : null;
+      const hasPendingUpdates = pendingUpdatesCount >= 1;
+      const pendingUpdatesTitle = hasPendingUpdates ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
+      const publishButton = hasPendingUpdates ? (<button className="eb-button pending-changes__publish" onClick={this.publishPendingUpdates}>Publish</button>) : null;
+      const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.undoPendingUpdates}>Undo Edits</button>) : null;
       component = (<div><h1 className="sign-in__heading">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
           <Link to="changepassword" className="change-password__link" >Change Password</Link>

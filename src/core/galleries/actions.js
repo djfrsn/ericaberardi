@@ -1,8 +1,8 @@
 import {
   CREATE_PLACEHOLDER_IMAGES,
   CLEAR_TOAST,
-  INIT_GALLERIES,
-  INIT_PENDING_GALLERIES,
+  HYDRATE_GALLERIES,
+  HYDRATE_PENDING_GALLERIES,
   TOGGLE_GALLERY_EDIT,
   HIGHLIGHT_GALLERIES_LINK,
   UPLOAD_GALLERY_IMAGE_ERROR
@@ -27,21 +27,21 @@ export function createPlaceholderImages(data) {
   };
 }
 
-export function initGalleries(data) {
+export function hydrateGalleries(data) {
   return dispatch => {
     dispatch({
-      type: INIT_GALLERIES,
+      type: HYDRATE_GALLERIES,
       payload: data
     });
   };
 }
 
 
-export function initPendingGalleries(data) {
+export function hydratePendingGalleries(snapshot) {
   return dispatch => {
     dispatch({
-      type: INIT_PENDING_GALLERIES,
-      payload: data
+      type: HYDRATE_PENDING_GALLERIES,
+      payload: snapshot
     });
   };
 }
@@ -66,7 +66,7 @@ export function highlightGalleriesLink(toggle) {
 
 export function pushImageData(dispatch, firebase, imageData) {
   const database = firebase.database();
-  database.ref(`${ENV}/pendingGalleries/${imageData.category}`).push(imageData);
+  database.ref(`${ENV}/pendingUpdates/galleries/${imageData.category}`).push(imageData);
 }
 
 export function uploadGalleryImage(data) {

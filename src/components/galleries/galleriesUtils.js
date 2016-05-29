@@ -18,8 +18,8 @@ export function setGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const defaultGallery = 'commercial';
-  const mergedGalleries = props.galleries.mergedGalleries;
-  const galleries = props.auth.authenticated && Object.keys(mergedGalleries).length > 0 ? mergedGalleries : props.galleries.galleries;
+  const pendingGalleries = props.galleries.pendingGalleries;
+  const galleries = props.auth.authenticated && Object.keys(pendingGalleries).length > 0 ? pendingGalleries : props.galleries.galleries;
   const categories = Object.keys(galleries);
   const galleryPath = categories.includes(path) ? path : defaultGallery;
   let galleryProp = galleries[galleryPath];

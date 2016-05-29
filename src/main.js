@@ -22,10 +22,13 @@ firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes
   if (user) {
     store.dispatch(authActions.initAuth());
 
-    let pendingGalleries = firebase.database().ref(`${ENV}/pendingGalleries`);
+    let pendingGalleries = firebase.database().ref(`${ENV}/pendingUpdates/galleries`);
 
     pendingGalleries.on('value', snapshot => {
-      store.dispatch(galleryActions.initPendingGalleries(snapshot.val()));
+      const snapshotVal = snapshot.val();
+
+      store.dispatch(galleryActions.hydratePendingGalleries(snapshotVal));
+      store.dispatch(adminActions.setPendingUpdates('galleries', snapshotVal));
     });
   }
 });
@@ -34,11 +37,11 @@ let galleries = firebase.database().ref(`${ENV}/galleries`);
 let newsReporting = firebase.database().ref(`${ENV}/newsReporting`);
 
 galleries.on('value', snapshot => {
-  store.dispatch(galleryActions.initGalleries(snapshot.val()));
+  store.dispatch(galleryActions.hydrateGalleries(snapshot.val()));
 });
 
 newsReporting.on('value', snapshot => {
-  store.dispatch(newsReportingActions.initNewsReporting(snapshot.val()));
+  store.dispatch(newsReportingActions.hydrateNewsReporting(snapshot.val()));
 });
 
 ReactDOM.render((

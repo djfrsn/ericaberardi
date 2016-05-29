@@ -4,6 +4,7 @@ import {
 
 import {
   CLEAR_TOAST,
+  SET_PENDING_UPDATES_COUNT,
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
@@ -29,6 +30,12 @@ export function adminReducer(state = initialState, action) {
         toast: {}
       };
 
+    case SET_PENDING_UPDATES_COUNT:
+      return {
+        ...state,
+        pendingUpdatesCount: action.payload.pendingUpdatesCount
+      };
+
     case SET_PENDING_UPDATES:
       return {
         ...state,
@@ -41,7 +48,6 @@ export function adminReducer(state = initialState, action) {
       return {
         ...state,
         publishSuccess: true,
-        publishedChangesDeleteQueue: action.payload,
         toast: {
           firstLine: 'Success!',
           secondLine: 'Your updates are live!.',

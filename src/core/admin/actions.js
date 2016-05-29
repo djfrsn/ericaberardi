@@ -1,10 +1,12 @@
 import {
   CLEAR_TOAST,
+  SET_PENDING_UPDATES_COUNT,
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR,
   CLEAR_UPDATES_ERROR
 } from './action-types';
+import { ENV } from 'config';
 import forIn from 'lodash.forin';
 import filter from 'lodash.filter';
 
@@ -24,14 +26,14 @@ function getPendingUpdatesCount(pendingUpdates) {
       pendingUpdatesCount += update.length;
     });
   });
-  console.log('pendingUpdateCount', pendingUpdatesCount);
+
   return pendingUpdatesCount;
 }
 
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
 // each key/value pair contains all pending updates for each route
-function dispatchPendingUpdates(dispatch, childUrl, props, pendingData) {
-  let pendingUpdates = { ...props.admin.pendingUpdates };
+function dispatchPendingUpdates(dispatch, childUrl, admin, pendingData) {
+  let pendingUpdates = { ...admin.pendingUpdates };
 
   pendingUpdates[childUrl] = {}; // pending updates to be set here
 
@@ -50,11 +52,12 @@ function dispatchPendingUpdates(dispatch, childUrl, props, pendingData) {
   });
 }
 
-export function setPendingUpdates(childUrl, props) {
-  return dispatch => {
+export function setPendingUpdates(childUrl, pendingGalleries) {
+  return (dispatch, getState) => {
+    const { admin } = getState();
     switch (childUrl) {
       case 'galleries':
-        dispatchPendingUpdates(dispatch, childUrl, props, props.galleries.mergedGalleries);
+        dispatchPendingUpdates(dispatch, childUrl, admin, pendingGalleries);
         break;
 
       default:
@@ -62,45 +65,43 @@ export function setPendingUpdates(childUrl, props) {
   };
 }
 
-const childUrl = (update, updateComputed) => { return update.name === 'homeGalleryOne' || update.name === 'homeGalleryTwo' ? update.name : `${update.name}/${updateComputed.id}`; };
+function publishGalleriesUpdates(getState, dispatch, childUrl) {
+  // TODO: set all pending galleries to pending false
+  const { firebase, admin, galleries } = getState();
+  debugger // check if pending changes actuall exist to protect unecessary publishing
+  const database = firebase.database();
+  database.ref(`${ENV}/${childUrl}`).set(galleries.pendingGalleries).then(() => {
+    dispatch({
+      type: PUBLISH_SUCCESS
+    });
+    database.ref(`${ENV}/pendingUpdates/${childUrl}`).remove();
+  }).catch(error => {
+    dispatch({
+      type: PUBLISH_ERROR,
+      payload: error
+    });
+  });
+}
 
 export function publishUpdates() {
   return (dispatch, getState) => {
-    const { firebase, admin, galleries } = getState();
-    debugger
-    admin.pendingUpdates.forEach(update => {
-      const updateComputed = update.data[Object.keys(update.data)[0]];
-      let data = galleries[update.name].map(gal => {
-        return {
-          ...gal,
-          src: updateComputed.id === gal.id ? updateComputed.src : gal.src,
-          topText: updateComputed.id === gal.id ? updateComputed.topText : gal.topText,
-          bottomText: updateComputed.id === gal.id ? updateComputed.bottomText : gal.bottomText
-        };
-      });
-      const url = childUrl(update, updateComputed);
-      firebase.child(url)
-        .set(data, error => {
-          if (error) {
-            console.error('ERROR @ createTask :', error); // eslint-disable-line no-console
-            dispatch({
-              type: PUBLISH_ERROR,
-              payload: error
-            });
-          }
-          else {
-            dispatch({
-              type: PUBLISH_SUCCESS,
-              payload: update
-            });
-          }
-        });
+    const { admin } = getState();
+
+    forIn(admin.pendingUpdates, (update, childUrl) => {
+    // loop through each pending update & set appropriate state to firebase
+      switch (childUrl) {
+        case 'galleries':
+          publishGalleriesUpdates(getState, dispatch, childUrl);
+          break;
+
+        default:
+      }
     });
   };
 }
 
 const deleteAdminChanges = (firebase, update, dispatch) => {
-  firebase.child(`pendingAdminChanges/${childUrl(update, {})}`)
+  firebase.child(`pendingAdminChanges/${''}`)
     .remove(error => {
       if (error) {
         console.error('ERROR @ deleteTask :', error); // eslint-disable-line no-console

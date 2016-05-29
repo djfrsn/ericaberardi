@@ -1,8 +1,8 @@
 
 import {
   CLEAR_TOAST,
-  INIT_GALLERIES,
-  INIT_PENDING_GALLERIES,
+  HYDRATE_GALLERIES,
+  HYDRATE_PENDING_GALLERIES,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   SUBMIT_GALLERY_IMAGE_ERROR,
   HIGHLIGHT_GALLERIES_LINK
@@ -11,7 +11,7 @@ import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
 
 export const initialState = {
   galleries: {},
-  mergedGalleries: {},
+  pendingGalleries: {},
   toast: {},
   highlightGalleriesLink: false
 };
@@ -42,16 +42,16 @@ export function galleriesReducer(state = initialState, action) {
         toast: {}
       };
 
-    case INIT_GALLERIES:
+    case HYDRATE_GALLERIES:
       return {
         ...state,
         galleries: action.payload
       };
 
-    case INIT_PENDING_GALLERIES:
+    case HYDRATE_PENDING_GALLERIES:
       return {
         ...state,
-        mergedGalleries: mergeGalleries(state, action)
+        pendingGalleries: action.payload ? mergeGalleries(state, action) : {}
       };
 
     case UPLOAD_GALLERY_IMAGE_SUCCESS:

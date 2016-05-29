@@ -1,15 +1,15 @@
 import {
   CLEAR_ADMIN_TOAST,
   SET_PENDING_UPDATES,
-  PUBLISH_SUCCESS,
+  CLEAR_PENDING_UPDATES,
   PUBLISH_ERROR,
   PUBLISH_INAVLID,
-  CLEAR_UPDATES_SUCCESS,
   CLEAR_UPDATES_ERROR
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
 import filter from 'lodash.filter';
+import { publishSweetAlert, undoSweetAlert } from './adminUtils';
 
 export function clearAdminToast() {
   return dispatch => {
@@ -131,9 +131,6 @@ function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
     const newState = setPendingStatus(false, pendingState); // set pending status of all children to false
     const database = firebase.database();
     database.ref(`${ENV}/${category}`).set(newState).then(() => {
-      dispatch({
-        type: PUBLISH_SUCCESS
-      });
       database.ref(`${ENV}/pendingUpdates/${category}`).remove();
     }).catch(error => {
       dispatch({
@@ -152,14 +149,25 @@ function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
 export function publishPendingUpdates() {
   return (dispatch, getState) => {
     const { admin } = getState();
-    forIn(admin.pendingUpdates, (update, category) => {
+    const pendingUpdates = admin.pendingUpdates;
+    const pendingUpdatesLength = Object.keys(pendingUpdates).length;
+    forIn(pendingUpdates, (update, category) => {
       // each route has it's own state and pending- state to hold data with user edits
-      let pendingState = { ...getState()[category][`pending-${category}`] };
+      let pendingState = { ...getState()[category][`pending-${category}`] }; // get the pending state for a given category
 
+      // TODO: Call sweet alert after pendingUpdatesLength === key for where we are in the for in
+      // then pass a callback containing the success sweet alert to  the last publish method
+      debugger
+
+      // dispatch({
+      //   type: CLEAR_PENDING_UPDATES
+      // });
+
+      publishSweetAlert();
       // loop through each pending update & set appropriate state to firebase
       switch (category) {
         case 'galleries':
-          publishGalleriesUpdates(dispatch, getState, category, pendingState);
+          // publishGalleriesUpdates(dispatch, getState, category, pendingState);
           break;
 
         default:
@@ -175,8 +183,9 @@ export function undoPendingUpdates() {
       const database = firebase.database();
       database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
         dispatch({
-          type: CLEAR_UPDATES_SUCCESS
+          type: CLEAR_PENDING_UPDATES
         });
+        undoSweetAlert();
       }).catch(error => {
         dispatch({
           type: CLEAR_UPDATES_ERROR,

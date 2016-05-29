@@ -3,10 +3,9 @@ import {
   CLEAR_ADMIN_SWAL,
   SET_PENDING_UPDATES_COUNT,
   SET_PENDING_UPDATES,
-  PUBLISH_SUCCESS,
+  CLEAR_PENDING_UPDATES,
   PUBLISH_ERROR,
   PUBLISH_INAVLID,
-  CLEAR_UPDATES_SUCCESS,
   CLEAR_UPDATES_ERROR
 } from './action-types';
 
@@ -44,16 +43,11 @@ export function adminReducer(state = initialState, action) {
         pendingUpdatesCount: action.payload.pendingUpdatesCount
       };
 
-    case PUBLISH_SUCCESS:
+    case CLEAR_PENDING_UPDATES:
       return {
         ...state,
         pendingUpdates: {},
-        pendingUpdatesCount: 0,
-        toast: {
-          firstLine: 'Success!',
-          secondLine: 'Your updates are live!.',
-          type: 'success'
-        }
+        pendingUpdatesCount: 0
       };
 
     case PUBLISH_ERROR:
@@ -74,18 +68,6 @@ export function adminReducer(state = initialState, action) {
           firstLine: 'Invalid content Updates!',
           secondLine: 'Try adding more content before publishing.',
           type: 'error'
-        }
-      };
-
-    case CLEAR_UPDATES_SUCCESS:
-      return {
-        ...state,
-        pendingUpdates: {},
-        pendingUpdatesCount: 0,
-        toast: {
-          firstLine: 'Success!',
-          secondLine: 'Pending updates have been cleared!',
-          type: 'success'
         }
       };
 

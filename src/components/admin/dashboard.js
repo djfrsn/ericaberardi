@@ -6,7 +6,7 @@ import { adminActions } from 'core/admin';
 import { galleryActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 import pendingUpdatesList from './pendingUpdatesList';
-import swal from 'sweetalert';
+import { confirmationAlert, undoAlert } from './dashboardAlerts';
 
 export class DashBoard extends Component {
   static propTypes = {
@@ -25,12 +25,10 @@ export class DashBoard extends Component {
     }
   }
   confirmPublish = () => {
-    console.log(swal);
-    swal({   title: "Are you sure?",   text: "You will not be able to recover this imaginary file!",   type: "warning",   showCancelButton: true,   confirmButtonColor: "#DD6B55",   confirmButtonText: "Yes, delete it!",   cancelButtonText: "No, cancel plx!",   closeOnConfirm: false,   closeOnCancel: false }, function(isConfirm){   if (isConfirm) {     swal("Deleted!", "Your imaginary file has been deleted.", "success");   } else {     swal("Cancelled", "Your imaginary file is safe :)", "error");   } });
-    // this.props.publishPendingUpdates();
+    confirmationAlert(this);
   }
   confirmUndo = () => {
-    this.props.undoPendingUpdates();
+    undoAlert(this);
   }
   render() {
     const { auth, admin } = this.props;

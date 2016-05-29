@@ -36,7 +36,7 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
   pendingUpdates[category] = {}; // pending updates to be set here
 
   forIn(pendingData, (prop, key) => {
-    var pendingProp = filter(prop, ['pending', true]);
+    const pendingProp = filter(prop, ['pending', true]);
     if (pendingProp.length > 0) {
       pendingUpdates[category][key] = pendingProp; // update new pendingProp
     }
@@ -63,25 +63,46 @@ export function setPendingUpdates(category, pendingGalleries) {
   };
 }
 
-function setPendingStatus(status, getState, category) {
-  debugger
+// Set 'pending: false' for each child of a given pendingUpdate category
+function setPendingStatus(status, pendingState) {
+  let newPendingState = {};
+
+  // works for objects with children that are objectArrays only
+  forIn(pendingState, (subCategories, subCategory) => {
+    newPendingState[subCategory] = [];
+    forIn(subCategories, data => {
+      newPendingState[subCategory].push({...data, pending: false});
+    });
+  });
+
+  return newPendingState;
 }
 
-function hasPendingChanges(getState, category) {
-  debugger
+// Return true if we pendingUpdate children exist with 'pending: true'
+function hasPendingChanges(pendingState) {
+  let pendingChanges = false;
 
-  return false;
+  // works for objects with children that are objectArrays only
+  forIn(pendingState, subCategories => {
+    if (!pendingChanges) { // perf check to avoid executing after a single pending change is found
+      const pendingCategory = filter(subCategories, ['pending', true]);
+      if (pendingCategory.length > 0) {
+        pendingChanges = true;
+      }
+    }
+  });
+
+  return pendingChanges;
 }
 
-function publishGalleriesUpdates(getState, dispatch, category) {
-  const { firebase, galleries } = getState();
-  // TODO: set all pending galleries to pending false
-  setPendingStatus(false, getState, category);
-  // TODO: check if pending changes actuall exist to protect unecessary publishing
-  const changesPending = hasPendingChanges(getState, category);
+function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
+  const { firebase } = getState();
+  const changesPending = hasPendingChanges(pendingState);
+
   if (changesPending) {
+    const newState = setPendingStatus(false, pendingState);
     const database = firebase.database();
-    database.ref(`${ENV}/${category}`).set(galleries[`pending-${category}`]).then(() => {
+    database.ref(`${ENV}/${category}`).set(newState).then(() => {
       dispatch({
         type: PUBLISH_SUCCESS
       });
@@ -100,10 +121,11 @@ export function publishPendingUpdates() {
     const { admin } = getState();
 
     forIn(admin.pendingUpdates, (update, category) => {
-    // loop through each pending update & set appropriate state to firebase
+      let pendingState = { ...getState()[category][`pending-${category}`] };
+      // loop through each pending update & set appropriate state to firebase
       switch (category) {
         case 'galleries':
-          publishGalleriesUpdates(getState, dispatch, category);
+          publishGalleriesUpdates(dispatch, getState, category, pendingState);
           break;
 
         default:

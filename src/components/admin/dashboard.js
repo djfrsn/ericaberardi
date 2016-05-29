@@ -12,7 +12,6 @@ export class DashBoard extends Component {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     clearToast: PropTypes.func.isRequired,
-    deletePublishUpdates: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     publishPendingUpdates: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,

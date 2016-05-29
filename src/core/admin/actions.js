@@ -1,5 +1,5 @@
 import {
-  CLEAR_TOAST,
+  CLEAR_ADMIN_TOAST,
   SET_PENDING_UPDATES,
   PUBLISH_SUCCESS,
   PUBLISH_ERROR
@@ -8,10 +8,10 @@ import { ENV } from 'config';
 import forIn from 'lodash.forin';
 import filter from 'lodash.filter';
 
-export function clearToast() {
+export function clearAdminToast() {
   return dispatch => {
     dispatch({
-      type: CLEAR_TOAST
+      type: CLEAR_ADMIN_TOAST
     });
   };
 }
@@ -24,7 +24,7 @@ function getPendingUpdatesCount(pendingUpdates) {
       pendingUpdatesCount += update.length;
     });
   });
-  // console.log('pendingUpdatesCount', pendingUpdatesCount);
+  // `console.log('pendingUpdatesCount', pendingUpdatesCount);
   return pendingUpdatesCount;
 }
 
@@ -37,6 +37,7 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
 
   forIn(pendingData, (prop, key) => {
     const pendingProp = filter(prop, ['pending', true]);
+
     if (pendingProp.length > 0) {
       pendingUpdates[category][key] = pendingProp; // update new pendingProp
     }
@@ -50,10 +51,11 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
   });
 }
 
+// a category is based on a childUrl for the app routes i.e /about
 export function setPendingUpdates(category, snapshot) {
   return (dispatch, getState) => {
     const { admin } = getState();
-    if (snapshot) {
+    if (snapshot) { // snapshot returns 'null' sans data
       switch (category) {
         case 'galleries':
           dispatchPendingUpdates(dispatch, category, admin, snapshot);
@@ -97,12 +99,13 @@ function hasPendingChanges(pendingState) {
   return pendingChanges;
 }
 
+// This method should work for any cateory
 function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
   const { firebase } = getState();
   const changesPending = hasPendingChanges(pendingState);
 
   if (changesPending) {
-    const newState = setPendingStatus(false, pendingState);
+    const newState = setPendingStatus(false, pendingState); // set pending status of all children to false
     const database = firebase.database();
     database.ref(`${ENV}/${category}`).set(newState).then(() => {
       dispatch({
@@ -121,9 +124,10 @@ function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
 export function publishPendingUpdates() {
   return (dispatch, getState) => {
     const { admin } = getState();
-
     forIn(admin.pendingUpdates, (update, category) => {
+      // each route has it's own state and pending- state to hold data with user edits
       let pendingState = { ...getState()[category][`pending-${category}`] };
+
       // loop through each pending update & set appropriate state to firebase
       switch (category) {
         case 'galleries':

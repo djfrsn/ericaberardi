@@ -19,6 +19,7 @@ export class Header extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    clearToast: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     signOut: PropTypes.func.isRequired,
     toast: PropTypes.object.isRequired
@@ -32,8 +33,9 @@ export class Header extends Component {
     }
   }
   toast = nextProps => {
-    if (nextProps.toast.toastType) {
-      this.container[nextProps.toast.toastType](
+    if (nextProps.toast.toastType && !nextProps.toast.toastComplete) {
+      this.props.clearToast();
+      this.toastContainer[nextProps.toast.toastType](
         nextProps.toast.firstLine,
         nextProps.toast.secondLine, {
           timeOut: 7000,
@@ -73,7 +75,7 @@ export class Header extends Component {
             </ul>
           </div>
         </div>
-        <ToastContainer ref={ref => this.container = ref} toastMessageFactory={ToastMessageFactory} className="toast-top-right" />
+        <ToastContainer ref={ref => this.toastContainer = ref} toastMessageFactory={ToastMessageFactory} className="toast-top-right" />
       </header>
     );
   }

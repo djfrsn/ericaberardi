@@ -1,6 +1,6 @@
 import {
   CREATE_PLACEHOLDER_IMAGES,
-  CLEAR_TOAST,
+  CLEAR_GALLERIES_TOAST,
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
   TOGGLE_GALLERY_EDIT,
@@ -10,10 +10,10 @@ import {
 import { ENV } from 'config';
 import utils from 'utils';
 
-export function clearToast() {
+export function clearGalleriesToast() {
   return dispatch => {
     dispatch({
-      type: CLEAR_TOAST
+      type: CLEAR_GALLERIES_TOAST
     });
   };
 }

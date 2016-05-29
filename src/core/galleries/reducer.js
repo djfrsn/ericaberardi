@@ -1,6 +1,6 @@
 
 import {
-  CLEAR_TOAST,
+  CLEAR_GALLERIES_TOAST,
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
@@ -36,7 +36,7 @@ function mergeGalleries(state, action) {
 
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
-    case CLEAR_TOAST:
+    case CLEAR_GALLERIES_TOAST:
       return {
         ...state,
         toast: {}

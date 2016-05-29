@@ -11,7 +11,7 @@ export class DashBoard extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    clearToast: PropTypes.func.isRequired,
+    clearAdminToast: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     publishPendingUpdates: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
@@ -19,7 +19,7 @@ export class DashBoard extends Component {
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.admin.toast.type) {
-      this.props.clearToast();
+      this.props.clearAdminToast();
       this.props.showToast(nextProps.admin.toast);
     }
   }

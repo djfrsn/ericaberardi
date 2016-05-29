@@ -1,5 +1,6 @@
 import {
   INIT_TOAST,
+  CLEAR_TOAST,
   SHOW_TOAST
 } from './action-types';
 
@@ -7,6 +8,14 @@ export function initToast() {
   return dispatch => {
     dispatch({
       type: INIT_TOAST
+    });
+  };
+}
+
+export function clearToast() {
+  return dispatch => {
+    dispatch({
+      type: CLEAR_TOAST
     });
   };
 }

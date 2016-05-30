@@ -11,7 +11,7 @@ export default opts => {
     forIn(updates, (update, subCategory) => {
       if (update.length > 0) {
         pendingUpdates.push((
-          <p key={`pendingUpdates-${subCategory}`} className="admin-pending_paragraph">{subCategory} - {update.length}</p>
+          <p key={`pendingUpdates-${subCategory}`} className="admin-pending_subcategory">{subCategory} - {update.length}</p>
         ));
       }
     });

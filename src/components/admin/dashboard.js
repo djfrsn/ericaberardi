@@ -37,12 +37,14 @@ export class DashBoard extends Component {
       const pendingUpdatesTitle = hasPendingUpdates ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
       const publishButton = hasPendingUpdates ? (<button className="eb-button pending-changes__publish" onClick={this.confirmPublish}>Publish</button>) : null;
       const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.confirmUndo}>Undo Edits</button>) : null;
-      component = (<div><h1 className="sign-in__heading">Admin DashBoard</h1>
+      component = (<div><h1 className="dashboard__header">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
           <Link to="changepassword" className="change-password__link" >Change Password</Link>
           <div className="pending-changes__wrapper">
             {pendingUpdatesTitle}
-            {pendingUpdatesList({ pendingUpdates: admin.pendingUpdates, scope: this })}
+            <div className="pending-changes__list_wrapper">
+              {pendingUpdatesList({ pendingUpdates: admin.pendingUpdates, scope: this })}
+            </div>
             <div className="eb-button__container">
               {clearEditsButton}
               {publishButton}
@@ -60,13 +62,6 @@ export class DashBoard extends Component {
     );
   }
 }
-
-// strategy
-// bring in galleries state
-// see if updates exist
-// if so show the affected galleries and list of images, size, & count for each category
-// also show the publish button
-// confirm with modal before allowing publish.....use animations.css or something similar for modal animation
 
 export default connect(state => ({
   auth: state.auth,

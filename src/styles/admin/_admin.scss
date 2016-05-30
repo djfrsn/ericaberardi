@@ -2,7 +2,7 @@
 //  GENERAL
 //===================================================================
 .sign-in, .change-password, .dashboard {
-  margin-top: 90px;
+  margin-top: 60px;
   input {
     color: #999;
     border: none;
@@ -17,8 +17,14 @@
 }
 
 .eb-button__container {
-  width: 30%;
+  width: 50%;
   margin: 0 auto;
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
 }
 
 .eb-button {
@@ -73,10 +79,41 @@
 .dashboard {
   max-width: 60%;
   font-family: $alt-font-family;
+  font-size: 1.5rem;
 }
 
 .dashboard__wrapper {
   text-align: center;
+}
+
+.dashboard__header {
+  text-align: center;
+  font-size: 1.4em;
+  margin-bottom: 40px;
+}
+
+//===================================================================
+//  PENDING CHANGES
+//===================================================================
+
+.pending-changes__list_wrapper {
+  display: -webkit-flex;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  text-transform: capitalize;
+}
+
+.category__container {
+  width: 25%;
+  margin-bottom: 40px;
+  h3 {
+    @include default-bottom-border();
+    padding-bottom: 10px;
+  }
 }
 
 .pending-changes__wrapper {
@@ -85,12 +122,11 @@
 }
 
 .pending-changes__title {
-  margin-top: 1em;
-  font-family: Marvel, 'sans-serif';
+  margin: 40px 0;
 }
 
-.admin-pending_paragraph {
-  margin-top: 0.5em;
+.admin-pending_subcategory {
+  margin-top: 10px;
   list-style: none;
 }
 
@@ -127,4 +163,28 @@
 
 .change-password__error-msg {
   color: red;
+}
+
+@media (max-width: 960px) {
+  .dashboard {
+    max-width: 80%;
+  }
+  .category__container {
+    width: 50%;
+  }
+  .eb-button__container {
+    width: 60%;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard {
+    max-width: 100%;
+  }
+  .category__container {
+    width: 100%;
+  }
+  .eb-button__container {
+    width: 100%;
+  }
 }

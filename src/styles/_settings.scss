@@ -56,6 +56,10 @@ $grid-max-width: 70% !default;
   border-top: 1px solid $color;
 }
 
+@mixin default-bottom-border($color: $colors-gray) {
+  border-bottom: 1px solid $color;
+}
+
 @mixin quick-cubic-transition($prop: all) {
   transition: $prop .4s cubic-bezier(0,0,.25,1);
 }

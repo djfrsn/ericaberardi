@@ -3,6 +3,8 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import Dropzone from 'react-dropzone';
+import Masonry from 'react-masonry-component';
+import deepEqual from 'deep-equal';
 // App Specific
 import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
@@ -11,8 +13,13 @@ import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
 import * as gUtils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
-import Gallery from './gallery';
+import galleryImages from './galleryImages';
 import Lightbox from './lightbox';
+
+const masonryOptions = {
+  transitionDuration: 500,
+  percentPosition: true
+};
 
 export class Galleries extends Component {
   static contextTypes = {
@@ -35,32 +42,41 @@ export class Galleries extends Component {
     categories: [],
     files: [],
     galleryDeleteEnabled: false,
-    showDeleteToggleMsg: false
+    showDeleteToggleMsg: false,
+    loadImagesSeq: true
   }
   componentWillMount() {
+    this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
-    this.setGallery(this.props);
+    this.setActiveGallery(this.props);
   }
   componentDidMount() {
     window.onresize = () => {
       gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     };
+    this.loadImagesSeq();
     const { pathname } = this.props.location;
     this.path = gUtils.parsePath(pathname).path; // stores currentCategory
   }
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     this.path = gUtils.parsePath(pathname).path;
-    if (Object.keys(nextProps.galleries.galleries).length > 0) {
-      this.setGallery(nextProps);
+    // try deep equal and length check to avoid setting gallery too often
+    if (!deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries)) {
+      this.setActiveGallery(nextProps);
     }
     if (nextProps.galleries.toast.type) {
       this.props.clearGalleriesToast();
       this.props.showToast(nextProps.galleries.toast);
     }
   }
+  componentDidUpdate() {
+    this.loadImagesSeq();
+  }
   componentWillUnmount() {
     this.props.highlightGalleriesLink(false);
+    this.unbindImagesLoaded = true;
+    gUtils.unbindImagesLoaded(this.galleryContainer);
     window.onresize = () => {}; // remove listener
   }
   onDrop(files) {
@@ -83,8 +99,13 @@ export class Galleries extends Component {
       this.props.tagImgForDeletion({imageId, category: this.path });
     }
   }
-  setGallery = props => {
-    gUtils.setGallery(props, this); // set current gallery images src
+  setActiveGallery = props => {
+    gUtils.setActiveGallery(props, this); // set current gallery images src
+  }
+  loadImagesSeq = () => {
+    if (this.state.loadImagesSeq && !this.state.galleryDeleteEnabled) {
+      gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
+    }
   }
   onToggleGalleryDelete = e => {
     e.preventDefault();
@@ -134,12 +155,14 @@ export class Galleries extends Component {
           </div>
           {galleryDropZone}
           <div className="gallery">
-            <Gallery
-              gallery={gallery}
-              showGalleryLightbox={this.showLightbox}
-              galleryContainer={this.galleryContainer}
-              location={this.props.location}
-            />
+            <Masonry
+              ref={ref => { this.masonry = ref; }}
+              className={'gallery__masonry'} // default ''
+              options={masonryOptions} // default {}
+              disableImagesLoaded={false} // default false
+              >
+                {galleryImages({gallery, scope: this})}
+            </Masonry>
           </div>
           <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
           {galleryDeleteControls}

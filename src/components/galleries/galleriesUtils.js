@@ -14,7 +14,7 @@ export function parsePath(val) { // takes paths like galleries/sports and return
   };
 }
 
-export function setGallery(props, scope) {
+export function setActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const defaultGallery = 'commercial';
@@ -35,7 +35,7 @@ export function setGallery(props, scope) {
         show: false // add view only attributes
       };
     });
-    scope.setState({ ...scope.state, categories, gallery });
+    scope.setState({ ...scope.state, categories, gallery, loadImagesSeq: true });
   }
 }
 
@@ -53,12 +53,15 @@ export function seqImagesLoaded(element, scope) {
   // a dispatch is used to iteratively remove the hidden class from each element
   imgLoad.on( 'progress', ( instance, image ) => {
     const loaded = image.isLoaded;
+    if (scope.state.loadImagesSeq) {
+      scope.setState({...scope.state, loadImagesSeq: false });
+    }
     if (loaded && !scope.unbindImagesLoaded) {
       const img = image.img;
       const id = img.parentElement.parentElement.id;
 
       // reveal image
-      const gallery = scope.props.gallery.map(image => {
+      const gallery = scope.state.gallery.map(image => {
         return {
           ...image, // update state to reveal each image
           show: image.id === id ? true : image.show

@@ -3,6 +3,7 @@ import {
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
   TOGGLE_GALLERY_DELETE,
+  TAG_IMAGE_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR
@@ -48,12 +49,10 @@ export function toggleGalleryDelete() {
 }
 
 export function tagImgForDeletion(data) {
-  return (dispatch, getState) => {
-    console.log(data);
-    const { galleryDeleteEnable } = getState();
+  return dispatch => {
     dispatch({
-      type: TOGGLE_GALLERY_DELETE,
-      payload: !galleryDeleteEnable
+      type: TAG_IMAGE_FOR_DELETION,
+      payload: { imageId: data.imageId, category: data.category }
     });
   };
 }

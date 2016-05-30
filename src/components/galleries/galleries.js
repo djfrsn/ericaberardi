@@ -61,7 +61,7 @@ export class Galleries extends Component {
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     this.path = gUtils.parsePath(pathname).path;
-    // try deep equal and length check to avoid setting gallery too often
+    // try deep equal check to avoid setting gallery when nothing has changed
     if (!deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries)) {
       this.setActiveGallery(nextProps);
     }
@@ -103,7 +103,7 @@ export class Galleries extends Component {
     gUtils.setActiveGallery(props, this); // set current gallery images src
   }
   loadImagesSeq = () => {
-    if (this.state.loadImagesSeq && !this.props.galleries.galleryDeleteEnabled) {
+    if (this.state.loadImagesSeq && this.props.galleries.seqImagesLoadedEnabled) {
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }

@@ -32,10 +32,11 @@ export function setActiveGallery(props, scope) {
     const gallery = galleryProp.map(image => {
       return {
         ...image,
-        show: false // add view only attributes
+        show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // force show when seqImagesLoaded is disabled, since that function reveals images normally
       };
     });
     scope.setState({ ...scope.state, categories, gallery, loadImagesSeq: true });
+      // TODO: use dispatch to set loadImagesSeq state
   }
 }
 
@@ -55,6 +56,7 @@ export function seqImagesLoaded(element, scope) {
     const loaded = image.isLoaded;
     if (scope.state.loadImagesSeq) {
       scope.setState({...scope.state, loadImagesSeq: false });
+      // TODO: use dispatch to set loadImagesSeq state
     }
     if (loaded && !scope.unbindImagesLoaded) {
       const img = image.img;

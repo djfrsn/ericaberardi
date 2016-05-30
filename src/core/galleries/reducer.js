@@ -1,11 +1,12 @@
 
 import {
-  CLEAR_GALLERIES_TOAST,
-  TOGGLE_GALLERY_DELETE,
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR,
+  CLEAR_GALLERIES_TOAST,
+  TOGGLE_GALLERY_DELETE,
+  TAG_IMAGE_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
@@ -15,7 +16,8 @@ export const initialState = {
   ['pending-galleries']: {},
   toast: {},
   galleryDeleteEnabled: false,
-  highlightGalleriesLink: false
+  highlightGalleriesLink: false,
+  seqImagesLoadedEnabled: true
 };
 
 const successToast = {
@@ -36,18 +38,29 @@ function mergeGalleries(state, action) {
   return mergeObjectArrays(state.galleries, pendingGalleries);
 }
 
+// merge published galleries w/ pending galleries :)
+function taggedForDeleteGalleries(state, action) {
+  const pendingGalleries = state['pending-galleries'];
+  const galleries = Object.keys(pendingGalleries).length > 0 ? pendingGalleries : state.galleries.galleries;
+  const gallery = galleries[action.payload.category].map(image => {
+    return {
+      ...image,
+      shouldDelete: image.id === action.payload.imageId ? true : false
+    };
+  });
+  console.log({ ...state.galleries, [action.payload.categories]: gallery });
+  return {
+    ...state,
+    galleries: { ...state.galleries, [action.payload.categories]: gallery }
+  };
+}
+
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
     case CLEAR_GALLERIES_TOAST:
       return {
         ...state,
         toast: {}
-      };
-
-    case TOGGLE_GALLERY_DELETE:
-      return {
-        ...state,
-        galleryDeleteEnabled: action.payload
       };
 
     case HYDRATE_GALLERIES:
@@ -73,6 +86,16 @@ export function galleriesReducer(state = initialState, action) {
         ...state,
         toast: errorToast
       };
+
+    case TOGGLE_GALLERY_DELETE:
+      return {
+        ...state,
+        seqImagesLoadedEnabled: !action.payload,
+        galleryDeleteEnabled: action.payload
+      };
+
+    case TAG_IMAGE_FOR_DELETION:
+      return taggedForDeleteGalleries(state, action);
 
     case HIGHLIGHT_GALLERIES_LINK:
       return {

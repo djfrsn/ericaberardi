@@ -39,7 +39,6 @@ export class Galleries extends Component {
   state = {
     gallery: [],
     categories: [],
-    currentCategory: '',
     files: [],
     galleryDeleteEnabled: false,
     showDeleteToggleMsg: false,
@@ -56,7 +55,7 @@ export class Galleries extends Component {
     };
     this.loadImagesSeq();
     const { pathname } = this.props.location;
-    this.path = gUtils.parsePath(pathname).path;
+    this.path = gUtils.parsePath(pathname).path; // stores currentCategory
   }
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
@@ -95,7 +94,7 @@ export class Galleries extends Component {
     }
     else if (this.state.galleryDeleteEnabled) {
       const imageId = e.currentTarget.parentElement.id;
-      this.props.tagImgForDeletion({imageId, category: this.state.currentCategory });
+      this.props.tagImgForDeletion({imageId, category: this.path });
     }
   }
   setGallery = props => {
@@ -149,7 +148,7 @@ export class Galleries extends Component {
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              {galleryCategories( { categories, props: this.props, path: this.path })}
+              {galleryCategories( { categories, props: this.props, category: this.path })}
             </ul>
           </div>
           {galleryDropZone}

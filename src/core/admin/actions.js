@@ -9,7 +9,7 @@ import {
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
 import filter from 'lodash.filter';
-import { publishSweetAlert, undoSweetAlert } from './adminUtils';
+import utils from 'utils';
 
 export function clearAdminToast() {
   return dispatch => {
@@ -85,6 +85,7 @@ function setPendingStatus(status, pendingState) {
   return newPendingState;
 }
 
+// Minimums for how many categorys/children should exist in the db
 function getPendingChangeMinimums(category) {
   let minCategoryCount = 1;
   let minChildCount = 1;
@@ -92,7 +93,7 @@ function getPendingChangeMinimums(category) {
   switch (category) {
     case 'galleries':
       minCategoryCount = 5;
-      minChildCount = 8;
+      minChildCount = 4;
       break;
 
     default:
@@ -123,7 +124,7 @@ function validatePendingChanges(category, pendingState) {
 }
 
 // This method should work for any category
-function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
+function publishContent(dispatch, getState, category, pendingState, publishCallback) {
   const { firebase } = getState();
   const changesValidated = validatePendingChanges(category, pendingState);
 
@@ -132,6 +133,9 @@ function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
     const database = firebase.database();
     database.ref(`${ENV}/${category}`).set(newState).then(() => {
       database.ref(`${ENV}/pendingUpdates/${category}`).remove();
+      if (utils.isFunction(publishCallback)) {
+        publishCallback();
+      }
     }).catch(error => {
       dispatch({
         type: PUBLISH_ERROR,
@@ -146,37 +150,39 @@ function publishGalleriesUpdates(dispatch, getState, category, pendingState) {
   }
 }
 
-export function publishPendingUpdates() {
+export function publishPendingUpdates(successCallback) {
   return (dispatch, getState) => {
     const { admin } = getState();
     const pendingUpdates = admin.pendingUpdates;
     const pendingUpdatesLength = Object.keys(pendingUpdates).length;
+    let publishCallback;
+    let callbackCount = 1;
+    // loop through pendingUpdates & set state to firebase
     forIn(pendingUpdates, (update, category) => {
       // each route has it's own state and pending- state to hold data with user edits
       let pendingState = { ...getState()[category][`pending-${category}`] }; // get the pending state for a given category
 
-      // TODO: Call sweet alert after pendingUpdatesLength === key for where we are in the for in
-      // then pass a callback containing the success sweet alert to  the last publish method
-      debugger
+      if (pendingUpdatesLength === callbackCount) { // pass publishCallback for final pass on pendingUpdates
+        publishCallback = successCallback;
+        dispatch({
+          type: CLEAR_PENDING_UPDATES
+        });
+      }
 
-      // dispatch({
-      //   type: CLEAR_PENDING_UPDATES
-      // });
-
-      publishSweetAlert();
-      // loop through each pending update & set appropriate state to firebase
       switch (category) {
         case 'galleries':
-          // publishGalleriesUpdates(dispatch, getState, category, pendingState);
+          publishContent(dispatch, getState, category, pendingState, publishCallback);
           break;
 
         default:
       }
+
+      callbackCount++;
     });
   };
 }
 
-export function undoPendingUpdates() {
+export function removePendingUpdates(successCallback) {
   return (dispatch, getState) => {
     const { firebase, admin } = getState();
     if (Object.keys(admin.pendingUpdates).length >= 1) {
@@ -185,7 +191,9 @@ export function undoPendingUpdates() {
         dispatch({
           type: CLEAR_PENDING_UPDATES
         });
-        undoSweetAlert();
+        if (utils.isFunction(successCallback)) {
+          successCallback(); // TODO: break utils into named functions
+        }
       }).catch(error => {
         dispatch({
           type: CLEAR_UPDATES_ERROR,

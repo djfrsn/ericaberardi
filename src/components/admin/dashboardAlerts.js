@@ -1,5 +1,24 @@
 import sweetalert from 'sweetalert';
 
+
+function publishSweetAlert() {
+  sweetalert({
+    title: 'Live!',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Your content updates have been published!</span>',
+    type: 'success',
+    html: true
+  });
+}
+
+function undoSweetAlert() {
+  sweetalert({
+    title: 'Removed',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Your pending edits have been removed.</span>',
+    type: 'success',
+    html: true
+  });
+}
+
 export function confirmationAlert(scope) {
   sweetalert({
     title: 'Are you sure?',
@@ -15,7 +34,7 @@ export function confirmationAlert(scope) {
     html: true
   }, isConfirm => {
     if (isConfirm) {
-      scope.props.publishPendingUpdates();
+      scope.props.publishPendingUpdates(publishSweetAlert);
     }
     else {
       sweetalert({
@@ -43,7 +62,7 @@ export function undoAlert(scope) {
     html: true
   }, isConfirm => {
     if (isConfirm) {
-      scope.props.undoPendingUpdates();
+      scope.props.removePendingUpdates(undoSweetAlert);
     }
     else {
       sweetalert({

@@ -25,5 +25,8 @@ export default {
   },
   randomInt: function( min, max ) {
     return Math.floor( Math.random() * max + min );
+  },
+  isFunction: function( func ) {
+    return typeof func === 'function';
   }
 };

@@ -14,9 +14,7 @@ export class DashBoard extends Component {
     auth: PropTypes.object.isRequired,
     clearAdminToast: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
-    publishPendingUpdates: PropTypes.func.isRequired,
-    showToast: PropTypes.func.isRequired,
-    undoPendingUpdates: PropTypes.func.isRequired
+    showToast: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
     if (nextProps.admin.toast.type) {

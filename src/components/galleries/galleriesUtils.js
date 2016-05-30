@@ -37,8 +37,8 @@ console.log('setActiveGallery');
         show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // force show when seqImagesLoaded is disabled, since that function reveals images normally
       };
     });
-    scope.setState({ ...scope.state, categories, gallery, loadImagesSeq: true });
-    // TODO: use dispatch to set loadImagesSeq state
+    scope.setState({ ...scope.state, categories, gallery });
+    scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to reset after additional images have been added
   }
 }
 
@@ -52,21 +52,20 @@ export function unbindImagesLoaded(element) {
 // https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element, scope) {
   const imgLoad = imagesLoaded(element);
+  if (scope.props.galleries.seqImagesLoadedEnabled) {
+    scope.props.seqImagesLoadedEnabled(false); // set false to signify imgLoad.progress event handler has been set
+  }
 console.log('seqImagesLoaded');
   // a dispatch is used to iteratively remove the hidden class from each element
   imgLoad.on( 'progress', ( instance, image ) => {
     const loaded = image.isLoaded;
-    if (scope.state.loadImagesSeq) {
-      scope.setState({...scope.state, loadImagesSeq: false });
-      // TODO: use dispatch to set loadImagesSeq state
-    }
     if (loaded && !scope.unbindImagesLoaded) {
       const img = image.img;
       const id = img.parentElement.parentElement.id;
 
 console.log('loadImagesSeq');
       const gallery = scope.state.gallery.map(image => {
-        return {
+        return { // images are hidden by default
           ...image, // update state to reveal each image
           show: image.id === id ? true : image.show
         };
@@ -74,8 +73,6 @@ console.log('loadImagesSeq');
       scope.setState({...scope.state, gallery});
     }
   });
-  // images are hidden by default
-  // as its triggered by the imagesLoaded.progress event
 }
 
 

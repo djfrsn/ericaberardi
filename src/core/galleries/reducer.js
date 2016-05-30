@@ -4,6 +4,7 @@ import {
   HYDRATE_PENDING_GALLERIES,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR,
+  IMAGES_LOADED_ENABLED,
   CLEAR_GALLERIES_TOAST,
   TOGGLE_GALLERY_DELETE,
   TAG_IMAGE_FOR_DELETION,
@@ -17,7 +18,7 @@ export const initialState = {
   toast: {},
   galleryDeleteEnabled: false,
   highlightGalleriesLink: false,
-  seqImagesLoadedEnabled: true
+  seqImagesLoadedEnabled: false
 };
 
 const successToast = {
@@ -57,6 +58,12 @@ function taggedForDeleteGalleries(state, action) {
 
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
+    case IMAGES_LOADED_ENABLED:
+      return {
+        ...state,
+        seqImagesLoadedEnabled: action.payload
+      };
+
     case CLEAR_GALLERIES_TOAST:
       return {
         ...state,

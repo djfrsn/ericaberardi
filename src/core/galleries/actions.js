@@ -1,4 +1,5 @@
 import {
+  IMAGES_LOADED_ENABLED,
   CLEAR_GALLERIES_TOAST,
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
@@ -34,6 +35,15 @@ export function hydratePendingGalleries(snapshot) {
     dispatch({
       type: HYDRATE_PENDING_GALLERIES,
       payload: snapshot
+    });
+  };
+}
+
+export function seqImagesLoadedEnabled(toggle) {
+  return dispatch => {
+    dispatch({
+      type: IMAGES_LOADED_ENABLED,
+      payload: toggle
     });
   };
 }

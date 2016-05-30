@@ -1,47 +1,6 @@
 //===================================================================
-//  ADMIN
+//  GENERAL
 //===================================================================
-.pending-changes__title {
-  margin-top: 1em;
-  font-family: Marvel, 'sans-serif';
-}
-
-.dashboard__wrapper {
-  text-align: center;
-}
-
-.admin-pending_paragraph {
-  margin-top: 0.5em;
-  list-style: none;
-}
-
-
-.change-password__link {
-  color: black;
-  text-align: center;
-}
-
-.change-password__success-msg, .change-password__error-msg {
-  font-size: 1rem;
-  text-align: center;
-}
-
-.change-password__success-msg {
-  color: #00B900;
-}
-
-.change-password__error-msg {
-  color: red;
-}
-
-.sign-in, .change-password {
-  max-width: 300px;
-}
-.dashboard {
-  max-width: 60%;
-  font-family: $alt-font-family;
-}
-
 .sign-in, .change-password, .dashboard {
   margin-top: 90px;
   input {
@@ -55,13 +14,6 @@
       outline: none;
     }
   }
-}
-
-.sign-in__heading {
-  margin-bottom: 36px;
-  font-size: 30px;
-  font-weight: 300;
-  text-align: center;
 }
 
 .eb-button__container {
@@ -94,6 +46,54 @@
   }
 }
 
+//===================================================================
+//  LOGIN
+//===================================================================
+
+.sign-in, .change-password {
+  max-width: 300px;
+}
+
+.login__error-msg {
+  color: red;
+  text-align: center;
+}
+
+.sign-in__heading {
+  margin-bottom: 36px;
+  font-size: 30px;
+  font-weight: 300;
+  text-align: center;
+}
+
+//===================================================================
+//  DASHBOARD
+//===================================================================
+
+.dashboard {
+  max-width: 60%;
+  font-family: $alt-font-family;
+}
+
+.dashboard__wrapper {
+  text-align: center;
+}
+
+.pending-changes__wrapper {
+  @include default-top-border();
+  margin-top: 40px;
+}
+
+.pending-changes__title {
+  margin-top: 1em;
+  font-family: Marvel, 'sans-serif';
+}
+
+.admin-pending_paragraph {
+  margin-top: 0.5em;
+  list-style: none;
+}
+
 .pending-changes__undo {
   background: lighten(red, 20%);
 }
@@ -107,7 +107,24 @@
   width: 45%;
 }
 
-.login__error-msg {
-  color: red;
+//===================================================================
+//  CHANGE PASSWORD
+//===================================================================
+
+.change-password__link {
+  color: black;
   text-align: center;
+}
+
+.change-password__success-msg, .change-password__error-msg {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.change-password__success-msg {
+  color: #00B900;
+}
+
+.change-password__error-msg {
+  color: red;
 }

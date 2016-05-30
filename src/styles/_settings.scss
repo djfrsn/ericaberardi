@@ -44,12 +44,18 @@ $grid-max-width: 70% !default;
 .no-scroll {
   overflow: hidden;
 }
+
 //===============================================
 //  MIXINS
 //===============================================
 @mixin font-family($family: $base-font-family) {
   font-family: $family;
 }
+
+@mixin default-top-border($color: $colors-gray) {
+  border-top: 1px solid $color;
+}
+
 @mixin quick-cubic-transition($prop: all) {
   transition: $prop .4s cubic-bezier(0,0,.25,1);
 }

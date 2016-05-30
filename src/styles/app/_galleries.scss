@@ -26,7 +26,7 @@
 }
 
 .gallery__navigation {
-  border-top: 1px solid $colors-gray;
+  @include default-top-border();
 }
 
 .gallery__masonry {
@@ -64,6 +64,3 @@
     color: $colors-white;
   }
 }
-// @media (max-width: 960px) {
-
-// }

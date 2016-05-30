@@ -33,6 +33,7 @@ export class Galleries extends Component {
     location: PropTypes.object.isRequired,
     showLightbox: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
+    toggleGalleryDelete: PropTypes.func.isRequired,
     uploadGalleryImage: PropTypes.func.isRequired
   }
   state = {
@@ -40,6 +41,7 @@ export class Galleries extends Component {
     categories: [],
     currentCategory: '',
     files: [],
+    showDeleteHelp: false,
     loadImagesSeq: true
   }
   componentWillMount() {
@@ -96,12 +98,20 @@ export class Galleries extends Component {
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
+  toggleDeleteHelp = () => {
+    this.setState({
+      ...this.state,
+      showDeleteHelp: !this.state.showDeleteHelp
+    });
+  }
   render() {
     const { gallery, categories } = this.state;
     const galleryDropZoneClass = classNames({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryDeleteClass = classNames({ ['gallery__delete_wrapper']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryDeleteWrapper = this.props.auth.authenticated ? (<div className={galleryDeleteClass}>
-      <p className="gallery__delete_reset">Reset</p><i className="fa fa-trash-o gallery_delete_icon"></i><p className="gallery_delete_confirm">Delete</p>
+    const galleryDeleteControlsClass = classNames({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const galleryHelpMsgClass = classNames({ ['delete__help_message']: true, ['invisible']: !this.state.showDeleteHelp });
+    const galleryDeleteMsgClass = classNames({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteHelp });
+    const galleryDeleteControls = this.props.auth.authenticated ? (<div className={galleryDeleteControlsClass}>
+      <a href="#" className="gallery__delete_reset">Reset</a><i onClick={this.props.toggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp} className="fa fa-trash-o gallery_delete_icon"></i><a href="#" className="gallery_delete_confirm">Delete</a>
     </div>) : null;
     const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
@@ -127,7 +137,9 @@ export class Galleries extends Component {
                 {galleryImages({gallery, scope: this})}
             </Masonry>
           </div>
-          {galleryDeleteWrapper}
+          <p className={galleryHelpMsgClass}>Select as many images as you'd like to delete. When your done, click the delete button to remove all selected images.</p>
+          {galleryDeleteControls}
+          <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
           <Lightbox/>
         </div>
       </div>

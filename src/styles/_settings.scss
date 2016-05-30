@@ -45,12 +45,24 @@ $grid-max-width: 70% !default;
   overflow: hidden;
 }
 
+.invisible {
+  visibility: hidden;
+}
+
 //===============================================
 //  MIXINS
 //===============================================
 @mixin font-family($family: $base-font-family) {
   font-family: $family;
 }
+
+@mixin flex-perfect-center() {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
 
 @mixin default-top-border($color: $colors-gray) {
   border-top: 1px solid $color;

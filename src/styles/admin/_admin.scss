@@ -21,11 +21,8 @@
 .eb-button__container {
   width: 50%;
   margin: 0 auto;
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
+  @include flex-perfect-center();
   flex-wrap: wrap;
-  align-items: center;
   justify-content: center;
 }
 
@@ -98,12 +95,8 @@
 //===================================================================
 
 .pending-changes__list_wrapper {
-  display: -webkit-flex;
-  display: flex;
-  flex-direction: row;
+  @include flex-perfect-center();
   flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
   margin-bottom: 40px;
   text-transform: capitalize;
 }

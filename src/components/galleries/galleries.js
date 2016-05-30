@@ -3,7 +3,6 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import Dropzone from 'react-dropzone';
-import Masonry from 'react-masonry-component';
 // App Specific
 import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
@@ -12,13 +11,8 @@ import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
 import * as gUtils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
-import galleryImages from './galleryImages';
+import GalleryImages from './galleryImages';
 import Lightbox from './lightbox';
-
-const masonryOptions = {
-  transitionDuration: 500,
-  percentPosition: true
-};
 
 export class Galleries extends Component {
   static contextTypes = {
@@ -101,7 +95,9 @@ export class Galleries extends Component {
     gUtils.setGallery(props, this); // set current gallery images src
   }
   loadImagesSeq = () => {
+    // TODO: seqImagesLoaded must be called once images are  o screen. running this function inside galleryImages would solve this
     if (this.state.loadImagesSeq) {
+       // only need to bind once imgs gallery on dom
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
@@ -153,14 +149,7 @@ export class Galleries extends Component {
           </div>
           {galleryDropZone}
           <div className="gallery">
-            <Masonry
-              ref={ref => { this.masonry = ref; }}
-              className={'gallery__masonry'} // default ''
-              options={masonryOptions} // default {}
-              disableImagesLoaded={false} // default false
-              >
-                {galleryImages({gallery, scope: this})}
-            </Masonry>
+            <GalleryImages gallery={gallery} showGalleryLightbox={this.showLightbox}/>
           </div>
           <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
           {galleryDeleteControls}

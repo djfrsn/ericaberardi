@@ -51,10 +51,10 @@ export function tagImgForDeletion(data) {
   return (dispatch, getState) => {
     console.log(data);
     const { galleryDeleteEnable } = getState();
-    // dispatch({
-    //   type: TOGGLE_GALLERY_DELETE,
-    //   payload: !galleryDeleteEnable
-    // });
+    dispatch({
+      type: TOGGLE_GALLERY_DELETE,
+      payload: !galleryDeleteEnable
+    });
   };
 }
 

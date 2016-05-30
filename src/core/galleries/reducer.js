@@ -46,8 +46,7 @@ export function galleriesReducer(state = initialState, action) {
 
     case TOGGLE_GALLERY_DELETE:
       return {
-        ...state,
-        galleryDeleteEnable: action.payload
+        ...state
       };
 
     case HYDRATE_GALLERIES:

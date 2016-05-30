@@ -10,12 +10,13 @@ export default opts => {
     }
     const src = cloud ? cloud.src : element.src;
     const containerWidth = cloud ? cloud.containerWidth : gUtils.getContainerWidth({type: 'gallery-preview'});
-    const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !element.show, ['gallery__image_delete']: element.shouldDelete });
+    const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !element.show });
+    const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: element.shouldDelete });
     const imageLinkClass = opts.scope.props.galleries.galleryDeleteEnabled ? 'lbx-disabled' : '';
     return element ? (
       <div key={element.id} id={element.id} className={containerClassName} style={{width: `${containerWidth}%` }}>
         <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>
-          <img src={src} />
+          <img src={src} className={imageClassName} />
         </a>
       </div>
       ) : null;

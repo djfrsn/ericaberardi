@@ -1,5 +1,4 @@
 import imagesLoaded from 'imagesloaded';
-import throttle from 'lodash.throttle';
 
 export function parsePath(val) { // takes paths like galleries/sports and returns sports
   let path = '/';
@@ -29,7 +28,6 @@ export function hydrateActiveGallery(props, scope) {
     scope.context.router.replace(`/galleries/${galleryPath}`);
   }
 
-console.log('hydrateActiveGallery');
   if (categories.length > 0) {
     const gallery = galleryProp.map(image => {
       return {
@@ -38,7 +36,9 @@ console.log('hydrateActiveGallery');
       };
     });
     scope.setState({ ...scope.state, categories, gallery });
-    scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added
+    if (!scope.props.galleries.forceImagesLoadedOff) {
+      scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added
+    }
   }
 }
 
@@ -55,15 +55,14 @@ export function seqImagesLoaded(element, scope) {
   if (scope.props.galleries.seqImagesLoadedEnabled) {
     scope.props.seqImagesLoadedEnabled(false); // set false to signify imgLoad.progress event handler has been set
   }
-console.log('seqImagesLoaded');
-  // a dispatch is used to iteratively remove the hidden class from each element
+
+  // NOTE: this is a perf hog and should only run when images are in the galleryContainer or when more images are added
   imgLoad.on( 'progress', ( instance, image ) => {
     const loaded = image.isLoaded;
     if (loaded && !scope.unbindImagesLoaded) {
       const img = image.img;
       const id = img.parentElement.parentElement.id;
 
-console.log('loadImagesSeq');
       const gallery = scope.state.gallery.map(image => {
         return { // images are hidden by default
           ...image, // update state to reveal each image

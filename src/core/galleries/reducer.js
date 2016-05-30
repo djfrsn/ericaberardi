@@ -97,7 +97,8 @@ export function galleriesReducer(state = initialState, action) {
     case TOGGLE_GALLERY_DELETE:
       return {
         ...state,
-        seqImagesLoadedEnabled: !action.payload,
+        forceImagesLoadedOff: true,
+        seqImagesLoadedEnabled: false,
         galleryDeleteEnabled: action.payload
       };
 

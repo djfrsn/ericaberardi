@@ -105,7 +105,7 @@ export class Galleries extends Component {
     gUtils.hydrateActiveGallery(props, this); // set current gallery images src
   }
   loadImagesSeq = () => {
-    if (this.props.galleries.seqImagesLoadedEnabled) {
+    if (this.props.galleries.seqImagesLoadedEnabled) { // enabled/disabled to prevent over binding
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }

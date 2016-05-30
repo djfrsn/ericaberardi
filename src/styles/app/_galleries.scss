@@ -47,6 +47,17 @@
     width: 100%;
     height: auto;
   }
+
+  .gallery__image {
+
+    &.gallery__image_delete {
+      border: 2px dashed red;
+    }
+
+    &:active {
+      outline: none;
+    }
+  }
 }
 
 .gallery__dropzone_container {

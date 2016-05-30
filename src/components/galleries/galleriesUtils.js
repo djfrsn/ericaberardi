@@ -15,7 +15,7 @@ export function parsePath(val) { // takes paths like galleries/sports and return
   };
 }
 
-export function setActiveGallery(props, scope) {
+export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const defaultGallery = 'commercial';
@@ -29,7 +29,7 @@ export function setActiveGallery(props, scope) {
     scope.context.router.replace(`/galleries/${galleryPath}`);
   }
 
-console.log('setActiveGallery');
+console.log('hydrateActiveGallery');
   if (categories.length > 0) {
     const gallery = galleryProp.map(image => {
       return {
@@ -38,7 +38,7 @@ console.log('setActiveGallery');
       };
     });
     scope.setState({ ...scope.state, categories, gallery });
-    scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to reset after additional images have been added
+    scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added
   }
 }
 

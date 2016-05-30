@@ -48,7 +48,6 @@ export class Galleries extends Component {
   componentWillMount() {
     this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
-    this.setActiveGallery(this.props, this);
   }
   componentDidMount() {
     window.onresize = () => {
@@ -60,11 +59,13 @@ export class Galleries extends Component {
   }
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
+    const curPathname = this.props.location.pathname;
     this.path = gUtils.parsePath(pathname).path;
-    // try deep equal check to avoid setting gallery/pending-galleries when nothing has changed
-    // currently not running on route change
-    if (!deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries'])) {
-      this.setActiveGallery(nextProps, this);
+
+    const routeChange = pathname !== curPathname; // update active gallery on route/gallersState change
+    const galleryChange = !deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries']);
+    if (routeChange || galleryChange) {
+      this.hydrateActiveGallery(nextProps, this);
     }
     if (nextProps.galleries.toast.type) {
       this.props.clearGalleriesToast();
@@ -100,8 +101,8 @@ export class Galleries extends Component {
       this.props.tagImgForDeletion({imageId, category: this.path });
     }
   }
-  setActiveGallery = props => {
-    gUtils.setActiveGallery(props, this); // set current gallery images src
+  hydrateActiveGallery = props => {
+    gUtils.hydrateActiveGallery(props, this); // set current gallery images src
   }
   loadImagesSeq = () => {
     if (this.props.galleries.seqImagesLoadedEnabled) {

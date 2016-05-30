@@ -1,4 +1,5 @@
 import imagesLoaded from 'imagesloaded';
+import throttle from 'lodash.throttle';
 
 export function parsePath(val) { // takes paths like galleries/sports and returns sports
   let path = '/';
@@ -50,7 +51,7 @@ export function unbindImagesLoaded(element) {
 // https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element, scope) {
   const imgLoad = imagesLoaded(element);
-
+console.log('ran');
   // a dispatch is used to iteratively remove the hidden class from each element
   imgLoad.on( 'progress', ( instance, image ) => {
     const loaded = image.isLoaded;
@@ -63,13 +64,15 @@ export function seqImagesLoaded(element, scope) {
       const id = img.parentElement.parentElement.id;
 
       // reveal image
-      const gallery = scope.state.gallery.map(image => {
-        return {
-          ...image, // update state to reveal each image
-          show: image.id === id ? true : image.show
-        };
-      });
-      scope.setState({...scope.state, gallery});
+      throttle(() => {
+        const gallery = scope.state.gallery.map(image => {
+          return {
+            ...image, // update state to reveal each image
+            show: image.id === id ? true : image.show
+          };
+        });
+        scope.setState({...scope.state, gallery});
+      }, 10)();
     }
   });
   // images are hidden by default

@@ -12,13 +12,38 @@ const masonryOptions = {
   percentPosition: true
 };
 
-export default class GalleryImages extends Component {
+export default class Gallery extends Component {
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  };
+
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    galleries: PropTypes.object.isRequired,
     gallery: PropTypes.array.isRequired,
     showGalleryLightbox: PropTypes.func.isRequired
   }
-
+  componentWillMount() {
+    this.unbindImagesLoaded = false;
+  }
+  componentDidMount() {
+    this.loadImagesSeq(this.props);
+  }
+  componentWillUnmount() {
+    this.unbindImagesLoaded = true;
+    gUtils.unbindImagesLoaded(this.props.galleryContainer);
+  }
+  componentWillReceiveProps(nextProps) {
+    this.loadImagesSeq(nextProps);
+  }
+  loadImagesSeq = props => {
+    const hasGalleryImages = props.gallery.length > 0;
+    // compares passed in props to this.props, if there is a difference....loadImagesSeq...this means new img tags have been added to the page
+    if (hasGalleryImages) {
+       // only need to bind once imgs gallery on dom
+      gUtils.seqImagesLoaded(this.props.galleryContainer, this); // show images progressively as they load
+    }
+  }
   render() {
     const gallery = this.props.gallery;
     const galleryImages = gallery.length > 0 ? gallery.map(element => {
@@ -55,4 +80,4 @@ export default connect(state => ({
   admin: state.admin,
   galleries: state.galleries,
   auth: state.auth
-}), Object.assign({}, authActions, adminActions, galleryActions, lightboxActions))(GalleryImages);
+}), Object.assign({}, authActions, adminActions, galleryActions, lightboxActions))(Gallery);

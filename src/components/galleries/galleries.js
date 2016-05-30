@@ -11,7 +11,7 @@ import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
 import * as gUtils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
-import GalleryImages from './galleryImages';
+import Gallery from './gallery';
 import Lightbox from './lightbox';
 
 export class Galleries extends Component {
@@ -35,11 +35,9 @@ export class Galleries extends Component {
     categories: [],
     files: [],
     galleryDeleteEnabled: false,
-    showDeleteToggleMsg: false,
-    loadImagesSeq: true
+    showDeleteToggleMsg: false
   }
   componentWillMount() {
-    this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
     this.setGallery(this.props);
   }
@@ -47,7 +45,6 @@ export class Galleries extends Component {
     window.onresize = () => {
       gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     };
-    this.loadImagesSeq();
     const { pathname } = this.props.location;
     this.path = gUtils.parsePath(pathname).path; // stores currentCategory
   }
@@ -62,13 +59,8 @@ export class Galleries extends Component {
       this.props.showToast(nextProps.galleries.toast);
     }
   }
-  componentDidUpdate() {
-    this.loadImagesSeq();
-  }
   componentWillUnmount() {
     this.props.highlightGalleriesLink(false);
-    this.unbindImagesLoaded = true;
-    gUtils.unbindImagesLoaded(this.galleryContainer);
     window.onresize = () => {}; // remove listener
   }
   onDrop(files) {
@@ -93,13 +85,6 @@ export class Galleries extends Component {
   }
   setGallery = props => {
     gUtils.setGallery(props, this); // set current gallery images src
-  }
-  loadImagesSeq = () => {
-    // TODO: seqImagesLoaded must be called once images are  o screen. running this function inside galleryImages would solve this
-    if (this.state.loadImagesSeq) {
-       // only need to bind once imgs gallery on dom
-      gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
-    }
   }
   onToggleGalleryDelete = e => {
     e.preventDefault();
@@ -149,7 +134,12 @@ export class Galleries extends Component {
           </div>
           {galleryDropZone}
           <div className="gallery">
-            <GalleryImages gallery={gallery} showGalleryLightbox={this.showLightbox}/>
+            <Gallery
+              gallery={gallery}
+              showGalleryLightbox={this.showLightbox}
+              galleryContainer={this.galleryContainer}
+              location={this.props.location}
+            />
           </div>
           <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
           {galleryDeleteControls}

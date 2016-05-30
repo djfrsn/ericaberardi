@@ -2,8 +2,10 @@
 //  GENERAL
 //===================================================================
 .sign-in, .change-password, .dashboard {
+  font-family: $alt-font-family;
   margin-top: 60px;
   input {
+    font-family: $alt-font-family;
     color: #999;
     border: none;
     border-bottom: 1px solid $colors-alt-black;
@@ -78,7 +80,6 @@
 
 .dashboard {
   max-width: 60%;
-  font-family: $alt-font-family;
   font-size: 1.5rem;
 }
 
@@ -150,6 +151,12 @@
 .change-password__link {
   color: black;
   text-align: center;
+  text-decoration: none;
+  @extend .link-border-hidden;
+
+  &.active, &:hover {
+    @extend .link-border;
+  }
 }
 
 .change-password__success-msg, .change-password__error-msg {

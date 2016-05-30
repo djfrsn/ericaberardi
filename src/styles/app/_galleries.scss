@@ -96,8 +96,18 @@
 
 $delete-margin-right: 20px;
 
+.gallery__delete_reset, .gallery_delete_confirm {
+  @include quick-cubic-transition(color);
+  text-decoration: none;
+  font-weight: bold;
+}
+
 .gallery__delete_reset {
   margin-right: $delete-margin-right;
+
+  &:hover {
+    color: $ericaYellow;
+  }
 }
 
 .gallery_delete_icon {
@@ -120,4 +130,7 @@ $delete-margin-right: 20px;
 
 .gallery_delete_confirm {
 
+  &:hover {
+    color: red;
+  }
 }

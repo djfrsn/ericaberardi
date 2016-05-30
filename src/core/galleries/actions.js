@@ -47,6 +47,16 @@ export function toggleGalleryDelete() {
   };
 }
 
+export function tagImgForDeletion() {
+  return (dispatch, getState) => {
+    const { galleryDeleteEnable } = getState();
+    dispatch({
+      type: TOGGLE_GALLERY_DELETE,
+      payload: !galleryDeleteEnable
+    });
+  };
+}
+
 export function highlightGalleriesLink(toggle) {
   return dispatch => {
     dispatch({

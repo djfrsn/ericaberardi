@@ -11,9 +11,10 @@ export default opts => {
     const containerWidth = cloud ? cloud.containerWidth : gUtils.getContainerWidth({type: 'gallery-preview'});
     const masonryClass = 'masonry__image__container';
     const containerClassName = element.show ? masonryClass : `${masonryClass} hide`;
+    const imageLinkClass = opts.scope.state.galleryDeleteEnabled ? 'lbx-disabled' : '';
     return element ? (
       <div key={element.id} id={element.id} className={containerClassName} style={{width: `${containerWidth}%` }}>
-        <a href="#!" onClick={opts.scope.showLightbox}>
+        <a href="#!" onClick={opts.scope.showLightbox} className={imageLinkClass}>
           <img src={src} />
         </a>
       </div>

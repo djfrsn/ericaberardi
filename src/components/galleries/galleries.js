@@ -33,7 +33,7 @@ export class Galleries extends Component {
     location: PropTypes.object.isRequired,
     showLightbox: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
-    toggleGalleryDelete: PropTypes.func.isRequired,
+    tagImgForDeletion: PropTypes.func.isRequired,
     uploadGalleryImage: PropTypes.func.isRequired
   }
   state = {
@@ -41,7 +41,7 @@ export class Galleries extends Component {
     categories: [],
     currentCategory: '',
     files: [],
-    galleryDeleteEnable: false,
+    galleryDeleteEnabled: false,
     showDeleteToggleMsg: false,
     loadImagesSeq: true
   }
@@ -88,8 +88,15 @@ export class Galleries extends Component {
   }
   showLightbox = e => {
     e.preventDefault();
-    this.props.showLightbox({e, id: e.currentTarget.parentElement.id, scope: this});
-    document.querySelector('body').className = 'no-scroll';
+    const lbxDisabled = Array.indexOf(e.currentTarget.classList, 'lbx-disabled') >= 0;
+    if (!lbxDisabled) {
+      this.props.showLightbox({e, id: e.currentTarget.parentElement.id, scope: this});
+      document.querySelector('body').className = 'no-scroll';
+    }
+    else if (this.state.galleryDeleteEnabled) {
+      const imageId = e.currentTarget.parentElement.id;
+      this.props.tagImgForDeletion({imageId, category: this.state.currentCategory });
+    }
   }
   setGallery = props => {
     gUtils.setGallery(props, this); // set current gallery images src
@@ -103,7 +110,7 @@ export class Galleries extends Component {
     e.preventDefault();
     this.setState({
       ...this.state,
-      galleryDeleteEnable: !this.state.galleryDeleteEnable
+      galleryDeleteEnabled: !this.state.galleryDeleteEnabled
     });
     // this.props.toggleGalleryDelete();
   }
@@ -114,10 +121,15 @@ export class Galleries extends Component {
     });
   }
   render() {
+    // delete strategy
+    // disable lightbox
+    // on img click if delete mode enabled set galleries img id to delete & save this state to db
+    // use delete prop to give red b order to any images selected for deletion
+    // on delete/reset show sweet alert prompt
     const { gallery, categories } = this.state;
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryDeleteToggle = !this.state.galleryDeleteEnable;
+    const galleryDeleteToggle = !this.state.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
     const galleryDeleteControls = this.props.auth.authenticated ? (<div className={galleryDeleteControlsClass}>
@@ -151,7 +163,7 @@ export class Galleries extends Component {
                 {galleryImages({gallery, scope: this})}
             </Masonry>
           </div>
-          <p className={galleryHelpMsgClass}>Select as many images as you'd like to delete. When your done, click the delete button to remove all selected images.</p>
+          <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
           {galleryDeleteControls}
           <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
           <Lightbox/>

@@ -39,10 +39,10 @@ export function hydratePendingGalleries(snapshot) {
 
 export function toggleGalleryDelete() {
   return (dispatch, getState) => {
-    const { galleryDeleteEnable } = getState();
+    const { galleries } = getState();
     dispatch({
       type: TOGGLE_GALLERY_DELETE,
-      payload: !galleryDeleteEnable
+      payload: !galleries.galleryDeleteEnabled
     });
   };
 }

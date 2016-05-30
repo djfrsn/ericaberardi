@@ -14,7 +14,7 @@ export const initialState = {
   galleries: {},
   ['pending-galleries']: {},
   toast: {},
-  galleryDeleteEnable: false,
+  galleryDeleteEnabled: false,
   highlightGalleriesLink: false
 };
 
@@ -46,7 +46,8 @@ export function galleriesReducer(state = initialState, action) {
 
     case TOGGLE_GALLERY_DELETE:
       return {
-        ...state
+        ...state,
+        galleryDeleteEnabled: action.payload
       };
 
     case HYDRATE_GALLERIES:

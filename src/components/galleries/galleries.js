@@ -35,13 +35,13 @@ export class Galleries extends Component {
     showLightbox: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
     tagImgForDeletion: PropTypes.func.isRequired,
+    toggleGalleryDelete: PropTypes.func.isRequired,
     uploadGalleryImage: PropTypes.func.isRequired
   }
   state = {
     gallery: [],
     categories: [],
     files: [],
-    galleryDeleteEnabled: false,
     showDeleteToggleMsg: false,
     loadImagesSeq: true
   }
@@ -94,7 +94,7 @@ export class Galleries extends Component {
       this.props.showLightbox({e, id: e.currentTarget.parentElement.id, scope: this});
       document.querySelector('body').className = 'no-scroll';
     }
-    else if (this.state.galleryDeleteEnabled) {
+    else if (this.props.galleries.galleryDeleteEnabled) {
       const imageId = e.currentTarget.parentElement.id;
       this.props.tagImgForDeletion({imageId, category: this.path });
     }
@@ -103,17 +103,13 @@ export class Galleries extends Component {
     gUtils.setActiveGallery(props, this); // set current gallery images src
   }
   loadImagesSeq = () => {
-    if (this.state.loadImagesSeq && !this.state.galleryDeleteEnabled) {
+    if (this.state.loadImagesSeq && !this.props.galleries.galleryDeleteEnabled) {
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
   onToggleGalleryDelete = e => {
     e.preventDefault();
-    this.setState({
-      ...this.state,
-      galleryDeleteEnabled: !this.state.galleryDeleteEnabled
-    });
-    // this.props.toggleGalleryDelete();
+    this.props.toggleGalleryDelete();
   }
   toggleDeleteHelp = () => {
     this.setState({
@@ -130,7 +126,7 @@ export class Galleries extends Component {
     const { gallery, categories } = this.state;
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryDeleteToggle = !this.state.galleryDeleteEnabled;
+    const galleryDeleteToggle = !this.props.galleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
     const galleryDeleteControls = this.props.auth.authenticated ? (<div className={galleryDeleteControlsClass}>

@@ -99,6 +99,10 @@ export class Galleries extends Component {
   render() {
     const { gallery, categories } = this.state;
     const galleryDropZoneClass = classNames({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const galleryDeleteClass = classNames({ ['gallery__delete_wrapper']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const galleryDeleteWrapper = this.props.auth.authenticated ? (<div className={galleryDeleteClass}>
+      <p className="gallery__delete_reset">Reset</p><i className="fa fa-trash-o gallery_delete_icon"></i><p className="gallery_delete_confirm">Delete</p>
+    </div>) : null;
     const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
         <div>Try dropping some files here, or click to select files to upload.</div>
@@ -123,6 +127,7 @@ export class Galleries extends Component {
                 {galleryImages({gallery, scope: this})}
             </Masonry>
           </div>
+          {galleryDeleteWrapper}
           <Lightbox/>
         </div>
       </div>

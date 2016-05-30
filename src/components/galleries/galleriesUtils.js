@@ -29,6 +29,7 @@ export function setActiveGallery(props, scope) {
     scope.context.router.replace(`/galleries/${galleryPath}`);
   }
 
+console.log('setActiveGallery');
   if (categories.length > 0) {
     const gallery = galleryProp.map(image => {
       return {
@@ -51,7 +52,7 @@ export function unbindImagesLoaded(element) {
 // https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element, scope) {
   const imgLoad = imagesLoaded(element);
-console.log('ran');
+console.log('seqImagesLoaded');
   // a dispatch is used to iteratively remove the hidden class from each element
   imgLoad.on( 'progress', ( instance, image ) => {
     const loaded = image.isLoaded;
@@ -63,16 +64,14 @@ console.log('ran');
       const img = image.img;
       const id = img.parentElement.parentElement.id;
 
-      // reveal image
-      throttle(() => {
-        const gallery = scope.state.gallery.map(image => {
-          return {
-            ...image, // update state to reveal each image
-            show: image.id === id ? true : image.show
-          };
-        });
-        scope.setState({...scope.state, gallery});
-      }, 10)();
+console.log('loadImagesSeq');
+      const gallery = scope.state.gallery.map(image => {
+        return {
+          ...image, // update state to reveal each image
+          show: image.id === id ? true : image.show
+        };
+      });
+      scope.setState({...scope.state, gallery});
     }
   });
   // images are hidden by default

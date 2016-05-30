@@ -62,6 +62,7 @@ export class Galleries extends Component {
     const { pathname } = nextProps.location;
     this.path = gUtils.parsePath(pathname).path;
     // try deep equal check to avoid setting gallery/pending-galleries when nothing has changed
+    // currently not running on route change
     if (!deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries'])) {
       this.setActiveGallery(nextProps, this);
     }

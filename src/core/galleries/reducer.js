@@ -1,6 +1,7 @@
 
 import {
   CLEAR_GALLERIES_TOAST,
+  TOGGLE_GALLERY_DELETE,
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
@@ -13,6 +14,7 @@ export const initialState = {
   galleries: {},
   ['pending-galleries']: {},
   toast: {},
+  galleryDeleteEnable: false,
   highlightGalleriesLink: false
 };
 
@@ -40,6 +42,12 @@ export function galleriesReducer(state = initialState, action) {
       return {
         ...state,
         toast: {}
+      };
+
+    case TOGGLE_GALLERY_DELETE:
+      return {
+        ...state,
+        galleryDeleteEnable: action.payload
       };
 
     case HYDRATE_GALLERIES:

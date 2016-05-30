@@ -1,9 +1,8 @@
 import {
-  CREATE_PLACEHOLDER_IMAGES,
   CLEAR_GALLERIES_TOAST,
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
-  TOGGLE_GALLERY_EDIT,
+  TOGGLE_GALLERY_DELETE,
   HIGHLIGHT_GALLERIES_LINK,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR
@@ -15,15 +14,6 @@ export function clearGalleriesToast() {
   return dispatch => {
     dispatch({
       type: CLEAR_GALLERIES_TOAST
-    });
-  };
-}
-
-export function createPlaceholderImages(data) {
-  return dispatch => {
-    dispatch({
-      type: CREATE_PLACEHOLDER_IMAGES,
-      payload: data
     });
   };
 }
@@ -47,11 +37,12 @@ export function hydratePendingGalleries(snapshot) {
   };
 }
 
-export function toggleGalleryEdit(data) {
-  return dispatch => {
+export function toggleGalleryDelete() {
+  return (dispatch, getState) => {
+    const { galleryDeleteEnable } = getState();
     dispatch({
-      type: TOGGLE_GALLERY_EDIT,
-      payload: data
+      type: TOGGLE_GALLERY_DELETE,
+      payload: !galleryDeleteEnable
     });
   };
 }

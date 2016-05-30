@@ -1,7 +1,7 @@
 // Vendor
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
-import classNames from 'classnames';
+import cn from 'classnames';
 import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
 // App Specific
@@ -41,7 +41,8 @@ export class Galleries extends Component {
     categories: [],
     currentCategory: '',
     files: [],
-    showDeleteHelp: false,
+    galleryDeleteEnable: false,
+    showDeleteToggleMsg: false,
     loadImagesSeq: true
   }
   componentWillMount() {
@@ -98,20 +99,33 @@ export class Galleries extends Component {
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
+  onToggleGalleryDelete = e => {
+    e.preventDefault();
+    this.setState({
+      ...this.state,
+      galleryDeleteEnable: !this.state.galleryDeleteEnable
+    });
+    // this.props.toggleGalleryDelete();
+  }
   toggleDeleteHelp = () => {
     this.setState({
       ...this.state,
-      showDeleteHelp: !this.state.showDeleteHelp
+      showDeleteToggleMsg: !this.state.showDeleteToggleMsg
     });
   }
   render() {
     const { gallery, categories } = this.state;
-    const galleryDropZoneClass = classNames({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryDeleteControlsClass = classNames({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryHelpMsgClass = classNames({ ['delete__help_message']: true, ['invisible']: !this.state.showDeleteHelp });
-    const galleryDeleteMsgClass = classNames({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteHelp });
+    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const galleryDeleteToggle = !this.state.galleryDeleteEnable;
+    const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
+    const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
     const galleryDeleteControls = this.props.auth.authenticated ? (<div className={galleryDeleteControlsClass}>
-      <a href="#" className="gallery__delete_reset">Reset</a><i onClick={this.props.toggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp} className="fa fa-trash-o gallery_delete_icon"></i><a href="#" className="gallery_delete_confirm">Delete</a>
+      <a href="#!" className={cn({ ['gallery__delete_reset']: true, ['invisible']: galleryDeleteToggle })}>Reset</a>
+      <a href="#!" onClick={this.onToggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp}>
+        <i className="fa fa-trash-o gallery_delete_icon"></i>
+      </a>
+      <a href="#!" className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
     </div>) : null;
     const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>

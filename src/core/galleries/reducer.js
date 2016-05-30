@@ -38,20 +38,20 @@ function mergeGalleries(state, action) {
   return mergeObjectArrays(state.galleries, pendingGalleries);
 }
 
-// merge published galleries w/ pending galleries :)
 function taggedForDeleteGalleries(state, action) {
   const pendingGalleries = state['pending-galleries'];
-  const galleries = Object.keys(pendingGalleries).length > 0 ? pendingGalleries : state.galleries.galleries;
+  const hasPendingGalleries = Object.keys(pendingGalleries).length > 0;
+  const stateKey = hasPendingGalleries ? 'pending-galleries' : 'galleries';
+  const galleries = hasPendingGalleries ? pendingGalleries : state.galleries.galleries;
   const gallery = galleries[action.payload.category].map(image => {
     return {
       ...image,
-      shouldDelete: image.id === action.payload.imageId ? true : false
+      shouldDelete: image.id === action.payload.imageId ? true : (image.shouldDelete || false)
     };
   });
-  console.log({ ...state.galleries, [action.payload.categories]: gallery });
   return {
     ...state,
-    galleries: { ...state.galleries, [action.payload.categories]: gallery }
+    [stateKey]: { ...state.galleries, [action.payload.category]: gallery }
   };
 }
 

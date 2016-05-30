@@ -48,7 +48,7 @@ export class Galleries extends Component {
   componentWillMount() {
     this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
-    this.setActiveGallery(this.props);
+    this.setActiveGallery(this.props, this);
   }
   componentDidMount() {
     window.onresize = () => {
@@ -61,9 +61,9 @@ export class Galleries extends Component {
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     this.path = gUtils.parsePath(pathname).path;
-    // try deep equal check to avoid setting gallery when nothing has changed
-    if (!deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries)) {
-      this.setActiveGallery(nextProps);
+    // try deep equal check to avoid setting gallery/pending-galleries when nothing has changed
+    if (!deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries'])) {
+      this.setActiveGallery(nextProps, this);
     }
     if (nextProps.galleries.toast.type) {
       this.props.clearGalleriesToast();
@@ -87,14 +87,14 @@ export class Galleries extends Component {
   onDropAccept = files => {
     this.props.uploadGalleryImage({ files, category: this.path });
   }
-  showLightbox = e => {
+  onImageClick = e => {
     e.preventDefault();
     const lbxDisabled = Array.indexOf(e.currentTarget.classList, 'lbx-disabled') >= 0;
     if (!lbxDisabled) {
       this.props.showLightbox({e, id: e.currentTarget.parentElement.id, scope: this});
       document.querySelector('body').className = 'no-scroll';
     }
-    else if (this.props.galleries.galleryDeleteEnabled) {
+    else if (this.props.galleries.galleryDeleteEnabled) { // Tag images for delection
       const imageId = e.currentTarget.parentElement.id;
       this.props.tagImgForDeletion({imageId, category: this.path });
     }

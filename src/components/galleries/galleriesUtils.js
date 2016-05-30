@@ -36,7 +36,7 @@ export function setActiveGallery(props, scope) {
       };
     });
     scope.setState({ ...scope.state, categories, gallery, loadImagesSeq: true });
-      // TODO: use dispatch to set loadImagesSeq state
+    // TODO: use dispatch to set loadImagesSeq state
   }
 }
 

@@ -50,9 +50,10 @@ function taggedForDeleteGalleries(state, action) {
       shouldDelete: image.id === action.payload.imageId ? true : (image.shouldDelete || false)
     };
   });
+
   return {
     ...state,
-    [stateKey]: { ...state.galleries, [action.payload.category]: gallery }
+    [stateKey]: { ...galleries, [action.payload.category]: gallery }
   };
 }
 

@@ -31,8 +31,8 @@ export function hydrateActiveGallery(props, scope) {
   if (categories.length > 0) {
     const gallery = galleryProp.map(image => {
       return {
-        ...image,
-        show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // force show when seqImagesLoaded is disabled, since that function reveals images normally
+        ...image, // force show when seqImagesLoaded is disabled
+        show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // since that function would otherwise reveals images
       };
     });
     scope.setState({ ...scope.state, categories, gallery });

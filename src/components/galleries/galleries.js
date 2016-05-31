@@ -62,7 +62,7 @@ export class Galleries extends Component {
     const curPathname = this.props.location.pathname;
     this.path = gUtils.parsePath(pathname).path;
 
-    const routeChange = pathname !== curPathname; // update active gallery on route/gallersState change
+    const routeChange = pathname !== curPathname || pathname === '/galleries'; // update active gallery on route/gallersState change
     const galleryChange = !deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries']);
     if (routeChange || galleryChange) {
       this.hydrateActiveGallery(nextProps, this);

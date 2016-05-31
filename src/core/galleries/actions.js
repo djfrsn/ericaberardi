@@ -5,6 +5,7 @@ import {
   HYDRATE_PENDING_GALLERIES,
   TOGGLE_GALLERY_DELETE,
   TAG_IMAGE_FOR_DELETION,
+  RESET_IMAGES_TAGGED_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR
@@ -54,6 +55,15 @@ export function toggleGalleryDelete() {
     dispatch({
       type: TOGGLE_GALLERY_DELETE,
       payload: !galleries.galleryDeleteEnabled
+    });
+  };
+}
+
+
+export function resetTaggedForGalleryDelete() {
+  return dispatch => {
+    dispatch({
+      type: RESET_IMAGES_TAGGED_FOR_DELETION
     });
   };
 }

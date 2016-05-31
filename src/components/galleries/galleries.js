@@ -32,6 +32,7 @@ export class Galleries extends Component {
     galleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
+    resetTaggedForGalleryDelete: PropTypes.func.isRequired,
     showLightbox: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
     tagImgForDeletion: PropTypes.func.isRequired,
@@ -109,9 +110,19 @@ export class Galleries extends Component {
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
+  onGalleryDeleteReset = e => {
+    e.preventDefault();
+    this.props.toggleGalleryDelete();
+    if (this.props.galleries.taggedForDeleteCount > 0) {
+      this.props.resetTaggedForGalleryDelete();
+    }
+  }
   onToggleGalleryDelete = e => {
     e.preventDefault();
     this.props.toggleGalleryDelete();
+    if (!this.props.galleries.galleryDeleteEnabled) {
+      this.props.resetTaggedForGalleryDelete(); // reset on toggle off
+    }
   }
   toggleDeleteHelp = () => {
     this.setState({
@@ -132,7 +143,7 @@ export class Galleries extends Component {
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
     const galleryDeleteControls = this.props.auth.authenticated ? (<div className={galleryDeleteControlsClass}>
-      <a href="#!" className={cn({ ['gallery__delete_reset']: true, ['invisible']: galleryDeleteToggle })}>Reset</a>
+      <a href="#!" onClick={this.onGalleryDeleteReset} className={cn({ ['gallery__delete_reset']: true, ['invisible']: galleryDeleteToggle })}>Reset</a>
       <a href="#!" onClick={this.onToggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp}>
         <i className="fa fa-trash-o gallery_delete_icon"></i>
       </a>

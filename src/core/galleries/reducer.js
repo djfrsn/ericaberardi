@@ -7,6 +7,7 @@ import {
   IMAGES_LOADED_ENABLED,
   CLEAR_GALLERIES_TOAST,
   TOGGLE_GALLERY_DELETE,
+  RESET_IMAGES_TAGGED_FOR_DELETION,
   TAG_IMAGE_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
@@ -18,7 +19,8 @@ export const initialState = {
   toast: {},
   galleryDeleteEnabled: false,
   highlightGalleriesLink: false,
-  seqImagesLoadedEnabled: false
+  seqImagesLoadedEnabled: false,
+  taggedForDeleteCount: 0
 };
 
 const successToast = {
@@ -39,6 +41,13 @@ function mergeGalleries(state, action) {
   return mergeObjectArrays(state.galleries, pendingGalleries);
 }
 
+// loop through galleries & reset tagged for delete state
+function resetTaggedForDeleteGalleries(state, action) {
+  // reset shouldDelete value for galleries
+}
+
+
+// tag a given imageId for deletion
 function taggedForDeleteGalleries(state, action) {
   const pendingGalleries = state['pending-galleries'];
   const hasPendingGalleries = Object.keys(pendingGalleries).length > 0;
@@ -105,6 +114,9 @@ export function galleriesReducer(state = initialState, action) {
 
     case TAG_IMAGE_FOR_DELETION:
       return taggedForDeleteGalleries(state, action);
+
+    case RESET_IMAGES_TAGGED_FOR_DELETION:
+      return resetTaggedForDeleteGalleries(state, action);
 
     case HIGHLIGHT_GALLERIES_LINK:
       return {

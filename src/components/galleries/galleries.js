@@ -112,7 +112,6 @@ export class Galleries extends Component {
   }
   onGalleryDeleteReset = e => {
     e.preventDefault();
-    this.props.toggleGalleryDelete();
     if (this.props.galleries.taggedForDeleteCount > 0) {
       this.props.resetTaggedForGalleryDelete();
     }

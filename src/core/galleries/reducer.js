@@ -77,9 +77,15 @@ function resetTaggedForDeleteGalleries(state) {
 function taggedForDeleteGalleries(state, action) {
   const { galleries, galleriesKey } = activeGalleries(state);
   const gallery = galleries[action.payload.category].map(image => {
+    const selectedImage = image.id === action.payload.imageId;
+    let shouldDelete;
+    if (selectedImage) {
+      shouldDelete = image.shouldDelete ? !image.shouldDelete : true;
+    }
+    const ifShouldntDelete = selectedImage ? false : image.shouldDelete; // if image isn't selected image ... use it's current state
     return {
-      ...image,
-      shouldDelete: image.id === action.payload.imageId ? true : (image.shouldDelete || false)
+      ...image, // this check allows for selecting and deselecting images
+      shouldDelete: shouldDelete ? shouldDelete : ifShouldntDelete // while retaining other images delete state
     };
   });
 

@@ -151,6 +151,8 @@ export class Galleries extends Component {
     // use delete prop to give red b order to any images selected for deletion
     // on delete/reset show sweet alert prompt
     const { gallery, categories } = this.state;
+    const taggedForDeleteCount = this.props.galleries.taggedForDeleteCount;
+    const char = taggedForDeleteCount > 1 ? '\'s' : '';
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     const galleryDeleteToggle = !this.props.galleries.galleryDeleteEnabled;
@@ -190,6 +192,7 @@ export class Galleries extends Component {
           <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
           {galleryDeleteControls}
           <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
+          <p className={cn({ ['taggedForDeleteCount']: true, ['invisible']: taggedForDeleteCount < 1 })}>{this.props.galleries.taggedForDeleteCount} {`Image${char}`} selected for deletion.</p>
           <Lightbox/>
         </div>
       </div>

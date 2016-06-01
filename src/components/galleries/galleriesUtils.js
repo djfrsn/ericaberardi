@@ -98,7 +98,7 @@ export function mq() {
 export function resizeGallery(scope) {
   const needResizeLayout = scope.masonry.masonry.needsResizeLayout();
   if (needResizeLayout) {
-    this.setGallery(scope.props, scope);
+    this.hydrateActiveGallery(scope.props, scope);
   }
 }
 // http://cloudinary.com/documentation/image_transformations#image_optimization

@@ -71,8 +71,23 @@ function resetTaggedForDeleteGalleries(state) {
 
   return {
     ...state,
-    [galleriesKey]: resetGalleries
+    [galleriesKey]: resetGalleries,
+    taggedForDeleteCount: 0
   };
+}
+
+function getTaggedForDeleteCount(galleries) {
+  let taggedForDeleteCount = 0;
+
+  forIn(galleries, gallery => {
+    gallery.forEach(image => {
+      if (image.shouldDelete) {
+        taggedForDeleteCount++;
+      }
+    });
+  });
+
+  return taggedForDeleteCount;
 }
 
 // tag a given imageId for deletion
@@ -91,9 +106,13 @@ function taggedForDeleteGalleries(state, action) {
     };
   });
 
+  const taggedForDeleteGalleries = { ...galleries, [action.payload.category]: gallery };
+  const taggedForDeleteCount = getTaggedForDeleteCount(taggedForDeleteGalleries);
+
   return {
     ...state,
-    [galleriesKey]: { ...galleries, [action.payload.category]: gallery }
+    [galleriesKey]: taggedForDeleteGalleries,
+    taggedForDeleteCount
   };
 }
 

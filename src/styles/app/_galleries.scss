@@ -88,7 +88,7 @@
   font-family: $alt-font-family;
 }
 
-.delete__toggle_message {
+.delete__toggle_message, .taggedForDeleteCount {
   font-family: $alt-font-family;
   font-weight: bold;
   text-align: center;
@@ -103,6 +103,10 @@
 .delete__help_message {
   font-size: 1.2em;
   margin-bottom: 20px;
+}
+
+.taggedForDeleteCount {
+  color: red;
 }
 
 $delete-margin-right: 20px;

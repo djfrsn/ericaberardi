@@ -14,6 +14,7 @@ import {
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import forIn from 'lodash.forin';
+import { activeGalleries } from './gsUtils';
 import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
 
 export const initialState = {
@@ -42,16 +43,6 @@ const errorToast = {
 function mergeGalleries(state, action) {
   const pendingGalleries = fObjectToObjectArray(action.payload);
   return mergeObjectArrays(state.galleries, pendingGalleries);
-}
-
-
-function activeGalleries(state) {
-  const pendingGalleries = state['pending-galleries'];
-  const hasPendingGalleries = Object.keys(pendingGalleries).length > 0;
-  const galleriesKey = hasPendingGalleries ? 'pending-galleries' : 'galleries';
-  const galleries = hasPendingGalleries ? pendingGalleries : state.galleries.galleries;
-
-  return { galleries, galleriesKey };
 }
 
 // loop through galleries & reset shouldDelete state

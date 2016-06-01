@@ -13,6 +13,8 @@ import {
   UPLOAD_GALLERY_IMAGE_ERROR
 } from './action-types';
 import { ENV } from 'config';
+import forIn from 'lodash.forin';
+import { activeGalleries } from './gsUtils';
 import utils from 'utils';
 
 export function clearGalleriesToast() {
@@ -69,12 +71,39 @@ export function toggleGalleryDelete() {
   };
 }
 
-export function onGalleryDeleteImages() {
+export function onGalleryDeleteImages(successCallback) {
   return (dispatch, getState) => {
-    const { galleries } = getState();
+    const { firebase, galleries } = getState();
+
+    const aGalleries = activeGalleries(galleries).galleries;
+    const storage = firebase.storage();
+
+    forIn(aGalleries, gallery => {
+      gallery.forEach(image => {
+        if (image.shouldDelete) {
+          // TODO: call if all files have been deleted....keep count since we know how many are selected
+          // set a 30 sec timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
+          // if (utils.isFunction(successCallback)) {
+          //   successCallback(); // TODO: break utils into named functions
+          // }
+          // Create a reference to the file to delete
+          const storageRef = storage.ref();
+          const imageRef = storageRef.child(image.fullPath);
+          debugger
+
+          // Delete the file
+          // imageRef.delete().then(function() {
+          //   // File deleted successfully
+
+          // }).catch(function(error) {
+          //   // Uh-oh, an error occurred!
+          // });
+        }
+      });
+    });
+
     dispatch({
-      type: DELETE_GALLERY_IMAGES,
-      payload: !galleries.galleryDeleteEnabled
+      type: DELETE_GALLERY_IMAGES
     });
   };
 }

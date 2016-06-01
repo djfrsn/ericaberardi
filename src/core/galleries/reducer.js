@@ -163,8 +163,8 @@ export function galleriesReducer(state = initialState, action) {
     case TOGGLE_GALLERY_DELETE:
       return {
         ...state,
-        forceImagesLoadedOff: true,
-        seqImagesLoadedEnabled: false,
+        forceImagesLoadedOff: action.payload, // force images loaded off while deleting imgs otherwise perf is horrible since
+        seqImagesLoadedEnabled: !action.payload, // imagesLoaded rebinds on all images in gallery container which is really slow
         galleryDeleteEnabled: action.payload
       };
 

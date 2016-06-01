@@ -1,9 +1,11 @@
 import {
   IMAGES_LOADED_ENABLED,
+  SEND_GALLERIES_TOAST,
   CLEAR_GALLERIES_TOAST,
   HYDRATE_GALLERIES,
   HYDRATE_PENDING_GALLERIES,
   TOGGLE_GALLERY_DELETE,
+  DELETE_GALLERY_IMAGES,
   TAG_IMAGE_FOR_DELETION,
   RESET_IMAGES_TAGGED_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK,
@@ -17,6 +19,14 @@ export function clearGalleriesToast() {
   return dispatch => {
     dispatch({
       type: CLEAR_GALLERIES_TOAST
+    });
+  };
+}
+export function sendGalleriesToast(toast) {
+  return dispatch => {
+    dispatch({
+      type: SEND_GALLERIES_TOAST,
+      payload: toast
     });
   };
 }
@@ -54,6 +64,16 @@ export function toggleGalleryDelete() {
     const { galleries } = getState();
     dispatch({
       type: TOGGLE_GALLERY_DELETE,
+      payload: !galleries.galleryDeleteEnabled
+    });
+  };
+}
+
+export function onGalleryDeleteImages() {
+  return (dispatch, getState) => {
+    const { galleries } = getState();
+    dispatch({
+      type: DELETE_GALLERY_IMAGES,
       payload: !galleries.galleryDeleteEnabled
     });
   };

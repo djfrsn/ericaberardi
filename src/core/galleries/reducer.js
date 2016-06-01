@@ -5,8 +5,10 @@ import {
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR,
   IMAGES_LOADED_ENABLED,
+  SEND_GALLERIES_TOAST,
   CLEAR_GALLERIES_TOAST,
   TOGGLE_GALLERY_DELETE,
+  DELETE_GALLERY_IMAGES,
   RESET_IMAGES_TAGGED_FOR_DELETION,
   TAG_IMAGE_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK
@@ -103,6 +105,12 @@ export function galleriesReducer(state = initialState, action) {
         seqImagesLoadedEnabled: action.payload
       };
 
+    case SEND_GALLERIES_TOAST:
+      return {
+        ...state,
+        toast: action.payload
+      };
+
     case CLEAR_GALLERIES_TOAST:
       return {
         ...state,
@@ -139,6 +147,11 @@ export function galleriesReducer(state = initialState, action) {
         forceImagesLoadedOff: true,
         seqImagesLoadedEnabled: false,
         galleryDeleteEnabled: action.payload
+      };
+
+    case DELETE_GALLERY_IMAGES:
+      return {
+        ...state
       };
 
     case TAG_IMAGE_FOR_DELETION:

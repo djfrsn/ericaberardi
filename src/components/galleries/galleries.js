@@ -11,6 +11,7 @@ import { authActions } from 'core/auth';
 import { galleryActions } from 'core/galleries';
 import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
+import { deleteImagesAlert } from './galleriesAlerts';
 import * as gUtils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
@@ -32,7 +33,9 @@ export class Galleries extends Component {
     galleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
+    onGalleryDeleteImages: PropTypes.func.isRequired,
     resetTaggedForGalleryDelete: PropTypes.func.isRequired,
+    sendGalleriesToast: PropTypes.func.isRequired,
     showLightbox: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
     tagImgForDeletion: PropTypes.func.isRequired,
@@ -123,6 +126,18 @@ export class Galleries extends Component {
       this.props.resetTaggedForGalleryDelete(); // reset taggedgalleries on toggle off
     }
   }
+  onDeleteImages = () => {
+    if (this.props.galleries.taggedForDeleteCount > 0) {
+      deleteImagesAlert(this);
+    }
+    else {
+      this.props.sendGalleriesToast({
+        firstLine: 'Error!',
+        secondLine: 'Select images to delete and try again.',
+        type: 'error'
+      });
+    }
+  }
   toggleDeleteHelp = () => {
     this.setState({
       ...this.state,
@@ -146,7 +161,7 @@ export class Galleries extends Component {
       <a href="#!" onClick={this.onToggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp}>
         <i className="fa fa-trash-o gallery_delete_icon"></i>
       </a>
-      <a href="#!" className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
+      <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
     </div>) : null;
     const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>

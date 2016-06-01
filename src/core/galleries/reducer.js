@@ -11,6 +11,7 @@ import {
   TAG_IMAGE_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
+import forIn from 'lodash.forin';
 import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
 
 export const initialState = {
@@ -41,18 +42,40 @@ function mergeGalleries(state, action) {
   return mergeObjectArrays(state.galleries, pendingGalleries);
 }
 
-// loop through galleries & reset tagged for delete state
-function resetTaggedForDeleteGalleries(state, action) {
-  // reset shouldDelete value for galleries
+
+function activeGalleries(state) {
+  const pendingGalleries = state['pending-galleries'];
+  const hasPendingGalleries = Object.keys(pendingGalleries).length > 0;
+  const galleriesKey = hasPendingGalleries ? 'pending-galleries' : 'galleries';
+  const galleries = hasPendingGalleries ? pendingGalleries : state.galleries.galleries;
+
+  return { galleries, galleriesKey };
 }
 
+// loop through galleries & reset shouldDelete state
+function resetTaggedForDeleteGalleries(state) {
+  // reset shouldDelete value for galleries
+  const { galleries, galleriesKey } = activeGalleries(state);
+  let resetGalleries = {};
+
+  forIn(galleries, (gallery, key) => {
+    resetGalleries[key] = gallery.map(image => {
+      return {
+        ...image,
+        shouldDelete: false
+      };
+    });
+  });
+
+  return {
+    ...state,
+    [galleriesKey]: resetGalleries
+  };
+}
 
 // tag a given imageId for deletion
 function taggedForDeleteGalleries(state, action) {
-  const pendingGalleries = state['pending-galleries'];
-  const hasPendingGalleries = Object.keys(pendingGalleries).length > 0;
-  const stateKey = hasPendingGalleries ? 'pending-galleries' : 'galleries';
-  const galleries = hasPendingGalleries ? pendingGalleries : state.galleries.galleries;
+  const { galleries, galleriesKey } = activeGalleries(state);
   const gallery = galleries[action.payload.category].map(image => {
     return {
       ...image,
@@ -62,7 +85,7 @@ function taggedForDeleteGalleries(state, action) {
 
   return {
     ...state,
-    [stateKey]: { ...galleries, [action.payload.category]: gallery }
+    [galleriesKey]: { ...galleries, [action.payload.category]: gallery }
   };
 }
 

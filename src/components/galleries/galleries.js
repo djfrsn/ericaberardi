@@ -120,8 +120,8 @@ export class Galleries extends Component {
   onToggleGalleryDelete = e => {
     e.preventDefault();
     this.props.toggleGalleryDelete();
-    if (!this.props.galleries.galleryDeleteEnabled) {
-      this.props.resetTaggedForGalleryDelete(); // reset on toggle off
+    if (this.props.galleries.galleryDeleteEnabled) {
+      this.props.resetTaggedForGalleryDelete(); // reset taggedgalleries on toggle off
     }
   }
   toggleDeleteHelp = () => {

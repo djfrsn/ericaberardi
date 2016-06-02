@@ -100,7 +100,7 @@ export function onGalleryDeleteImages(successCallback) {
           const storageRef = storage.ref();
           // Create a reference to the file to delete
           const imageRef = storageRef.child(image.fullPath);
-          debugger
+
 
           // Delete the file
           // imageRef.delete().then(function() {
@@ -120,7 +120,7 @@ export function onGalleryDeleteImages(successCallback) {
             // TODO: shouldDelete imgs get deleted else push those images into a local collection
           }
         });
-
+      });
     });
 
     dispatch({

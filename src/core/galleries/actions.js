@@ -76,8 +76,7 @@ export function createCategory(category) {
   return (dispatch, getState) => {
     const { firebase } = getState();
     if (isValidCategory(category)) {
-      const id = firebase.database().ref().child(`${ENV}/galleries`).push().key;
-      firebase.database().ref(`${ENV}/galleries/${category.toLowerCase()}`).set({ [id]: { id, pending: true }}).then(() => {
+      firebase.database().ref(`${ENV}/galleries/${category.toLowerCase()}`).set(false).then(() => {
         dispatch({
           type: CREATE_CATEGORY_SUCCESS
         });

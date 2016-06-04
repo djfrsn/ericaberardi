@@ -6,6 +6,8 @@ import {
   UPLOAD_GALLERY_IMAGE_ERROR,
   IMAGES_LOADED_ENABLED,
   SEND_GALLERIES_TOAST,
+  CREATE_CATEGORY_SUCCESS,
+  CREATE_CATEGORY_ERROR,
   CLEAR_GALLERIES_TOAST,
   TOGGLE_GALLERY_DELETE,
   DELETE_GALLERY_IMAGES,
@@ -29,7 +31,7 @@ export const initialState = {
 
 const successToast = {
   firstLine: 'Success!',
-  secondLine: 'Image updates are now pending, publish to go live!.',
+  secondLine: 'Updates are now pending, publish to go live!.',
   type: 'success'
 };
 
@@ -38,12 +40,6 @@ const errorToast = {
   secondLine: 'The update was unsuccessful, please try again.',
   type: 'error'
 };
-
-// merge published galleries w/ pending galleries :)
-function mergeGalleries(state, action) {
-  const pendingGalleries = fObjectToObjectArray(action.payload);
-  return mergeObjectArrays(state.galleries, pendingGalleries);
-}
 
 // loop through galleries & reset shouldDelete state
 function resetTaggedForDeleteGalleries(state) {
@@ -137,6 +133,18 @@ export function galleriesReducer(state = initialState, action) {
       return {
         ...state,
         ['pending-galleries']: action.payload
+      };
+
+    case CREATE_CATEGORY_SUCCESS:
+      return {
+        ...state,
+        toast: successToast
+      };
+
+    case CREATE_CATEGORY_ERROR:
+      return {
+        ...state,
+        toast: errorToast
       };
 
     case UPLOAD_GALLERY_IMAGE_SUCCESS:

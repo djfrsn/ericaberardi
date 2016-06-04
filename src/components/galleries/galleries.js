@@ -30,6 +30,7 @@ export class Galleries extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     clearGalleriesToast: PropTypes.func.isRequired,
+    createCategory: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
@@ -141,6 +142,11 @@ export class Galleries extends Component {
       });
     }
   }
+  onCreateCategory = e => {
+    e.preventDefault();
+    this.props.createCategory(this.newCategory.value);
+    this.newCategory.value = '';
+  }
   toggleDeleteHelp = () => {
     this.setState({
       ...this.state,
@@ -166,9 +172,11 @@ export class Galleries extends Component {
       <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
     </div>) : null;
     const addCategory = this.props.auth.authenticated ? (<div className={galleryAddCategoryClass}>
-      <p>Create</p>
-      <input type="text" placeholder="New Category"/>
-      <button>Submit</button>
+      <form onSubmit={this.onCreateCategory}>
+        <p>Create</p>
+        <input type="text" placeholder="New Category" ref={ref => this.newCategory = ref}/>
+        <button type="submit" onClick={this.onCreateCategory}>Submit</button>
+      </form>
     </div>) : null;
     const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>

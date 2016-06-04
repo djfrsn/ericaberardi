@@ -9,6 +9,8 @@ import {
   TAG_IMAGE_FOR_DELETION,
   RESET_IMAGES_TAGGED_FOR_DELETION,
   HIGHLIGHT_GALLERIES_LINK,
+  CREATE_CATEGORY_SUCCESS,
+  CREATE_CATEGORY_ERROR,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR
 } from './action-types';
@@ -58,6 +60,34 @@ export function seqImagesLoadedEnabled(toggle) {
       type: IMAGES_LOADED_ENABLED,
       payload: toggle
     });
+  };
+}
+
+function isValidCategory(category) {
+  return typeof category === 'string' && category.length > 0;
+}
+
+export function createCategory(category) {
+  const failure = dispatch => {
+    dispatch({
+      type: CREATE_CATEGORY_ERROR
+    });
+  };
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    if (isValidCategory(category)) {
+      const id = firebase.database().ref().child(`${ENV}/galleries`).push().key;
+      firebase.database().ref(`${ENV}/galleries/${category.toLowerCase()};}`).set({ [id]: { id, pending: true }}).then(() => {
+        dispatch({
+          type: CREATE_CATEGORY_SUCCESS
+        });
+      }).catch(() => {
+        failure(dispatch);
+      });
+    }
+    else {
+      failure(dispatch);
+    }
   };
 }
 

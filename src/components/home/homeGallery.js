@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import utils from 'utils';
-import * as gUtils from 'components/galleries/galleriesUtils';
 
 export default opts => {
   const galleries = opts.galleries;
@@ -27,13 +26,14 @@ export default opts => {
         {
           columnsMeta[column].map(category => {
             // return random img for each category
-            const elements = galleries[category] || [];
-            const ri = utils.randomInt(0, elements.length);
-            const element = elements[ri];
-            const cloud = gUtils.cloudinaryTransform({ type: 'gallery-preview', src: element.src, hq: true });
+            const elements = galleries[category] || {};
+            const elementKeys = Object.keys(elements);
+            const ri = utils.randomInt(0, elementKeys.length);
+            const element = elements[elementKeys[ri]];
+
             return element ? (
               <div key={element.id} id={element.id} className="image__container">
-                <img src={cloud.src} />
+                <img src={element.src} />
                 <Link to={`galleries/${category.toLowerCase()}`} className="gallery__link" >
                   <div className="overlay">
                     <div className="overlay__content">

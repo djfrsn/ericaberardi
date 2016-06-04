@@ -10,7 +10,8 @@ function getImages(opts) {
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !element.show });
     const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: element.shouldDelete });
     const imageLinkClass = opts.scope.props.galleries.galleryDeleteEnabled ? 'lbx-disabled' : '';
-    if (element) {
+    const protectedImage = element.pending && !opts.scope.props.auth.authenticated;
+    if (element && !protectedImage) {
       images.push(
         <div key={element.id} id={element.id} className={containerClassName} style={{width: `${containerWidth}%` }}>
           <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>

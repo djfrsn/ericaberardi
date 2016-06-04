@@ -187,7 +187,7 @@ export function highlightGalleriesLink(toggle) {
 
 export function pushImageData(dispatch, firebase, imageData) {
   const database = firebase.database();
-  database.ref(`${ENV}/pendingUpdates/galleries/${imageData.category}`).push(imageData);
+  database.ref(`${ENV}/galleries/${imageData.category}`).push(imageData);
 }
 
 export function uploadGalleryImage(data) {

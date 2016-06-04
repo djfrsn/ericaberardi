@@ -76,7 +76,7 @@
   cursor: pointer;
   @include quick-cubic-transition(background);
 
-  &.active {
+  &:hover {
     background: $colors-black;
     color: $colors-white;
   }

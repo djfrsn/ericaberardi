@@ -101,7 +101,6 @@ export function onGalleryDeleteImages(successCallback) {
           // Create a reference to the file to delete
           const imageRef = storageRef.child(image.fullPath);
 
-
           // Delete the file
           // imageRef.delete().then(function() {
           //   // File deleted successfully

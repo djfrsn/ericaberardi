@@ -136,7 +136,7 @@ export function galleriesReducer(state = initialState, action) {
     case HYDRATE_PENDING_GALLERIES:
       return {
         ...state,
-        ['pending-galleries']: action.payload ? mergeGalleries(state, action) : {}
+        ['pending-galleries']: action.payload
       };
 
     case UPLOAD_GALLERY_IMAGE_SUCCESS:

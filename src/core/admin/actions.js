@@ -76,9 +76,9 @@ function setPendingStatus(status, pendingState) {
 
   // works for objects with children that are objectArrays only
   forIn(pendingState, (subCategories, subCategory) => {
-    newPendingState[subCategory] = [];
-    forIn(subCategories, data => {
-      newPendingState[subCategory].push({...data, pending: false});
+    newPendingState[subCategory] = {};
+    forIn(subCategories, (data, key) => {
+      newPendingState[subCategory][key] = {...data, pending: false};
     });
   });
 
@@ -92,7 +92,7 @@ function getPendingChangeMinimums(category) {
 
   switch (category) {
     case 'galleries':
-      minCategoryCount = 5;
+      minCategoryCount = 1;
       minChildCount = 4;
       break;
 
@@ -108,6 +108,7 @@ function validatePendingChanges(category, pendingState) {
   const { minCategoryCount, minChildCount } = getPendingChangeMinimums(category);
   let validChanges = false;
   // works work object arrays
+
   const categoryCount = Object.keys(pendingState).length;
   if (categoryCount >= minCategoryCount) {
     let pendingStateValid = true;
@@ -131,6 +132,7 @@ function publishContent(dispatch, getState, category, pendingState, publishCallb
   if (changesValidated) {
     const newState = setPendingStatus(false, pendingState); // set pending status of all children to false
     const database = firebase.database();
+
     database.ref(`${ENV}/${category}`).set(newState).then(() => {
       database.ref(`${ENV}/pendingUpdates/${category}`).remove();
       if (utils.isFunction(publishCallback)) {

@@ -21,6 +21,16 @@
     "test": "karma start --single-run",
     "deploy": "git push && npm run build && firebase deploy"
   },
+  "babel": {
+    "env": {
+      "production": {
+        "plugins": [
+          "transform-react-constant-elements",
+          "transform-react-inline-elements"
+        ]
+      }
+    }
+  },
   "dependencies": {
     "babel-plugin-transform-react-inline-elements": "^6.8.0",
     "babel-polyfill": "~6.7.2",

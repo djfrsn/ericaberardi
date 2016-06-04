@@ -63,12 +63,14 @@ export class Galleries extends Component {
   }
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
-    const curPathname = this.props.location.pathname;
+    const galleriesPathname = this.galleriesPathname;
     this.path = gUtils.parsePath(pathname).path;
 
-    const routeChange = pathname !== curPathname || pathname === '/galleries'; // update active gallery on route/gallersState change
+    const routeChange = pathname !== galleriesPathname || pathname === '/galleries';
     const galleryChange = !deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries']);
+
     if (routeChange || galleryChange) {
+      this.galleriesPathname = pathname; // update active gallery on route/gallersState change
       this.hydrateActiveGallery(nextProps, this);
     }
     if (nextProps.galleries.toast.type) {
@@ -82,6 +84,7 @@ export class Galleries extends Component {
   componentWillUnmount() {
     this.props.highlightGalleriesLink(false);
     this.unbindImagesLoaded = true;
+    this.galleriesPathname = '';
     gUtils.unbindImagesLoaded(this.galleryContainer);
     window.onresize = () => {}; // remove listener
   }

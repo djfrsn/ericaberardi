@@ -3,7 +3,6 @@ import cn from 'classnames';
 import forIn from 'lodash.forin';
 import * as gUtils from './galleriesUtils';
 
-
 function getImages(opts) {
   let images = [];
   forIn(opts.gallery, element => {

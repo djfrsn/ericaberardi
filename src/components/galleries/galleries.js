@@ -148,14 +148,11 @@ export class Galleries extends Component {
     });
   }
   render() {
-    // delete strategy
-    // disable lightbox
-    // on img click if delete mode enabled set galleries img id to delete & save this state to db
-    // use delete prop to give red b order to any images selected for deletion
-    // on delete/reset show sweet alert prompt
     const { gallery, categories } = this.state;
     const taggedForDeleteCount = this.props.galleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
+    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
     const galleryDeleteToggle = !this.props.galleries.galleryDeleteEnabled;
@@ -167,6 +164,11 @@ export class Galleries extends Component {
         <i className="fa fa-trash-o gallery_delete_icon"></i>
       </a>
       <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
+    </div>) : null;
+    const addCategory = this.props.auth.authenticated ? (<div className={galleryAddCategoryClass}>
+      <p>Create</p>
+      <input type="text" placeholder="New Category"/>
+      <button>Submit</button>
     </div>) : null;
     const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
@@ -181,6 +183,8 @@ export class Galleries extends Component {
               {galleryCategories( { categories, props: this.props, category: this.path })}
             </ul>
           </div>
+          {addCategory}
+          <h2 className={dropZoneTitleClass}>Upload Files</h2>
           {galleryDropZone}
           <div className="gallery">
             <Masonry

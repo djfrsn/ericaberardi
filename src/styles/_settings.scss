@@ -63,6 +63,13 @@ $grid-max-width: 70% !default;
   justify-content: center;
 }
 
+@mixin interaction-base() {
+  border: none;
+  background-color: inherit;
+  &:focus {
+    outline: none;
+  }
+}
 
 @mixin default-top-border($color: $colors-gray) {
   border-top: 1px solid $color;

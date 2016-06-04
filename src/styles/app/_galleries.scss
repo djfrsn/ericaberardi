@@ -3,7 +3,7 @@
 //===================================================================
 
 .galleries__links {
-  margin-top: 30px;
+  margin: 30px 0;
   font-size: 1.55rem;
   text-align: center;
   text-transform: capitalize;
@@ -60,9 +60,53 @@
   }
 }
 
+.gallery__add_category_container {
+  width: 100%;
+  margin: 40px auto;
+  @include flex-perfect-center();
+
+  .gallery__category_controls {
+    width: 65%;
+    margin: 0 auto;
+  }
+
+  p, input, button {
+    font-family: $alt-font-family;
+    font-size: 1.4rem;
+    display: inline-block;
+  }
+  button, input {
+    @include interaction-base();
+  }
+  p {
+    margin-right: 10px;
+  }
+  input {
+    margin-right: 10px;
+    text-align: center;
+    border-bottom: 2px solid $colors-black;
+    @include quick-cubic-transition(border-bottom);
+
+    &:hover, &:focus {
+      border-bottom-color: $ericaYellow;
+    }
+  }
+  button {
+    @include button-base();
+    background: $ericaYellow;
+    border-radius: 3px;
+    @include quick-cubic-transition(background);
+
+    &:hover {
+      background: $colors-black;
+      color: $colors-white;
+    }
+  }
+}
+
 .gallery__dropzone_container {
   font-family: $alt-font-family;
-  margin: 60px 0;
+  margin: 0 0 60px;
   font-size: 1.4rem;
 }
 
@@ -80,6 +124,13 @@
     background: $colors-black;
     color: $colors-white;
   }
+}
+
+.gallery__dropzone_title {
+  text-align: center;
+  margin-bottom: 20px;
+  font-family: $alt-font-family;
+  font-size: 1.4em;
 }
 
 .gallery__delete_controls {

@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { lightboxActions } from 'core/lightbox';
-import * as gUtils from './galleriesUtils';
 
 export default class Lightbox extends Component {
   static propTypes = {
@@ -23,17 +22,12 @@ export default class Lightbox extends Component {
     const lbxclass = 'lbx-container';
     const lightboxClass = show ? `${lbxclass} show` : lbxclass;
     const gllryImages = slides.length > 0 ? slides.map((slide, key) => {
-      let cloud;
-      if (slide.src.includes('cloudinary')) {
-        cloud = gUtils.cloudinaryTransform({ type: 'gallery-expanded', src: slide.src }) || {};
-      }
-      const src = cloud ? cloud.src : slide.src;
       const gllryImgClass = 'lbx-img';
       if (slide.active) activeSlideIndex = key + 1;
       const imgClass = slide.active ? gllryImgClass : `${gllryImgClass} hide`;
       return (
         <div key={slide.id} className={imgClass}>
-          <img src={src}/>
+          <img src={slide.src}/>
         </div>
       );
     }) : null;

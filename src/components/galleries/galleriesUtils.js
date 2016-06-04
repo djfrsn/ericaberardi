@@ -103,7 +103,6 @@ export function resizeGallery(scope) {
     this.hydrateActiveGallery(scope.props, scope);
   }
 }
-// http://cloudinary.com/documentation/image_transformations#image_optimization
 export function getContainerWidth( opts ) {
   let containerWidth = 100; // mobile defaults
   const mqt = mq();
@@ -126,27 +125,18 @@ export function getContainerWidth( opts ) {
     default:
   }
   // return containerWidth as a percentage to control column count
-  // transform a given src to cloudinary format based on the window.width
   return {
     containerWidth: containerWidth
   };
 }
 
-// http://cloudinary.com/documentation/image_transformations#image_optimization
-export function cloudinaryTransform( opts ) {
+export function imageTransform( opts ) {
   let containerWidth = 100; // mobile defaults
   let srcWidth = 275;
   let srcHeight;
   const windowHeight = window.innerHeight;
   const mqt = mq();
-  const url = opts.src.split('d/v');
-  const defaults = 'f_auto,c_scale';
-  const getUrl = (w, h) => {
-    return !h ? `${url[0]}d/${defaults},w_${w}/v${url[1]}` : `${url[0]}d/${defaults},h_${h}/v${url[1]}`;
-  };
-  // ar_4:3 http://cloudinary.com/documentation/image_transformations#aspect_ratio_based_cropping
-  // f_auto auto deliver best file format
-  // q_70 quality
+
   switch (opts.type) {
     case 'gallery-preview':
       if (mqt === 'mobile') {
@@ -172,10 +162,9 @@ export function cloudinaryTransform( opts ) {
     default:
   }
   // return containerWidth as a percentage to control column count
-  // transform a given src to cloudinary format based on the window.width
   return {
     containerWidth: containerWidth,
-    src: opts.src.includes('lorempixel') ? opts.src : getUrl(srcWidth, srcHeight)
+    src: opts.src.includes('lorempixel') ? opts.src : {srcWidth, srcHeight}
   };
 }
 // TODO: set random height widths for images

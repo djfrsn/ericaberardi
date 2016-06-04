@@ -1,24 +1,31 @@
 import React from 'react';
 import cn from 'classnames';
+import forIn from 'lodash.forin';
 import * as gUtils from './galleriesUtils';
 
-export default opts => {
-  return opts.gallery.map(element => {
-    let cloud;
-    if (element.src.includes('cloudinary')) {
-      cloud = gUtils.cloudinaryTransform({ type: 'gallery-preview', src: element.src });
-    }
-    const src = cloud ? cloud.src : element.src;
-    const containerWidth = cloud ? cloud.containerWidth : gUtils.getContainerWidth({type: 'gallery-preview'});
+
+function getImages(opts) {
+  let images = [];
+  forIn(opts.gallery, element => {
+    const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'});
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !element.show });
     const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: element.shouldDelete });
     const imageLinkClass = opts.scope.props.galleries.galleryDeleteEnabled ? 'lbx-disabled' : '';
-    return element ? (
-      <div key={element.id} id={element.id} className={containerClassName} style={{width: `${containerWidth}%` }}>
-        <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>
-          <img src={src} className={imageClassName} />
-        </a>
-      </div>
-      ) : null;
+    if (element) {
+      images.push(
+        <div key={element.id} id={element.id} className={containerClassName} style={{width: `${containerWidth}%` }}>
+          <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>
+            <img src={element.src} className={imageClassName} />
+          </a>
+        </div>
+      );
+    }
   });
+
+  return images;
+}
+
+export default opts => {
+  const galleryImages = getImages(opts);
+  return galleryImages;
 };

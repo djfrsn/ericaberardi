@@ -1,4 +1,6 @@
 import imagesLoaded from 'imagesloaded';
+import forIn from 'lodash.forin';
+import mapValues from 'lodash.mapvalues';
 
 export function parsePath(val) { // takes paths like galleries/sports and returns sports
   let path = '/';
@@ -18,18 +20,17 @@ export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const defaultGallery = 'commercial';
-  const pendingGalleries = props.galleries['pending-galleries']; // galleries = pending-galleries if user is authenticated
-  const galleries = props.auth.authenticated && Object.keys(pendingGalleries).length > 0 ? pendingGalleries : props.galleries.galleries;
+  const galleries = props.galleries.galleries;
   const categories = Object.keys(galleries);
   const galleryPath = categories.includes(path) ? path : defaultGallery;
-  let galleryProp = galleries[galleryPath];
+  let activeGallery = galleries[galleryPath];
 
   if (path !== galleryPath) { // if needed correct browser url to show current category
     scope.context.router.replace(`/galleries/${galleryPath}`);
   }
 
   if (categories.length > 0) {
-    const gallery = galleryProp.map(image => {
+    const gallery = forIn(activeGallery, image => {
       return {
         ...image, // force show when seqImagesLoaded is disabled
         show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // since that function would otherwise reveals images
@@ -63,12 +64,13 @@ export function seqImagesLoaded(element, scope) {
       const img = image.img;
       const id = img.parentElement.parentElement.id;
 
-      const gallery = scope.state.gallery.map(image => {
+      const gallery = mapValues(scope.state.gallery, image => {
         return { // images are hidden by default
           ...image, // update state to reveal each image
-          show: image.id === id ? true : image.show
+          show: image.id === id ? true : (image.show || false)
         };
       });
+
       scope.setState({...scope.state, gallery});
     }
   });

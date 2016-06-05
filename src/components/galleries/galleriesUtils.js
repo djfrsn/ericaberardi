@@ -1,4 +1,5 @@
 import imagesLoaded from 'imagesloaded';
+import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
 import mapValues from 'lodash.mapvalues';
 
@@ -19,23 +20,32 @@ export function parsePath(val) { // takes paths like galleries/sports and return
 export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
-  const defaultGallery = 'commercial';
   const galleries = props.galleries.images;
-  const categories = Object.keys(galleries);
-  const galleryPath = categories.includes(path) ? path : defaultGallery;
-  let activeGallery = galleries[galleryPath];
+  const categories = props.galleries.categories;
 
-  if (path !== galleryPath) { // if needed correct browser url to show current category
-    scope.context.router.replace(`/galleries/${galleryPath}`);
-  }
 
-  if (categories.length > 0) {
+  if (Object.keys(categories).length > 0) {
+    const defaultGallery = categories[Object.keys(categories)[0]];
+    const galleryMatch = filter(categories, { category: path })[0];
+
+    const galleryPath = galleryMatch ? galleryMatch.category : defaultGallery.category;
+
+    const category = () => {
+      return categories[filter(categories, { category: galleryPath })[0].id || defaultGallery.id];
+    };
+    let activeGallery = galleries[category().id];
+
+    if (path !== galleryPath) { // if needed correct browser url to show current category
+      scope.context.router.replace(`/galleries/${galleryPath}`);
+    }
+
     const gallery = forIn(activeGallery, image => {
       return {
         ...image, // force show when seqImagesLoaded is disabled
         show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // since that function would otherwise reveals images
       };
     });
+
     scope.setState({ ...scope.state, categories, gallery });
     if (!scope.props.galleries.forceImagesLoadedOff) {
       scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added

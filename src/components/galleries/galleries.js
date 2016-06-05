@@ -44,8 +44,8 @@ export class Galleries extends Component {
     uploadGalleryImage: PropTypes.func.isRequired
   }
   state = {
-    gallery: [],
-    categories: [],
+    gallery: {},
+    categories: {},
     files: [],
     showDeleteToggleMsg: false,
     loadImagesSeq: true
@@ -155,30 +155,25 @@ export class Galleries extends Component {
   }
   render() {
     const { gallery, categories } = this.state;
+    const authenticated = authenticated;
+    const galleryLength = Object.keys(gallery).length;
     const taggedForDeleteCount = this.props.galleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
-    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
-    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: gallery.length < 1 }); // hide dropzone until images loaded
+    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
+    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
+    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
+    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
     const galleryDeleteToggle = !this.props.galleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
-    const galleryDeleteControls = this.props.auth.authenticated ? (<div className={galleryDeleteControlsClass}>
-      <a href="#!" onClick={this.onGalleryDeleteReset} className={cn({ ['gallery__delete_reset']: true, ['invisible']: galleryDeleteToggle })}>Reset</a>
-      <a href="#!" onClick={this.onToggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp}>
-        <i className="fa fa-trash-o gallery_delete_icon"></i>
-      </a>
-      <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
-    </div>) : null;
-    const addCategory = this.props.auth.authenticated ? (<div className={galleryAddCategoryClass}>
+    const addCategory = authenticated ? (<div className={galleryAddCategoryClass}>
       <form onSubmit={this.onCreateCategory}>
         <p>Create</p>
         <input type="text" placeholder="New Category" ref={ref => this.newCategory = ref}/>
         <button type="submit" onClick={this.onCreateCategory}>Submit</button>
       </form>
     </div>) : null;
-    const galleryDropZone = this.props.auth.authenticated ? (<div className={galleryDropZoneClass}>
+    const galleryDropZone = authenticated ? (<div className={galleryDropZoneClass}>
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
         <div>Try dropping some files here, or click to select files to upload.</div>
       </Dropzone>
@@ -192,7 +187,7 @@ export class Galleries extends Component {
             </ul>
           </div>
           {addCategory}
-          <h2 className={dropZoneTitleClass}>Upload Files</h2>
+          {authenticated ? (<h2 className={dropZoneTitleClass}>Upload Files</h2>) : null}
           {galleryDropZone}
           <div className="gallery">
             <Masonry
@@ -204,10 +199,18 @@ export class Galleries extends Component {
                 {galleryImages({gallery, scope: this})}
             </Masonry>
           </div>
-          <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
-          {galleryDeleteControls}
-          <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
-          <p className={cn({ ['taggedForDeleteCount']: true, ['invisible']: taggedForDeleteCount < 1 })}>{this.props.galleries.taggedForDeleteCount} {`Image${char}`} selected for deletion.</p>
+          {authenticated ? (<div>
+            <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
+            <div className={galleryDeleteControlsClass}>
+              <a href="#!" onClick={this.onGalleryDeleteReset} className={cn({ ['gallery__delete_reset']: true, ['invisible']: galleryDeleteToggle })}>Reset</a>
+              <a href="#!" onClick={this.onToggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp}>
+                <i className="fa fa-trash-o gallery_delete_icon"></i>
+              </a>
+              <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
+            </div>
+            <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
+            <p className={cn({ ['taggedForDeleteCount']: true, ['invisible']: taggedForDeleteCount < 1 })}>{this.props.galleries.taggedForDeleteCount} {`Image${char}`} selected for deletion.</p>
+          </div>) : null}
           <Lightbox/>
         </div>
       </div>

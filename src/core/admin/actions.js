@@ -8,7 +8,6 @@ import {
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
-import filter from 'lodash.filter';
 import utils from 'utils';
 
 export function clearAdminToast() {
@@ -24,7 +23,7 @@ function isImages(category, key) {
   return category === 'galleries' && key === 'images';
 }
 
-function getPendingImagesCount(categories) {
+export function getPendingImagesCount(categories) {
   let pendingImagesCount = 0;
 
   forIn(categories, images => {
@@ -71,9 +70,9 @@ function getPendingImages(categories) {
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
 // each key/value pair contains all pending updates for each route
 function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
-  let pendingUpdates = { ...admin.pendingUpdates };
+  let pendingUpdates = { ...admin.pendingUpdates }; // apply current pending updates
 
-  pendingUpdates[category] = {}; // pending updates to be set here
+  pendingUpdates[category] = {}; // reset pending updates for a category
 
   forIn(pendingData, (prop, key) => {
 
@@ -87,8 +86,8 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
     if (Object.keys(pendingProp).length > 0) {
       pendingUpdates[category][key] = pendingProp; // update new pendingProp
     }
-    else if (isImages(category, key)) {
-      pendingUpdates[category][key] = getPendingImages(prop);
+    else if (isImages(category, key)) { // images are nested differently than categories....
+      pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
     }
   });
 

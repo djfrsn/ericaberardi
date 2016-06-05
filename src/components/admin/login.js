@@ -20,8 +20,8 @@ export class Login extends Component {
     if (!auth.authenticated) {
       component = (<div>
         <form onSubmit={this.onLogin}>
-          <input type="text" placeholder="Email" ref={ref => this.email = ref}/>
-          <input type="password" placeholder="Password" ref={ref => this.password = ref}/>
+          <input name="email" type="text" placeholder="Email" ref={ref => this.email = ref} autoComplete="email"/>
+          <input name="password" type="password" placeholder="Password" ref={ref => this.password = ref} autoComplete="password"/>
           <button type="submit" className="eb-button sign-in__button" onClick={this.onLogin}>Login</button>
         </form>
         {errorMsg}</div>);

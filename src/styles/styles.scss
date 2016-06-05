@@ -36,3 +36,29 @@
 ::selection {
   background: rgba(54, 77, 245, 0.1);
 }
+
+input:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input:-moz-autofill {
+  -moz-box-shadow: 0 0 0px 1000px white inset;
+}
+input:-o-autofill {
+  -o-box-shadow: 0 0 0px 1000px white inset;
+}
+input:-khtml-autofill {
+  -khtml-box-shadow: 0 0 0px 1000px white inset;
+}
+
+input:focus:-webkit-autofill {
+  -webkit-box-shadow: 0 0 0px 1000px white inset;
+}
+input:focus:-moz-autofill {
+  -moz-box-shadow: 0 0 0px 1000px white inset;
+}
+input:focus:-o-autofill {
+  -o-box-shadow: 0 0 0px 1000px white inset;
+}
+input:focus:-khtml-autofill {
+  -khtml-box-shadow: 0 0 0px 1000px white inset;
+}

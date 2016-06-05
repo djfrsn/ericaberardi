@@ -100,7 +100,7 @@ export class Galleries extends Component {
     }
   }
   onDropAccept = files => {
-    this.props.uploadGalleryImage({ files, category: this.path });
+    this.props.uploadGalleryImage({ files, categoryId: this.state.activeGalleryId, category: this.path });
   }
   onImageClick = e => {
     e.preventDefault();

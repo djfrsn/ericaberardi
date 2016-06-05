@@ -78,7 +78,7 @@ export function createCategory(category) {
   return (dispatch, getState) => {
     const { firebase } = getState();
     if (isValidCategory(category)) {
-      const id = firebase.database(`${ENV}/galleries/categories/`).ref().child('categories').push().key;
+      const id = firebase.database(`${ENV}/galleries`).ref().child('categories').push().key;
       firebase.database().ref(`${ENV}/galleries/categories/${id}`).set({
         id,
         category: category.toLowerCase(),
@@ -190,7 +190,7 @@ export function highlightGalleriesLink(toggle) {
 
 export function pushImageData(dispatch, firebase, imageData) {
   const database = firebase.database();
-  database.ref(`${ENV}/galleries/${imageData.category}`).push(imageData);
+  database.ref(`${ENV}/galleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData);
 }
 
 export function uploadGalleryImage(data) {
@@ -217,12 +217,14 @@ export function uploadGalleryImage(data) {
         });
       }, () => {
         // Handle successful uploads on complete
-        const id = utils.uuid();
+
+        const id = firebase.database(`${ENV}/galleries/images`).ref().child(`${categoryId}`).push().key;
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
         // TODO: push imageData to pendingGalleryImages/category
         // set listener in main.js to call mergePendingImages galleries action
+
         const imageData = { id, src, category, categoryId, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 
         if (filesLength === key) { // dispatch success message after last image is successfully uploaded

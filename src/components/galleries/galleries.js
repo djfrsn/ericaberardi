@@ -183,7 +183,7 @@ export class Galleries extends Component {
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              {galleryCategories( { categories, props: this.props, category: this.path })}
+              {galleryCategories( { categories, props: this.props, category: this.path, scope: this })}
             </ul>
           </div>
           {addCategory}

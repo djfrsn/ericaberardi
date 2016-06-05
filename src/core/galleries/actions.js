@@ -37,10 +37,11 @@ export function sendGalleriesToast(toast) {
 
 export function hydrateGalleries(data) {
   return (dispatch, getState) => {
-    const { auth } = getState();
+    const { auth, galleries } = getState();
+    const snapshot = data ? data : { categories: galleries.categories, images: galleries.images };
     dispatch({
       type: HYDRATE_GALLERIES,
-      payload: { data, auth }
+      payload: { snapshot, auth }
     });
   };
 }

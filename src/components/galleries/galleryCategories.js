@@ -9,7 +9,8 @@ function getCategories(opts) {
     const defaultGallery = list[Object.keys(list)[0]];
     const categoryAccepted = (opts.category === '/' ? defaultGallery.category : opts.category) === category.category; // if path is root, default to first category
     const className = categoryAccepted ? `${galleryLink} active` : galleryLink;
-    if (category) {
+    const protectedCategory = category.pending && !opts.scope.props.auth.authenticated;
+    if (category && !protectedCategory) {
       categories.push(
         <li key={key}><Link to={`/galleries/${category.category}`} className={className}>{category.category}</Link></li>
       );

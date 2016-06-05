@@ -106,21 +106,10 @@ function taggedForDeleteGalleries(state, action) {
 }
 
 function getGalleryData(payload) {
-  const { categories, images } = payload.data;
-  let cat = categories;
-  let img = images;
-  if (!payload.auth.authenticated) {
-    cat = {}; // show only published categories
-    const publishedCat = filter(cat, { pending: true });
-    if (publishedCat.length > 0) {
-      forEach(publishedCat, category => {
-        cat[category.id] = category;
-      });
-    }
-  }
+  const { categories, images } = payload.snapshot;
   return {
-    categories: cat,
-    images: img
+    categories,
+    images
   };
 }
 

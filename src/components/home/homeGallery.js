@@ -1,22 +1,31 @@
 import React from 'react';
 import { Link } from 'react-router';
+import forIn from 'lodash.forin';
 import utils from 'utils';
 
 export default opts => {
   const galleries = opts.images;
-  const categories = Object.keys(opts.categories);
+  const categories = opts.categories;
+  const categoriesLength = Object.keys(opts.categories).length;
   let columns = null;
   // columns are list of images
-  if (categories.length > 0) {
+  if (categoriesLength > 0) {
     let columnsMeta = { '0': [], '1': [] };
     // push every other category into each column
-    categories.forEach((category, key) => {
+    let key = 0;
+    forIn(categories, category => {
+      const protectedCategory = category.pending && !opts.scope.props.auth.authenticated;
       if (key % 2 === 0) {
-        columnsMeta['0'].push(category);
+        if (!protectedCategory) {
+          columnsMeta['0'].push(category);
+        }
       }
       else {
-        columnsMeta['1'].push(category);
+        if (!protectedCategory) {
+          columnsMeta['1'].push(category);
+        }
       }
+      key++;
     });
     // for each column return gallery-col
     columns = (Object.keys(columnsMeta).map((column, key) => {
@@ -25,7 +34,7 @@ export default opts => {
         {
           columnsMeta[column].map(category => {
             // return random img for each category
-            const elements = galleries[category] || {};
+            const elements = galleries[category.id] || {};
             const elementKeys = Object.keys(elements);
             const ri = utils.randomInt(0, elementKeys.length);
             const element = elements[elementKeys[ri]];

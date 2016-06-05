@@ -39,8 +39,10 @@ export function hydrateActiveGallery(props, scope) {
       scope.context.router.replace(`/galleries/${galleryPath}`);
     }
 
-    const gallery = forIn(activeGallery, image => {
-      return {
+    const gallery = {};
+
+    forIn(activeGallery, (image, id) => {
+      gallery[id] = {
         ...image, // force show when seqImagesLoaded is disabled
         show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // since that function would otherwise reveals images
       };

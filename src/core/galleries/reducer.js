@@ -16,8 +16,6 @@ import {
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import forIn from 'lodash.forin';
-import forEach from 'lodash.foreach';
-import filter from 'lodash.filter';
 import { activeGalleries } from './gsUtils';
 
 export const initialState = {

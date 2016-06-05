@@ -123,6 +123,7 @@ export function galleriesReducer(state = initialState, action) {
       };
 
     case SEND_GALLERIES_TOAST:
+    console.log(action.payload);
       return {
         ...state,
         toast: action.payload

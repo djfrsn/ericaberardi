@@ -65,6 +65,7 @@ export class Galleries extends Component {
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     const galleriesPathname = this.galleriesPathname;
+    const toast = nextProps.galleries.toast;
     this.path = gUtils.parsePath(pathname).path;
 
     const routeChange = pathname !== galleriesPathname || pathname === '/galleries';
@@ -74,9 +75,10 @@ export class Galleries extends Component {
       this.galleriesPathname = pathname; // update active gallery on route/gallersState change
       this.hydrateActiveGallery(nextProps, this);
     }
-    if (nextProps.galleries.toast.type) {
+    if (toast.type) {
+      console.log(toast);
       this.props.clearGalleriesToast();
-      this.props.showToast(nextProps.galleries.toast);
+      this.props.showToast(toast);
     }
   }
   shouldComponentUpdate(nextProps, nextState) {

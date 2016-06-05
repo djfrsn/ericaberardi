@@ -16,8 +16,6 @@ import {
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
-import { activeGalleries } from './gsUtils';
-import utils from 'utils';
 
 export function clearGalleriesToast() {
   return dispatch => {
@@ -111,6 +109,7 @@ export function onGalleryDeleteImages(successCallback) {
   return (dispatch, getState) => {
     const { firebase, galleries } = getState();
     const storage = firebase.storage();
+    const database = firebase.database();
     let imagesDeletedCount = 0;
     const taggedForDeleteCount = galleries.taggedForDeleteCount;
     let success = false;
@@ -118,42 +117,46 @@ export function onGalleryDeleteImages(successCallback) {
     forIn(galleries.images, gallery => {
       forIn(gallery, image => {
         if (image.shouldDelete) {
-          // call if all files have been deleted....keep count since we know how many are selected
-          // TODO: place this inside img delete callback
-          imagesDeletedCount++;
-          if (imagesDeletedCount === taggedForDeleteCount) {
-            success = true;
-            successCallback();
-          }
           // TODO: for each file that is deleted the meta data must also be removed from firebase
-          console.log(image, `${ENV}/galleries/${image.categoryId}/${image.id}`);
-          // firebase.database().ref(`${ENV}/galleries/${image.categoryId}/${image.id}`).set(null).then(() => {
-          //   const storageRef = storage.ref();
-          //   // Create a reference to the file to delete
-          //   const imageRef = storageRef.child(image.fullPath);
-          //   imageRef.delete().then(function() {
-          //     // File deleted successfully
-          //     imagesDeletedCount++;
-          //   }).catch(function(error) {
-          //     // Uh-oh, an error occurred!
-          //     // log errors to env/logs/errors/galleries/shouldDelete/image.id = image
-          //   });
-          // }).catch(error => {
-          //   // err :(
-          //   // TODO: dispatch alert for image deletion error...pass name of image along... in msg
-          // });
+          database.ref(`${ENV}/galleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
+            const storageRef = storage.ref();
+            // Create a reference to the file to delete
+            const imageRef = storageRef.child(image.fullPath);
+            imageRef.delete().then(() => {
+              // File deleted successfully
+              imagesDeletedCount++;
+              // call if all files have been deleted....
+              if (imagesDeletedCount === taggedForDeleteCount) {
+                success = true;
+                successCallback();
+                dispatch({
+                  type: RESET_IMAGES_TAGGED_FOR_DELETION
+                });
+              }
+            }).catch(() => {
+              // we failed to delete an img.....log error
+              database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${image.id}`).set(image);
+            });
+          }).catch(() => {
+            dispatch({
+              type: SEND_GALLERIES_TOAST,
+              payload: {
+                firstLine: 'Error!',
+                secondLine: `Failed to delete ${image.name}!`,
+                type: 'error'
+              }
+            });
+          });
         }
       });
-
-      setTimeout(() => {
-        if (!success) {
-          // TODO: set a 45 sec timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
-          successCallback();
-        }
-      }, 45000);
-      // TODO: loop galleries and check imagesToDelete id's to remove meta data from galleries & pending-galleries
-
     });
+
+    setTimeout(() => {
+        // timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
+      if (!success) {
+        successCallback('error', 'An attempt to delete images was made, although some files may not have been deleted!');
+      }
+    }, 45000);
 
     dispatch({
       type: DELETE_GALLERY_IMAGES
@@ -188,9 +191,15 @@ export function highlightGalleriesLink(toggle) {
   };
 }
 
-export function pushImageData(dispatch, firebase, imageData) {
+export function pushImageData(dispatch, firebase, imageData, shouldDispatch) {
   const database = firebase.database();
-  database.ref(`${ENV}/galleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData);
+  database.ref(`${ENV}/galleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData).then(() => {
+    if (shouldDispatch) {
+      dispatch({
+        type: UPLOAD_GALLERY_IMAGE_SUCCESS
+      });
+    }
+  });
 }
 
 export function uploadGalleryImage(data) {
@@ -200,7 +209,7 @@ export function uploadGalleryImage(data) {
     const { category, categoryId } = data;
     const storage = firebase.storage();
     const storageRef = storage.ref().child(category);
-
+    let shouldDispatch = false;
     const filesLength = data.files.length - 1;
 
     data.files.forEach((file, key) => {
@@ -228,12 +237,10 @@ export function uploadGalleryImage(data) {
         const imageData = { id, src, category, categoryId, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 
         if (filesLength === key) { // dispatch success message after last image is successfully uploaded
-          dispatch({
-            type: UPLOAD_GALLERY_IMAGE_SUCCESS
-          });
+          shouldDispatch = true;
         }
 
-        pushImageData(dispatch, firebase, imageData);
+        pushImageData(dispatch, firebase, imageData, shouldDispatch);
       });
     });
   };

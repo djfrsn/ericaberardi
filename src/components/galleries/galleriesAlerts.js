@@ -1,11 +1,11 @@
 import sweetalert from 'sweetalert';
 
 
-function publishSweetAlert() {
+function publishSweetAlert(type = 'success', text = 'Your content updates have been published!') {
   sweetalert({
     title: 'Live!',
-    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Your content updates have been published!</span>',
-    type: 'success',
+    text: `<span style="font-size: 1.2em; color:rgb(31, 31, 31);">${text}</span>`,
+    type: type,
     html: true
   });
 }

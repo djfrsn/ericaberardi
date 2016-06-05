@@ -3,7 +3,7 @@
 //===================================================================
 
 .galleries__links {
-  margin: 30px 0;
+  margin: 60px 0 30px;
   font-size: 1.55rem;
   text-align: center;
   text-transform: capitalize;
@@ -31,9 +31,9 @@
   margin: 25px 0 80px;
 }
 
-.gallery__navigation {
-  @include default-top-border();
-}
+// .gallery__navigation {
+//   @include default-top-border();
+// }
 
 .gallery__masonry {
 }

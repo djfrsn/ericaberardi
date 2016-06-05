@@ -76,7 +76,6 @@ export class Galleries extends Component {
       this.hydrateActiveGallery(nextProps, this);
     }
     if (toast.type) {
-      console.log(toast);
       this.props.clearGalleriesToast();
       this.props.showToast(toast);
     }

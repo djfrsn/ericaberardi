@@ -4,7 +4,8 @@ import {
   ON_SWIPE,
   ON_CLOSE
 } from './action-types';
-
+import forIn from 'lodash.forin';
+import findKey from 'lodash.findkey';
 
 export const initialState = {
   activeSlide: {},
@@ -27,15 +28,17 @@ export function lightboxReducer(state = initialState, action) {
 }
 
 function initLightBox(state, action) {
+  const slides = {};
+  forIn(action.payload.scope.state.gallery, (image, id) => {
+    slides[id] = {
+      id: image.id,
+      src: image.src,
+      active: image.id === action.payload.e.currentTarget.parentElement.id ? true : false
+    };
+  });
   return {
     ...state,
-    slides: action.payload.scope.state.gallery.map(image => {
-      return {
-        id: image.id,
-        src: image.src,
-        active: image.id === action.payload.e.currentTarget.parentElement.id ? true : false
-      };
-    }),
+    slides: slides,
     show: true
   };
 }
@@ -43,26 +46,36 @@ function initLightBox(state, action) {
 function onSwipe(state, action) {
   const direction = action.payload.direction;
   const slides = state.slides;
-  const activeSlideIndex = state.slides.findIndex(slide => {
-    return slide.active ? true : false;
-  });
-  let nextSlide = direction === 'left' ? state.slides[activeSlideIndex - 1] : state.slides[activeSlideIndex + 1];
+  const activeSlideId = findKey(state.slides, {active: true});
+  const slidesIds = Object.keys(slides);
+  const activeSlideIndex = slidesIds.indexOf(activeSlideId);
+
+  let nextSlideIndex = direction === 'left' ? activeSlideIndex - 1 : activeSlideIndex + 1;
+  const nextSlideId = slidesIds[nextSlideIndex];
+  let nextSlide = slides[nextSlideId];
 
   if (!nextSlide && direction === 'right') {
-    nextSlide = slides[0];
+    // get first slide id
+    nextSlide = slides[slidesIds[0]];
   }
   else if (!nextSlide && direction === 'left') {
-    nextSlide = state.slides.slice(slides.length - 1, slides.length)[0];
+    // get last slide id
+    const slidesLength = Object.keys(slides).length;
+    nextSlide = slides[slidesIds.slice(slidesLength - 1, slidesLength)[0]];
   }
+
+  let newSlides = {};
+
+  forIn(slides, (slide, id) => {
+    newSlides[id] = {
+      ...slide,
+      active: slide.id === nextSlide.id ? true : false
+    };
+  });
 
   return {
     ...state,
-    slides: slides.map(slide => {
-      return {
-        ...slide,
-        active: slide.id === nextSlide.id ? true : false
-      };
-    })
+    slides: newSlides
   };
 }
 

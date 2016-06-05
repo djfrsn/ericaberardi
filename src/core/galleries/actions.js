@@ -225,13 +225,10 @@ export function uploadGalleryImage(data) {
         });
       }, () => {
         // Handle successful uploads on complete
-
         const id = firebase.database(`${ENV}/galleries/images`).ref().child(`${categoryId}`).push().key;
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
-        // TODO: push imageData to pendingGalleryImages/category
-        // set listener in main.js to call mergePendingImages galleries action
 
         const imageData = { id, src, category, categoryId, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 

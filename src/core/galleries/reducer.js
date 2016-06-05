@@ -16,7 +16,6 @@ import {
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import forIn from 'lodash.forin';
-import { activeGalleries } from './gsUtils';
 
 export const initialState = {
   categories: {},
@@ -123,7 +122,6 @@ export function galleriesReducer(state = initialState, action) {
       };
 
     case SEND_GALLERIES_TOAST:
-    console.log(action.payload);
       return {
         ...state,
         toast: action.payload

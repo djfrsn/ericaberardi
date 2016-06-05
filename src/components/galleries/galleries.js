@@ -82,7 +82,7 @@ export class Galleries extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     const propsChanged = !deepEqual(this.props, nextProps);
     const stateChanged = !deepEqual(this.state, nextState);
-    return propsChanged || stateChanged;
+    return propsChanged || stateChanged; // rerender on prop/state change
   }
   componentDidUpdate() {
     this.loadImagesSeq();

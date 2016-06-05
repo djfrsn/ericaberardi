@@ -5,7 +5,7 @@ import * as gUtils from './galleriesUtils';
 
 function getImages(opts) {
   let images = [];
-  console.log('ran');
+
   forIn(opts.gallery, element => {
     const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'});
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !element.show });

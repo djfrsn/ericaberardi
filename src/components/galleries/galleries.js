@@ -79,6 +79,11 @@ export class Galleries extends Component {
       this.props.showToast(nextProps.galleries.toast);
     }
   }
+  shouldComponentUpdate(nextProps, nextState) {
+    const propsChanged = !deepEqual(this.props, nextProps);
+    const stateChanged = !deepEqual(this.state, nextState);
+    return propsChanged || stateChanged;
+  }
   componentDidUpdate() {
     this.loadImagesSeq();
   }

@@ -43,13 +43,14 @@ const errorToast = {
 
 // loop through galleries & reset shouldDelete state
 function resetTaggedForDeleteGalleries(state) {
-  // reset shouldDelete value for galleries
-  const { galleries, galleriesKey } = activeGalleries(state);
+  // reset shouldDelete value for all images
+  const { images } = state;
   let resetGalleries = {};
 
-  forIn(galleries, (gallery, key) => {
-    resetGalleries[key] = gallery.map(image => {
-      return {
+  forIn(images, (gallery, key) => {
+    resetGalleries[key] = {};
+    forIn(gallery, (image, id) => {
+      resetGalleries[key][id] = {
         ...image,
         shouldDelete: false
       };
@@ -58,7 +59,7 @@ function resetTaggedForDeleteGalleries(state) {
 
   return {
     ...state,
-    [galleriesKey]: resetGalleries,
+    images: resetGalleries,
     taggedForDeleteCount: 0
   };
 }
@@ -100,7 +101,7 @@ function taggedForDeleteGalleries(state, action) {
 
   return {
     ...state,
-    'images': taggedForDeleteGalleries,
+    images: taggedForDeleteGalleries,
     taggedForDeleteCount
   };
 }

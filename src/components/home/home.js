@@ -8,11 +8,10 @@ export class Home extends Component {
     galleries: PropTypes.object.isRequired
   }
   render() {
-    const { galleries } = this.props.galleries;
     return (
       <div className="g-row" ref={ref => this.row = ref}>
         <div className="g-col" >
-          {homeGallery({galleries})}
+          {homeGallery({...this.props.galleries})}
         </div>
       </div>
     );

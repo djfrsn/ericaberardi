@@ -197,7 +197,7 @@ export function uploadGalleryImage(data) {
   return (dispatch, getState) => {
     const { firebase } = getState();
 
-    const category = data.category;
+    const { category, categoryId } = data;
     const storage = firebase.storage();
     const storageRef = storage.ref().child(category);
 
@@ -223,7 +223,7 @@ export function uploadGalleryImage(data) {
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
         // TODO: push imageData to pendingGalleryImages/category
         // set listener in main.js to call mergePendingImages galleries action
-        const imageData = { id, src, category, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
+        const imageData = { id, src, category, categoryId, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 
         if (filesLength === key) { // dispatch success message after last image is successfully uploaded
           dispatch({

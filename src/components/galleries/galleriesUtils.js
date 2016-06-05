@@ -20,7 +20,7 @@ export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const defaultGallery = 'commercial';
-  const galleries = props.galleries.galleries;
+  const galleries = props.galleries.images;
   const categories = Object.keys(galleries);
   const galleryPath = categories.includes(path) ? path : defaultGallery;
   let activeGallery = galleries[galleryPath];

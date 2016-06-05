@@ -3,9 +3,8 @@ import { Link } from 'react-router';
 import utils from 'utils';
 
 export default opts => {
-  const galleries = opts.galleries;
-  const categories = Object.keys(galleries);
-
+  const galleries = opts.images;
+  const categories = Object.keys(opts.categories);
   let columns = null;
   // columns are list of images
   if (categories.length > 0) {
@@ -34,10 +33,10 @@ export default opts => {
             return element ? (
               <div key={element.id} id={element.id} className="image__container">
                 <img src={element.src} />
-                <Link to={`galleries/${category.toLowerCase()}`} className="gallery__link" >
+                <Link to={`galleries/${element.category.toLowerCase()}`} className="gallery__link" >
                   <div className="overlay">
                     <div className="overlay__content">
-                      <div className="gallery-image-text">{category}</div>
+                      <div className="gallery-image-text">{element.category}</div>
                     </div>
                   </div>
                 </Link>

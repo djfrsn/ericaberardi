@@ -17,10 +17,10 @@ import {
 } from './action-types';
 import forIn from 'lodash.forin';
 import { activeGalleries } from './gsUtils';
-import { fObjectToObjectArray, mergeObjectArrays } from 'lava';
 
 export const initialState = {
-  galleries: {},
+  categories: {},
+  images: {},
   ['pending-galleries']: {},
   toast: {},
   galleryDeleteEnabled: false,
@@ -103,6 +103,14 @@ function taggedForDeleteGalleries(state, action) {
   };
 }
 
+function getGalleryData(payload) {
+  const { categories, images } = payload;
+  return {
+    categories,
+    images
+  };
+}
+
 export function galleriesReducer(state = initialState, action) {
   switch (action.type) {
     case IMAGES_LOADED_ENABLED:
@@ -126,7 +134,7 @@ export function galleriesReducer(state = initialState, action) {
     case HYDRATE_GALLERIES:
       return {
         ...state,
-        galleries: action.payload
+        ...getGalleryData(action.payload)
       };
 
     case HYDRATE_PENDING_GALLERIES:

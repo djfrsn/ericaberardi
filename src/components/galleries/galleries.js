@@ -68,7 +68,7 @@ export class Galleries extends Component {
     this.path = gUtils.parsePath(pathname).path;
 
     const routeChange = pathname !== galleriesPathname || pathname === '/galleries';
-    const galleryChange = !deepEqual(nextProps.galleries.galleries, this.props.galleries.galleries) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries']);
+    const galleryChange = !deepEqual(nextProps.galleries.images, this.props.galleries.images) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries']);
 
     if (routeChange || galleryChange) {
       this.galleriesPathname = pathname; // update active gallery on route/gallersState change
@@ -160,7 +160,7 @@ export class Galleries extends Component {
   }
   render() {
     const { gallery, categories } = this.state;
-    const authenticated = authenticated;
+    const authenticated = this.props.auth.authenticated;
     const galleryLength = Object.keys(gallery).length;
     const taggedForDeleteCount = this.props.galleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';

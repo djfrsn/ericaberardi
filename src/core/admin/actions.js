@@ -19,16 +19,53 @@ export function clearAdminToast() {
   };
 }
 
+// helper for obtaining pendingImages
+function isImages(category, key) {
+  return category === 'galleries' && key === 'images';
+}
+
+function getPendingImagesCount(categories) {
+  let pendingImagesCount = 0;
+
+  forIn(categories, images => {
+    pendingImagesCount += Object.keys(images).length;
+  });
+
+  return pendingImagesCount;
+}
+
 function getPendingUpdatesCount(pendingUpdates) {
   let pendingUpdatesCount = 0;
 
-  forIn(pendingUpdates, updates => {
-    forIn(updates, update => {
-      pendingUpdatesCount += update.length;
+  forIn(pendingUpdates, (updates, category) => {
+    forIn(updates, (update, key) => {
+      if (isImages(category, key)) {
+        pendingUpdatesCount += getPendingImagesCount(update, key);
+      }
+      else {
+        pendingUpdatesCount += Object.keys(update).length;
+      }
     });
   });
   // `console.log('pendingUpdatesCount', pendingUpdatesCount);
   return pendingUpdatesCount;
+}
+
+function getPendingImages(categories) {
+  let pendingImages = {};
+
+  forIn(categories, (images, key) => {
+    if (Object.keys(images).length > 0) {
+      pendingImages[key] = {}; // do images have keys? A category with no images wouldn't....
+    }
+    forIn(images, (image, id) => {
+      if (image.pending) {
+        pendingImages[key][id] = image;
+      }
+    });
+  });
+
+  return pendingImages;
 }
 
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
@@ -39,10 +76,19 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
   pendingUpdates[category] = {}; // pending updates to be set here
 
   forIn(pendingData, (prop, key) => {
-    const pendingProp = filter(prop, ['pending', true]);
 
-    if (pendingProp.length > 0) {
+    let pendingProp = {};
+    forIn(prop, (child, key) => {
+      if (child.pending) {
+        pendingProp[key] = child;
+      }
+    });
+
+    if (Object.keys(pendingProp).length > 0) {
       pendingUpdates[category][key] = pendingProp; // update new pendingProp
+    }
+    else if (isImages(category, key)) {
+      pendingUpdates[category][key] = getPendingImages(prop);
     }
   });
 

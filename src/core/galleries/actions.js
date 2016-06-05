@@ -152,10 +152,9 @@ export function onGalleryDeleteImages(successCallback) {
     });
 
     setTimeout(() => {
-        // timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
       if (!success) {
         successCallback('error', 'An attempt to delete images was made, although some files may not have been deleted!');
-      }
+      } // timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
     }, 45000);
 
     dispatch({

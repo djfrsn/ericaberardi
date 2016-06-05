@@ -49,6 +49,12 @@
   }
 
   .gallery__image {
+    border-radius: 2px;
+    @include quick-cubic-transition(border);
+
+    &.pending {
+      border: 2px solid $ericaYellow;
+    }
 
     &.gallery__image_delete {
       border: 2px dashed red;

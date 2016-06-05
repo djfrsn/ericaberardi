@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
-import { galleryActions } from 'core/galleries';
+import { galleriesActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 import pendingUpdatesList from './pendingUpdatesList';
 import { confirmationAlert, undoAlert } from './dashboardAlerts';
@@ -67,4 +67,4 @@ export default connect(state => ({
   auth: state.auth,
   admin: state.admin,
   galleries: state.galleries
-}), Object.assign({}, authActions, adminActions, galleryActions, toastActions))(DashBoard);
+}), Object.assign({}, authActions, adminActions, galleriesActions, toastActions))(DashBoard);

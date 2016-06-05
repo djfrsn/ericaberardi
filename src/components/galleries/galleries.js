@@ -8,7 +8,7 @@ import deepEqual from 'deep-equal';
 // App Specific
 import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
-import { galleryActions } from 'core/galleries';
+import { galleriesActions } from 'core/galleries';
 import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
 import { deleteImagesAlert } from './galleriesAlerts';
@@ -227,4 +227,4 @@ export default connect(state => ({
   admin: state.admin,
   galleries: state.galleries,
   auth: state.auth
-}), Object.assign({}, authActions, adminActions, galleryActions, lightboxActions, toastActions))(Galleries);
+}), Object.assign({}, authActions, adminActions, galleriesActions, lightboxActions, toastActions))(Galleries);

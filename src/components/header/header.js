@@ -5,7 +5,7 @@ import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
-import { galleryActions } from 'core/galleries';
+import { galleriesActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 const toastr = require('react-toastr-redux/lib');
 
@@ -100,4 +100,4 @@ export default connect(state => ({
   admin: state.admin,
   galleries: state.galleries,
   toast: state.toast
-}), Object.assign({}, authActions, adminActions, galleryActions, toastActions))(Header);
+}), Object.assign({}, authActions, adminActions, galleriesActions, toastActions))(Header);

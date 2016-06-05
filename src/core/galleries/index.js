@@ -1,5 +1,5 @@
-import * as galleryActions from './actions';
-export { galleryActions };
+import * as galleriesActions from './actions';
+export { galleriesActions };
 
 export * from './action-types';
 export * from './reducer';

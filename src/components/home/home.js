@@ -1,7 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
-import { galleryActions } from 'core/galleries';
+import { galleriesActions } from 'core/galleries';
 import homeGallery from './homeGallery';
 
 export class Home extends Component {
@@ -23,4 +23,4 @@ export class Home extends Component {
 export default connect(state => ({
   auth: state.auth,
   galleries: state.galleries
-}), Object.assign({}, galleryActions, authActions))(Home);
+}), Object.assign({}, galleriesActions, authActions))(Home);

@@ -6,7 +6,8 @@ import * as firebase from 'firebase';
 import 'styles/styles.scss';
 import { Root } from 'components/root';
 import { authActions /* , authRouteResolver */ } from 'core/auth';
-import { galleryActions } from 'core/galleries';
+import { adminActions } from 'core/admin';
+import { galleriesActions } from 'core/galleries';
 import { newsReportingActions } from 'core/newsReporting';
 import { ENV, FIREBASE_CONFIG } from './config';
 import configureStore from './store';
@@ -18,7 +19,8 @@ const store = configureStore({
 const history = syncHistoryWithStore(browserHistory, store);
 
 firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes to update protected data
-  store.dispatch(galleryActions.hydrateGalleries()); // hydrate to hide/show pending content
+  store.dispatch(galleriesActions.hydrateGalleries()); // hydrate to hide/show pending content
+  // TODO: setPendingUpdates without args to set the state to false
   if (user) {
     store.dispatch(authActions.hydrateAuth());
   }
@@ -28,7 +30,9 @@ let galleries = firebase.database().ref(`${ENV}/galleries`);
 let newsReporting = firebase.database().ref(`${ENV}/newsReporting`);
 
 galleries.on('value', snapshot => {
-  store.dispatch(galleryActions.hydrateGalleries(snapshot.val()));
+  const data = snapshot.val();
+  store.dispatch(adminActions.setPendingUpdates('galleries', data));
+  store.dispatch(galleriesActions.hydrateGalleries(data));
 });
 
 newsReporting.on('value', snapshot => {

@@ -16,6 +16,8 @@ import {
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import forIn from 'lodash.forin';
+import forEach from 'lodash.foreach';
+import filter from 'lodash.filter';
 import { activeGalleries } from './gsUtils';
 
 export const initialState = {
@@ -104,10 +106,21 @@ function taggedForDeleteGalleries(state, action) {
 }
 
 function getGalleryData(payload) {
-  const { categories, images } = payload;
+  const { categories, images } = payload.data;
+  let cat = categories;
+  let img = images;
+  if (!payload.auth.authenticated) {
+    cat = {}; // show only published categories
+    const publishedCat = filter(cat, { pending: true });
+    if (publishedCat.length > 0) {
+      forEach(publishedCat, category => {
+        cat[category.id] = category;
+      });
+    }
+  }
   return {
-    categories,
-    images
+    categories: cat,
+    images: img
   };
 }
 

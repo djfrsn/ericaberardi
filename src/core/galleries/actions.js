@@ -36,10 +36,11 @@ export function sendGalleriesToast(toast) {
 }
 
 export function hydrateGalleries(data) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { auth } = getState();
     dispatch({
       type: HYDRATE_GALLERIES,
-      payload: data
+      payload: { data, auth }
     });
   };
 }
@@ -79,7 +80,8 @@ export function createCategory(category) {
       const id = firebase.database(`${ENV}/galleries/categories/`).ref().child('categories').push().key;
       firebase.database().ref(`${ENV}/galleries/categories/${id}`).set({
         id,
-        category: category.toLowerCase()
+        category: category.toLowerCase(),
+        pending: true
       }).then(() => {
         dispatch({
           type: CREATE_CATEGORY_SUCCESS

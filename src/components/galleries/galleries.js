@@ -161,13 +161,13 @@ export class Galleries extends Component {
   render() {
     const { gallery, categories } = this.state;
     const authenticated = this.props.auth.authenticated;
-    const galleryLength = Object.keys(gallery).length;
+    const galleriesLength = Object.keys(this.props.galleries.categories).length;
     const taggedForDeleteCount = this.props.galleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
-    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
-    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
-    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
-    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleryLength < 1 }); // hide dropzone until images loaded
+    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
+    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
+    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
+    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
     const galleryDeleteToggle = !this.props.galleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });

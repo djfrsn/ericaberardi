@@ -111,7 +111,7 @@ export class Galleries extends Component {
     }
     else if (this.props.galleries.galleryDeleteEnabled) { // Tag images for delection
       const imageId = e.currentTarget.parentElement.id;
-      this.props.tagImgForDeletion({imageId, category: this.path });
+      this.props.tagImgForDeletion({imageId, categoryId: this.state.activeGalleryId });
     }
   }
   hydrateActiveGallery = props => {

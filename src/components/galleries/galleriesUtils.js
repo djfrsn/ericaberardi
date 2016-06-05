@@ -33,7 +33,8 @@ export function hydrateActiveGallery(props, scope) {
     const category = () => {
       return categories[filter(categories, { category: galleryPath })[0].id || defaultGallery.id];
     };
-    let activeGallery = galleries[category().id];
+    let activeGalleryId = category().id;
+    let activeGallery = galleries[activeGalleryId];
 
     if (path !== galleryPath) { // if needed correct browser url to show current category
       scope.context.router.replace(`/galleries/${galleryPath}`);
@@ -43,12 +44,12 @@ export function hydrateActiveGallery(props, scope) {
 
     forIn(activeGallery, (image, id) => {
       gallery[id] = {
-        ...image, // force show when seqImagesLoaded is disabled
+        ...image, // force show when seqImagesLoaded is disabled...
         show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // since that function would otherwise reveals images
       };
     });
 
-    scope.setState({ ...scope.state, categories, gallery });
+    scope.setState({ ...scope.state, categories, gallery, activeGalleryId });
     if (!scope.props.galleries.forceImagesLoadedOff) {
       scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added
     }

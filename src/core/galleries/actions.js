@@ -177,7 +177,7 @@ export function tagImgForDeletion(data) {
   return dispatch => {
     dispatch({
       type: TAG_IMAGE_FOR_DELETION,
-      payload: { imageId: data.imageId, category: data.category }
+      payload: { imageId: data.imageId, categoryId: data.categoryId }
     });
   };
 }

@@ -67,7 +67,7 @@ function getTaggedForDeleteCount(galleries) {
   let taggedForDeleteCount = 0;
 
   forIn(galleries, gallery => {
-    gallery.forEach(image => {
+    forIn(gallery, image => {
       if (image.shouldDelete) {
         taggedForDeleteCount++;
       }
@@ -79,26 +79,28 @@ function getTaggedForDeleteCount(galleries) {
 
 // tag a given imageId for deletion
 function taggedForDeleteGalleries(state, action) {
-  const { galleries, galleriesKey } = activeGalleries(state);
-  const gallery = galleries[action.payload.category].map(image => {
+  const { images } = state;
+  const gallery = {};
+
+  forIn(images[action.payload.categoryId], (image, id) => {
     const selectedImage = image.id === action.payload.imageId;
     let shouldDelete;
     if (selectedImage) {
-      shouldDelete = image.shouldDelete ? !image.shouldDelete : true;
+      shouldDelete = image.shouldDelete ? !image.shouldDelete : true; // toggle shouldDelete state if it exist other set true
     }
-    const ifShouldntDelete = selectedImage ? false : image.shouldDelete; // if image isn't selected image ... use it's current state
-    return {
+    const ifShouldntDelete = selectedImage ? false : (image.shouldDelete || false); // if image isn't selected image ... use it's current state or false if it hasn't been set yet
+    gallery[id] = {
       ...image, // this check allows for selecting and deselecting images
       shouldDelete: shouldDelete ? shouldDelete : ifShouldntDelete // while retaining other images delete state
     };
   });
 
-  const taggedForDeleteGalleries = { ...galleries, [action.payload.category]: gallery };
+  const taggedForDeleteGalleries = { ...images, [action.payload.categoryId]: gallery };
   const taggedForDeleteCount = getTaggedForDeleteCount(taggedForDeleteGalleries);
 
   return {
     ...state,
-    [galleriesKey]: taggedForDeleteGalleries,
+    'images': taggedForDeleteGalleries,
     taggedForDeleteCount
   };
 }

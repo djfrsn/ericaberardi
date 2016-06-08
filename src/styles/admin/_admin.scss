@@ -141,7 +141,7 @@
 //  CHANGE PASSWORD
 //===================================================================
 
-.change-password__link {
+.dashboard__link {
   color: black;
   text-align: center;
   text-decoration: none;
@@ -150,6 +150,10 @@
   &.active, &:hover {
     @extend .link-border;
   }
+}
+
+.dashboard__link_divider {
+  margin: 0 10px;
 }
 
 .change-password__success-msg, .change-password__error-msg {

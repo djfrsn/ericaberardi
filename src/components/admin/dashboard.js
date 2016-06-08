@@ -30,16 +30,18 @@ export class DashBoard extends Component {
   }
   render() {
     const { auth, admin } = this.props;
-    let component = <p style={{textAlign: 'center'}}><a href="/login">Login</a> to use the dashboard.</p>;
+    let dashboard = <p style={{textAlign: 'center'}}><a href="/login">Login</a> to use the dashboard.</p>;
     if (auth.authenticated) {
       const pendingUpdatesCount = Object.keys(admin.pendingUpdates).length;
       const hasPendingUpdates = pendingUpdatesCount >= 1;
       const pendingUpdatesTitle = hasPendingUpdates ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
       const publishButton = hasPendingUpdates ? (<button className="eb-button pending-changes__publish" onClick={this.confirmPublish}>Publish</button>) : null;
       const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.confirmUndo}>Undo Edits</button>) : null;
-      component = (<div><h1 className="dashboard__header">Admin DashBoard</h1>
+      dashboard = (<div><h1 className="dashboard__header">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
-          <Link to="changepassword" className="change-password__link" >Change Password</Link>
+          <Link to="changepassword" className="dashboard__link" >Change Password</Link>
+          <span className="dashboard__link_divider">&#8226;</span>
+          <Link to="deletecategory" className="dashboard__link" >Delete Category</Link>
           <div className="pending-changes__wrapper">
             {pendingUpdatesTitle}
             <div className="pending-changes__list_wrapper">
@@ -56,7 +58,7 @@ export class DashBoard extends Component {
     return (
       <div className="g-row dashboard">
         <div className="g-col">
-          {component}
+          {dashboard}
         </div>
       </div>
     );

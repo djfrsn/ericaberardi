@@ -116,16 +116,22 @@ export function setPendingUpdates(category, snapshot) {
 }
 
 // Set 'pending: false' for each child of a given pendingUpdate category
-function setPendingStatus(status, pendingState) {
-  let newPendingState = {};
+function setPendingStatus(category, status, state) {
+  let newPendingState = { ...state };
 
-  // works for objects with children that are objectArrays only
-  forIn(pendingState, (subCategories, subCategory) => {
-    newPendingState[subCategory] = {};
-    forIn(subCategories, (data, key) => {
-      newPendingState[subCategory][key] = {...data, pending: false};
+  if (category === 'galleries') {
+    newPendingState.images = { ...state.images }; // extend to avoid losing data other than objects
+    forIn(state.categories, category => {
+      const categoryId = category.id;
+      newPendingState.categories[categoryId] = { ...category, pending: false };
+      const images = state.images[categoryId];
+      if (images) {
+        forIn(images, image => {
+          newPendingState.images[categoryId][image.id] = {...image, pending: false};
+        });
+      }
     });
-  });
+  }
 
   return newPendingState;
 }
@@ -137,7 +143,7 @@ function getPendingChangeMinimums(category) {
 
   switch (category) {
     case 'galleries':
-      minCategoryCount = 1;
+      minCategoryCount = 3;
       minChildCount = 4;
       break;
 
@@ -149,76 +155,87 @@ function getPendingChangeMinimums(category) {
 
 // Return true if pendingUpdate children meet minimum content count i.e there should always be atleast 5 gallery categories w/ atleast 8 photos each
 // This will prevent a user from deleting all of the content from the site :)
-function validatePendingChanges(category, pendingState) {
+function validatePendingChanges(category, state) {
   const { minCategoryCount, minChildCount } = getPendingChangeMinimums(category);
   let validChanges = false;
-  // works work object arrays
 
-  const categoryCount = Object.keys(pendingState).length;
-  if (categoryCount >= minCategoryCount) {
-    let pendingStateValid = true;
+  if (category === 'galleries') {
+    const categories = state.categories;
+    const categoryCount = Object.keys(categories).length;
+    if (categoryCount >= minCategoryCount) {
+      let stateValid = true;
+      let index = 1;
 
-    forIn(pendingState, child => {
-      if (child.length < minChildCount) {
-        pendingStateValid = false;
-      }
-    });
-    validChanges = pendingStateValid;
+      forIn(categories, category => {
+        const images = state.images[category.id] || {};
+        if (Object.keys(images).length < minChildCount && index <= minCategoryCount) {
+          stateValid = false;
+        }
+        index++;
+      });
+      validChanges = stateValid;
+    }
   }
-
-  return validChanges;
+  console.log('validChanges', validChanges);
+  return false;
 }
 
 // This method should work for any category
-function publishContent(dispatch, getState, category, pendingState, publishCallback) {
-  const { firebase } = getState();
-  const changesValidated = validatePendingChanges(category, pendingState);
+function publishContent(opts) {
+  const { firebase } = opts.getState();
+  const changesValidated = validatePendingChanges(opts.category, opts.state);
+
+  // TODO: try adding more content to meet requirments & see if this works!
 
   if (changesValidated) {
-    const newState = setPendingStatus(false, pendingState); // set pending status of all children to false
+    const newState = setPendingStatus(opts.category, false, opts.state); // set pending status of all children to false
     const database = firebase.database();
+    let callbackCount = 1;
+    let successCallback;
 
-    database.ref(`${ENV}/${category}`).set(newState).then(() => {
-      database.ref(`${ENV}/pendingUpdates/${category}`).remove();
-      if (utils.isFunction(publishCallback)) {
-        publishCallback();
+    opts.children.forEach(child => {
+      // iterate through category children & set data in firebase
+      if (opts.children.length === callbackCount) {
+        successCallback = opts.callbacks.successCallback;
       }
-    }).catch(error => {
-      dispatch({
-        type: PUBLISH_ERROR,
-        payload: error
+
+      database.ref(`${ENV}/${opts.category}/${child}`).set(newState[child]).then(() => {
+        if (utils.isFunction(successCallback)) {
+          successCallback(); // call final publish/success callback
+        }
+        callbackCount++;
       });
     });
   }
   else {
-    dispatch({
-      type: PUBLISH_INAVLID
-    });
+    setTimeout(() => {
+      if (utils.isFunction(opts.callbacks.errorCallback)) {
+        opts.callbacks.errorCallback();
+      }
+    }, 0); // run at the end of the callstack to avoid sweetalert glitch
   }
 }
 
-export function publishPendingUpdates(successCallback) {
+export function publishPendingUpdates(successCallback, errorCallback) {
   return (dispatch, getState) => {
     const { admin } = getState();
     const pendingUpdates = admin.pendingUpdates;
     const pendingUpdatesLength = Object.keys(pendingUpdates).length;
-    let publishCallback;
+    let callbacks = {errorCallback};
     let callbackCount = 1;
+
     // loop through pendingUpdates & set state to firebase
     forIn(pendingUpdates, (update, category) => {
       // each route has it's own state and pending- state to hold data with user edits
-      let pendingState = { ...getState()[category][`pending-${category}`] }; // get the pending state for a given category
+      let state = { ...getState()[category] }; // get the pending state for a given category
 
       if (pendingUpdatesLength === callbackCount) { // pass publishCallback for final pass on pendingUpdates
-        publishCallback = successCallback;
-        dispatch({
-          type: CLEAR_PENDING_UPDATES
-        });
+        callbacks.successCallback = successCallback;
       }
 
       switch (category) {
         case 'galleries':
-          publishContent(dispatch, getState, category, pendingState, publishCallback);
+          publishContent({dispatch, getState, category, children: ['categories', 'images'], state, callbacks});
           break;
 
         default:
@@ -228,7 +245,8 @@ export function publishPendingUpdates(successCallback) {
     });
   };
 }
-
+// strategy
+// check pending content by category & create new state without this data
 export function removePendingUpdates(successCallback) {
   return (dispatch, getState) => {
     const { firebase, admin } = getState();

@@ -10,6 +10,15 @@ function publishSweetAlert() {
   });
 }
 
+function publishErrorAlert() {
+  sweetalert({
+    title: 'Invalid content updates!',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Try adding more content before publishing.</span>',
+    type: 'error',
+    html: true
+  });
+}
+
 function undoSweetAlert() {
   sweetalert({
     title: 'Removed',
@@ -34,13 +43,13 @@ export function confirmationAlert(scope) {
     html: true
   }, isConfirm => {
     if (isConfirm) {
-      scope.props.publishPendingUpdates(publishSweetAlert);
+      scope.props.publishPendingUpdates(publishSweetAlert, publishErrorAlert);
     }
     else {
       sweetalert({
         title: 'Cancelled',
         text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Your content updates are still pending :)</span>',
-        type: 'error',
+        type: 'success',
         html: true
       });
     }

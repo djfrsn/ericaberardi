@@ -20,7 +20,6 @@ import forIn from 'lodash.forin';
 export const initialState = {
   categories: {},
   images: {},
-  ['pending-galleries']: {},
   toast: {},
   galleryDeleteEnabled: false,
   highlightGalleriesLink: false,

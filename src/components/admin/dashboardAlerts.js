@@ -77,7 +77,7 @@ export function undoAlert(scope) {
       sweetalert({
         title: 'Cancelled',
         text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Your content updates are still pending :)</span>',
-        type: 'error',
+        type: 'success',
         html: true
       });
     }

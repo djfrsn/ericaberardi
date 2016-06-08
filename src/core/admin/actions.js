@@ -2,8 +2,6 @@ import {
   CLEAR_ADMIN_TOAST,
   SET_PENDING_UPDATES,
   CLEAR_PENDING_UPDATES,
-  PUBLISH_ERROR,
-  PUBLISH_INAVLID,
   CLEAR_UPDATES_ERROR
 } from './action-types';
 import { ENV } from 'config';
@@ -176,16 +174,14 @@ function validatePendingChanges(category, state) {
       validChanges = stateValid;
     }
   }
-  console.log('validChanges', validChanges);
-  return false;
+
+  return validChanges;
 }
 
 // This method should work for any category
 function publishContent(opts) {
   const { firebase } = opts.getState();
   const changesValidated = validatePendingChanges(opts.category, opts.state);
-
-  // TODO: try adding more content to meet requirments & see if this works!
 
   if (changesValidated) {
     const newState = setPendingStatus(opts.category, false, opts.state); // set pending status of all children to false
@@ -200,8 +196,13 @@ function publishContent(opts) {
       }
 
       database.ref(`${ENV}/${opts.category}/${child}`).set(newState[child]).then(() => {
+        opts.dispatch({
+          type: CLEAR_PENDING_UPDATES
+        });
         if (utils.isFunction(successCallback)) {
-          successCallback(); // call final publish/success callback
+          setTimeout(() => {
+            successCallback(); // call final publish/success callback
+          }, 0);
         }
         callbackCount++;
       });
@@ -210,7 +211,7 @@ function publishContent(opts) {
   else {
     setTimeout(() => {
       if (utils.isFunction(opts.callbacks.errorCallback)) {
-        opts.callbacks.errorCallback();
+        opts.callbacks.errorCallback(); // show error alert
       }
     }, 0); // run at the end of the callstack to avoid sweetalert glitch
   }

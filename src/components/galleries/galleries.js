@@ -183,6 +183,7 @@ export class Galleries extends Component {
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
         <div>Try dropping some files here, or click to select files to upload.</div>
       </Dropzone>
+      <p className="gallery__dropzone_help">*Pending images have a yellow border.</p>
     </div>) : null;
     return (
       <div className="g-row gallery__container" ref={ref => { this.galleryContainer = ref; }}>

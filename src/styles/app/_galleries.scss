@@ -118,7 +118,7 @@
 
 .gallery__dropzone {
   width: 60%;
-  margin: 0 auto;
+  margin: 0 auto 10px;
   padding: 20px;
   background: $ericaYellow;
   border-radius: 3px;
@@ -126,10 +126,17 @@
   cursor: pointer;
   @include quick-cubic-transition(background);
 
+
+
   &:hover {
     background: $colors-black;
     color: $colors-white;
   }
+}
+
+.gallery__dropzone_help {
+  text-align: center;
+  font-size: 0.9em;
 }
 
 .gallery__dropzone_title {

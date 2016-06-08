@@ -1,7 +1,7 @@
 import sweetalert from 'sweetalert';
 
 
-function publishSweetAlert(type = 'success', text = 'Your content updates have been published!') {
+function publishSweetAlert(type = 'success', text = 'Image deletion successful!') {
   sweetalert({
     title: 'Live!',
     text: `<span style="font-size: 1.2em; color:rgb(31, 31, 31);">${text}</span>`,
@@ -17,7 +17,7 @@ export function deleteImagesAlert(scope) {
     type: 'warning',
     showCancelButton: true,
     confirmButtonColor: '#93c577',
-    confirmButtonText: 'Yes, publish!',
+    confirmButtonText: 'Yes, delete!',
     cancelButtonText: 'No, I"ll Wait!',
     closeOnConfirm: false,
     closeOnCancel: false,

@@ -1,6 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
+import cn from 'classnames';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
@@ -34,6 +35,7 @@ export class DashBoard extends Component {
     if (auth.authenticated) {
       const pendingUpdatesCount = Object.keys(admin.pendingUpdates).length;
       const hasPendingUpdates = pendingUpdatesCount >= 1;
+      const pendingChangesClass = cn({['pending-changes__wrapper']: true, ['hidden']: !hasPendingUpdates });
       const pendingUpdatesTitle = hasPendingUpdates ? (<h3 className="pending-changes__title">Pending Content Updates</h3>) : null;
       const publishButton = hasPendingUpdates ? (<button className="eb-button pending-changes__publish" onClick={this.confirmPublish}>Publish</button>) : null;
       const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.confirmUndo}>Undo Edits</button>) : null;
@@ -42,7 +44,7 @@ export class DashBoard extends Component {
           <Link to="changepassword" className="dashboard__link" >Change Password</Link>
           <span className="dashboard__link_divider">&#8226;</span>
           <Link to="deletecategory" className="dashboard__link" >Delete Category</Link>
-          <div className="pending-changes__wrapper">
+          <div className={pendingChangesClass}>
             {pendingUpdatesTitle}
             <div className="pending-changes__list_wrapper">
               {pendingUpdatesList({ pendingUpdates: admin.pendingUpdates, scope: this })}

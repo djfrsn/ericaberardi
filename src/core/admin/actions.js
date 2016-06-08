@@ -70,24 +70,26 @@ function getPendingImages(categories) {
 function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
   let pendingUpdates = { ...admin.pendingUpdates }; // apply current pending updates
 
-  pendingUpdates[category] = {}; // reset pending updates for a category
+  if (Object.keys(pendingUpdates).length > 0) { // register pending updates if any exist
+    pendingUpdates[category] = {}; // reset pending updates for a category
 
-  forIn(pendingData, (prop, key) => {
+    forIn(pendingData, (prop, key) => {
 
-    let pendingProp = {};
-    forIn(prop, (child, key) => {
-      if (child.pending) {
-        pendingProp[key] = child;
+      let pendingProp = {};
+      forIn(prop, (child, key) => {
+        if (child.pending) {
+          pendingProp[key] = child;
+        }
+      });
+      const childHasKeys = Object.keys(pendingProp).length > 0;
+      if (childHasKeys) {
+        pendingUpdates[category][key] = pendingProp; // update new pendingProp
+      }
+      else if (isImages(category, key) && childHasKeys) { // images are nested differently than categories....
+        pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
       }
     });
-
-    if (Object.keys(pendingProp).length > 0) {
-      pendingUpdates[category][key] = pendingProp; // update new pendingProp
-    }
-    else if (isImages(category, key)) { // images are nested differently than categories....
-      pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
-    }
-  });
+  }
 
   const pendingUpdatesCount = getPendingUpdatesCount(pendingUpdates);
 
@@ -101,7 +103,7 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
 export function setPendingUpdates(category, snapshot) {
   return (dispatch, getState) => {
     const { admin } = getState();
-    if (snapshot) { // snapshot returns 'null' sans data
+    if (snapshot) {
       switch (category) {
         case 'galleries':
           dispatchPendingUpdates(dispatch, category, admin, snapshot);

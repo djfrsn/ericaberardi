@@ -49,7 +49,7 @@ export function hydrateActiveGallery(props, scope) {
       };
     });
 
-    scope.setState({ ...scope.state, categories, gallery, activeGalleryId });
+    scope.setState({ ...scope.state, gallery, activeGalleryId });
     if (!scope.props.galleries.forceImagesLoadedOff) {
       scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added
     }

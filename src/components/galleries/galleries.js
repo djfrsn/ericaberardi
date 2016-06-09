@@ -45,7 +45,6 @@ export class Galleries extends Component {
   }
   state = {
     gallery: {},
-    categories: {},
     files: [],
     showDeleteToggleMsg: false,
     loadImagesSeq: true
@@ -160,7 +159,7 @@ export class Galleries extends Component {
     });
   }
   render() {
-    const { gallery, categories } = this.state;
+    const { gallery } = this.state;
     const authenticated = this.props.auth.authenticated;
     const galleriesLength = Object.keys(this.props.galleries.categories).length;
     const taggedForDeleteCount = this.props.galleries.taggedForDeleteCount;
@@ -190,7 +189,7 @@ export class Galleries extends Component {
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              {galleryCategories( { categories, props: this.props, category: this.path, scope: this })}
+              {galleryCategories( { props: this.props, category: this.path, scope: this })}
             </ul>
           </div>
           {addCategory}

@@ -106,25 +106,27 @@ function getPendingImages(categories) {
 function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
   let pendingUpdates = { ...admin.pendingUpdates }; // apply current pending updates
 
-  if (Object.keys(pendingUpdates).length > 0) { // register pending updates if any exist
+  if (Object.keys(pendingData).length > 0) { // register pending updates if any exist
     pendingUpdates[category] = {}; // reset pending updates for a category
+    if (category === 'galleries') {
+      forIn(pendingData, (prop, key) => {
 
-    forIn(pendingData, (prop, key) => {
+        let pendingProp = {};
+        forIn(prop, (child, key) => {
+          if (child.pending) {
+            pendingProp[key] = child;
+          }
+        });
 
-      let pendingProp = {};
-      forIn(prop, (child, key) => {
-        if (child.pending) {
-          pendingProp[key] = child;
+        const parentPending = Object.keys(pendingProp).length > 0;
+        if (parentPending) {
+          pendingUpdates[category][key] = pendingProp; // update new pendingProp
+        }
+        else if (isImages(category, key)) { // images are nested differently than categories....
+          pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
         }
       });
-      const childHasKeys = Object.keys(pendingProp).length > 0;
-      if (childHasKeys) {
-        pendingUpdates[category][key] = pendingProp; // update new pendingProp
-      }
-      else if (isImages(category, key) && childHasKeys) { // images are nested differently than categories....
-        pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
-      }
-    });
+    }
   }
 
   const pendingUpdatesCount = getPendingUpdatesCount(pendingUpdates);

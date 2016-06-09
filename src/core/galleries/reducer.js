@@ -1,7 +1,6 @@
 
 import {
   HYDRATE_GALLERIES,
-  HYDRATE_PENDING_GALLERIES,
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR,
   IMAGES_LOADED_ENABLED,
@@ -136,12 +135,6 @@ export function galleriesReducer(state = initialState, action) {
       return {
         ...state,
         ...getGalleryData(action.payload)
-      };
-
-    case HYDRATE_PENDING_GALLERIES:
-      return {
-        ...state,
-        ['pending-galleries']: action.payload
       };
 
     case CREATE_CATEGORY_SUCCESS:

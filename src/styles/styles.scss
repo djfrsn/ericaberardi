@@ -33,6 +33,10 @@
   display: none !important;
 }
 
+a:focus {
+  outline: none;
+}
+
 ::selection {
   background: rgba(54, 77, 245, 0.1);
 }

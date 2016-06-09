@@ -1,5 +1,4 @@
 import React, { Component, PropTypes } from 'react';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import { authActions } from 'core/auth';
@@ -7,14 +6,16 @@ import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 import pendingUpdatesList from './pendingUpdatesList';
-import { confirmationAlert, undoAlert } from './dashboardAlerts';
+import { confirmationAlert, undoAlert, deleteGalleriesAlert, changePasswordAlert } from './dashboardAlerts';
 
 export class DashBoard extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
     clearAdminToast: PropTypes.func.isRequired,
+    deleteGalleries: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
+    publishPendingUpdates: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired
   };
   componentWillReceiveProps(nextProps) {
@@ -25,6 +26,12 @@ export class DashBoard extends Component {
   }
   confirmPublish = () => {
     confirmationAlert(this);
+  }
+  changePassword = () => {
+    changePasswordAlert(this);
+  }
+  deleteGalleries = () => {
+    deleteGalleriesAlert(this);
   }
   confirmUndo = () => {
     undoAlert(this);
@@ -41,9 +48,9 @@ export class DashBoard extends Component {
       const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.confirmUndo}>Undo Edits</button>) : null;
       dashboard = (<div><h1 className="dashboard__header">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
-          <Link to="changepassword" className="dashboard__link" >Change Password</Link>
+          <a onClick={this.changePassword} className="dashboard__link" >Change Password</a>
           <span className="dashboard__link_divider">&#8226;</span>
-          <Link to="deletecategory" className="dashboard__link" >Delete Category</Link>
+          <a href="#" className="dashboard__link" onClick={this.deleteGalleries}>Delete Galleries Category</a>
           <div className={pendingChangesClass}>
             {pendingUpdatesTitle}
             <div className="pending-changes__list_wrapper">

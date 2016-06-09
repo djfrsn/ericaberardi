@@ -1,6 +1,6 @@
 import {
   CLEAR_ADMIN_TOAST,
-  CLEAR_ADMIN_SWAL,
+  DELETE_GALLERIES_CATEGORY,
   SET_PENDING_UPDATES_COUNT,
   SET_PENDING_UPDATES,
   CLEAR_PENDING_UPDATES,
@@ -23,7 +23,7 @@ export function adminReducer(state = initialState, action) {
         toast: {}
       };
 
-    case CLEAR_ADMIN_SWAL:
+    case DELETE_GALLERIES_CATEGORY:
       return {
         ...state
       };

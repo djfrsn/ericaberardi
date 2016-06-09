@@ -3,8 +3,6 @@ import {
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
   SIGN_OUT_SUCCESS,
-  CHANGE_PASSWORD_SUCCESS,
-  CHANGE_PASSWORD_ERROR,
   RESET_AUTH_MESSAGES
 } from './action-types';
 
@@ -76,27 +74,15 @@ export function signInWithEmail(email, password) {
   };
 }
 
-export function changePassword(newPassword) {
+export function changePassword(opts) {
   return (dispatch, getState) => {
     const { firebase } = getState();
     const user = firebase.auth().currentUser;
 
-    user.updatePassword(newPassword).then(function() {
-      dispatch({
-        type: CHANGE_PASSWORD_SUCCESS,
-        meta: {
-          timestamp: Date.now()
-        }
-      });
-    }, function(error) {
-      // An error happened.
-      dispatch({
-        type: CHANGE_PASSWORD_ERROR,
-        payload: error,
-        meta: {
-          timestamp: Date.now()
-        }
-      });
+    user.updatePassword(opts.newPassword).then(() => {
+      opts.changePasswordSuccessAlert();
+    }, error => {
+      opts.changePasswordErrorAlert(error);
     });
   };
 }

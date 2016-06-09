@@ -3,8 +3,6 @@ import {
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
   SIGN_OUT_SUCCESS,
-  CHANGE_PASSWORD_SUCCESS,
-  CHANGE_PASSWORD_ERROR,
   RESET_AUTH_MESSAGES
 } from './action-types';
 
@@ -46,19 +44,6 @@ export function authReducer(state = initialState, action) {
       return {
         authenticated: false,
         id: null
-      };
-
-    case CHANGE_PASSWORD_SUCCESS:
-      return {
-        ...state,
-        changePasswordSuccess: true
-      };
-
-    case CHANGE_PASSWORD_ERROR:
-      return {
-        ...state,
-        changePasswordError: true,
-        changePasswordErrorMsg: payload.message
       };
 
     case RESET_AUTH_MESSAGES:

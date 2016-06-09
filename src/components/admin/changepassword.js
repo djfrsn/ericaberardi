@@ -29,7 +29,7 @@ export class ChangePassword extends Component {
     if (auth.authenticated) {
       component = (<div><h1 className="sign-in__heading">Change Password</h1>
         <form onSubmit={this.changePassword}>
-          <input type="password" placeholder="New Password" ref={ref => this.newPassword = ref}/>
+          <input className="admin_input" type="password" placeholder="New Password" ref={ref => this.newPassword = ref}/>
           <button type="submit" className="eb-button password-submit__button" onClick={this.changePassword}>Submit</button>
         </form>
         {msg}</div>);

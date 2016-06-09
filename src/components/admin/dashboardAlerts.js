@@ -28,11 +28,92 @@ function undoSweetAlert() {
   });
 }
 
+function deleteSuccessAlert(category) {
+  const categoryName = `<span style="text-transform: capitalize; font-weight: bold;">${category}</span>`;
+  sweetalert({
+    title: 'Success!',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">' + categoryName + ' galleries deleted.</span>',
+    type: 'success',
+    html: true
+  });
+}
+
+function deleteErrorAlert() {
+  sweetalert({
+    title: 'Unsuccessful!',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Unfortunately something wen\"t wrong when trying to delete this category. Please try again :(</span>',
+    type: 'error',
+    html: true
+  });
+}
+
+export function deleteGalleriesAlert(scope) {
+  sweetalert({
+    title: 'Delete Galleries Category',
+    text: 'Type the name of a galleries category to delete it.',
+    type: 'input',
+    confirmButtonColor: '#d50d0d',
+    confirmButtonText: 'Delete!',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    animation: 'slide-from-top',
+    inputPlaceholder: 'Category Name'
+  }, category => {
+    if (category === false) return false;
+    if (category === '') {
+      sweetalert.showInputError('You need to write something!');
+      return false;
+    }
+    scope.props.deleteGalleries({category, deleteSuccessAlert, deleteErrorAlert, sweetalert});
+  });
+}
+
+
+function changePasswordSuccessAlert() {
+  sweetalert({
+    title: 'Success!',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Password successfully changed.</span>',
+    type: 'success',
+    html: true
+  });
+}
+
+function changePasswordErrorAlert(error) {
+  sweetalert({
+    title: 'Unsuccessful!',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">' + error.message + '</span>',
+    type: 'error',
+    html: true
+  });
+}
+
+export function changePasswordAlert(scope) {
+  sweetalert({
+    title: 'Change Password',
+    text: 'Type in your new password.',
+    type: 'input',
+    inputType: 'password',
+    confirmButtonColor: '#93c577',
+    confirmButtonText: 'Confirm',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    animation: 'slide-from-top',
+    inputPlaceholder: '...'
+  }, newPassword => {
+    if (newPassword === false) return false;
+    if (newPassword === '') {
+      sweetalert.showInputError('An empty password...thats not too safe...try typing something!');
+      return false;
+    }
+    scope.props.changePassword({newPassword, changePasswordSuccessAlert, changePasswordErrorAlert});
+  });
+}
+
 export function confirmationAlert(scope) {
   sweetalert({
     title: 'Are you sure?',
     text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">You will not be able to undo these changes!</span>',
-    type: 'warning',
+    type: 'info',
     showCancelButton: true,
     confirmButtonColor: '#93c577',
     confirmButtonText: 'Yes, publish!',
@@ -60,7 +141,7 @@ export function undoAlert(scope) {
   sweetalert({
     title: 'Are you sure?',
     text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">You will not be able to retrieve your pending changes!</span>',
-    type: 'warning',
+    type: 'info',
     showCancelButton: true,
     confirmButtonColor: '#93c577',
     confirmButtonText: 'Yes, I"ll undo edits!',

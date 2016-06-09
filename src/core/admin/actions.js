@@ -1,11 +1,13 @@
 import {
   CLEAR_ADMIN_TOAST,
+  DELETE_GALLERIES_CATEGORY,
   SET_PENDING_UPDATES,
   CLEAR_PENDING_UPDATES,
   CLEAR_UPDATES_ERROR
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
+import findKey from 'lodash.findkey';
 import utils from 'utils';
 
 export function clearAdminToast() {
@@ -13,6 +15,41 @@ export function clearAdminToast() {
     dispatch({
       type: CLEAR_ADMIN_TOAST
     });
+  };
+}
+
+export function deleteGalleries(opts) {
+  return (dispatch, getState) => {
+    const { firebase, galleries } = getState();
+    const database = firebase.database();
+    const categoryName = opts.category.toLowerCase();
+    const categoryId = findKey(galleries.categories, { category: categoryName });
+    let callbackCount = 0;
+
+    const successCallback = () => {
+      if (callbackCount > 1) {
+        opts.deleteSuccessAlert(categoryName);
+      }
+    };
+
+    if (categoryId) {
+      database.ref(`${ENV}/galleries/categories/${categoryId}`).set(null).then(() => {
+        callbackCount++;
+        successCallback();
+      }).catch(() => {
+        opts.deleteErrorAlert();
+      });
+      database.ref(`${ENV}/galleries/images/${categoryId}`).set(null).then(() => {
+        callbackCount++;
+        successCallback();
+      }).catch(error => {
+        // we failed to delete a categories images.....log error
+        database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleries', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/images/${categoryId}`, error});
+      });
+    }
+    else {
+      opts.sweetalert.showInputError('This isn\"t a valid category name!');
+    }
   };
 }
 

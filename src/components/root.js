@@ -14,7 +14,6 @@ import Pricing from './pricing/pricing';
 import About from './about/about';
 import Contact from './contact/contact';
 import Login from './admin/login';
-import ChangePassword from './admin/changePassword';
 import Dashboard from './admin/dashboard';
 
 // TODO: <Route component={NotFound} path='*'/>

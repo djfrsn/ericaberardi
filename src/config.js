@@ -11,7 +11,6 @@ export const FIREBASE_CONFIG = {
 
 // Route paths
 export const LOGIN_PATH = '/login';
-export const CHANGE_PASSWORD_PATH = '/changepassword';
 export const DASHBOARD_PATH = '/dashboard';
 export const HOME_PATH = '/home';
 export const GALLERIES_PATH = '/galleries';

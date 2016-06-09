@@ -69,16 +69,16 @@ export function deleteGalleriesAlert(scope) {
 }
 
 
-function changePasswordSuccessAlert() {
+function successAlert(type) {
   sweetalert({
     title: 'Success!',
-    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Password successfully changed.</span>',
+    text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">' + type + ' successfully changed.</span>',
     type: 'success',
     html: true
   });
 }
 
-function changePasswordErrorAlert(error) {
+function errorAlert(error) {
   sweetalert({
     title: 'Unsuccessful!',
     text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">' + error.message + '</span>',
@@ -102,10 +102,31 @@ export function changePasswordAlert(scope) {
   }, newPassword => {
     if (newPassword === false) return false;
     if (newPassword === '') {
-      sweetalert.showInputError('An empty password...thats not too safe...try typing something!');
+      sweetalert.showInputError('An empty password...thats not too safe...try writing something!');
       return false;
     }
-    scope.props.changePassword({newPassword, changePasswordSuccessAlert, changePasswordErrorAlert});
+    scope.props.changePassword({newPassword, successAlert, errorAlert});
+  });
+}
+
+export function changeEmailAlert(scope) {
+  sweetalert({
+    title: 'Change Email',
+    text: 'Type in your new email address.',
+    type: 'input',
+    confirmButtonColor: '#93c577',
+    confirmButtonText: 'Confirm',
+    showCancelButton: true,
+    closeOnConfirm: false,
+    animation: 'slide-from-top',
+    inputPlaceholder: '...'
+  }, newEmail => {
+    if (newEmail === false) return false;
+    if (newEmail === '') {
+      sweetalert.showInputError('You need to write something!');
+      return false;
+    }
+    scope.props.changeEmail({newEmail, successAlert, errorAlert});
   });
 }
 

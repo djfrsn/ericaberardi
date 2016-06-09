@@ -6,12 +6,13 @@ import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 import pendingUpdatesList from './pendingUpdatesList';
-import { confirmationAlert, undoAlert, deleteGalleriesAlert, changePasswordAlert } from './dashboardAlerts';
+import { confirmationAlert, undoAlert, deleteGalleriesAlert, changeEmailAlert, changePasswordAlert } from './dashboardAlerts';
 
 export class DashBoard extends Component {
   static propTypes = {
     admin: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
+    changeEmail: PropTypes.func.isRequired,
     clearAdminToast: PropTypes.func.isRequired,
     deleteGalleries: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
@@ -26,6 +27,9 @@ export class DashBoard extends Component {
   }
   confirmPublish = () => {
     confirmationAlert(this);
+  }
+  changeEmail = () => {
+    changeEmailAlert(this);
   }
   changePassword = () => {
     changePasswordAlert(this);
@@ -48,6 +52,8 @@ export class DashBoard extends Component {
       const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.confirmUndo}>Undo Edits</button>) : null;
       dashboard = (<div><h1 className="dashboard__header">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
+          <a onClick={this.changeEmail} className="dashboard__link" >Change Email</a>
+          <span className="dashboard__link_divider">&#8226;</span>
           <a onClick={this.changePassword} className="dashboard__link" >Change Password</a>
           <span className="dashboard__link_divider">&#8226;</span>
           <a href="#" className="dashboard__link" onClick={this.deleteGalleries}>Delete Galleries Category</a>

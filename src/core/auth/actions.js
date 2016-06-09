@@ -80,9 +80,22 @@ export function changePassword(opts) {
     const user = firebase.auth().currentUser;
 
     user.updatePassword(opts.newPassword).then(() => {
-      opts.changePasswordSuccessAlert();
+      opts.successAlert('Password');
     }, error => {
-      opts.changePasswordErrorAlert(error);
+      opts.errorAlert(error);
+    });
+  };
+}
+
+export function changeEmail(opts) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    const user = firebase.auth().currentUser;
+
+    user.updateEmail(opts.newEmail).then(() => {
+      opts.successAlert('Email');
+    }, error => {
+      opts.errorAlert(error);
     });
   };
 }

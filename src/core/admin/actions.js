@@ -291,21 +291,27 @@ export function publishPendingUpdates(successCallback, errorCallback) {
 export function removePendingUpdates(successCallback) {
   return (dispatch, getState) => {
     const { firebase, admin } = getState();
-    if (Object.keys(admin.pendingUpdates).length >= 1) {
+    const pendingUpdates = admin.pendingUpdates;
+    if (Object.keys(pendingUpdates).length >= 1) {
       const database = firebase.database();
-      database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
-        dispatch({
-          type: CLEAR_PENDING_UPDATES
-        });
-        if (utils.isFunction(successCallback)) {
-          successCallback(); // TODO: break utils into named functions
+      forIn(pendingUpdates, (update, category) => {
+        if (category === 'galleries') {
+          // delete categories, images & meta
         }
-      }).catch(error => {
-        dispatch({
-          type: CLEAR_UPDATES_ERROR,
-          payload: error
-        });
       });
+      // database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
+      //   dispatch({
+      //     type: CLEAR_PENDING_UPDATES
+      //   });
+      //   if (utils.isFunction(successCallback)) {
+      //     successCallback(); // TODO: break utils into named functions
+      //   }
+      // }).catch(error => {
+      //   dispatch({
+      //     type: CLEAR_UPDATES_ERROR,
+      //     payload: error
+      //   });
+      // });
     }
   };
 }

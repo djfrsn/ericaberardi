@@ -1,8 +1,7 @@
 import {
   CLEAR_ADMIN_TOAST,
   SET_PENDING_UPDATES,
-  CLEAR_PENDING_UPDATES,
-  CLEAR_UPDATES_ERROR
+  CLEAR_PENDING_UPDATES
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
@@ -299,19 +298,19 @@ export function removePendingUpdates(successCallback) {
           // delete categories, images & meta
         }
       });
-      // database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
-      //   dispatch({
-      //     type: CLEAR_PENDING_UPDATES
-      //   });
-      //   if (utils.isFunction(successCallback)) {
-      //     successCallback(); // TODO: break utils into named functions
-      //   }
-      // }).catch(error => {
-      //   dispatch({
-      //     type: CLEAR_UPDATES_ERROR,
-      //     payload: error
-      //   });
-      // });
+      database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
+        dispatch({
+          type: CLEAR_PENDING_UPDATES
+        });
+        if (utils.isFunction(successCallback)) {
+          successCallback(); // TODO: break utils into named functions
+        }
+      }).catch(error => {
+        dispatch({
+          type: CLEAR_UPDATES_ERROR,
+          payload: error
+        });
+      });
     }
   };
 }

@@ -1,6 +1,6 @@
 {
   "database": {
-    "rules": "./firebase-rules.json"
+    "rules": "firebase-rules.json"
   },
   "hosting": {
     "public": "target",
@@ -9,59 +9,6 @@
         "source": "**",
         "destination": "/index.html"
       }
-    ],
-    "headers": [
-      {
-        "source": "**/*",
-        "headers": [
-          {
-            "key": "X-Content-Type-Options",
-            "value": "nosniff"
-          },
-          {
-            "key": "X-Frame-Options",
-            "value": "DENY"
-          },
-          {
-            "key": "X-UA-Compatible",
-            "value": "ie=edge"
-          },
-          {
-            "key": "X-XSS-Protection",
-            "value": "1; mode=block"
-          }
-        ]
-      },
-      {
-        "source": "**/*.@(css|html|js|map)",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "max-age=3600"
-          }
-        ],
-        "headers": [ {
-          "source" : "**/*.@(eot|otf|ttf|ttc|woff|font.css)",
-          "headers" : [ {
-            "key" : "Access-Control-Allow-Origin",
-            "value" : "*"
-          } ]
-          }, {
-          "source" : "**/*.@(jpg|jpeg|gif|png)",
-          "headers" : [ {
-            "key" : "Cache-Control",
-            "value" : "max-age=7200"
-          } ]
-          }, {
-          "source" : "404.html",
-          "headers" : [ {
-            "key" : "Cache-Control",
-            "value" : "max-age=300"
-          } ]
-        } ]
-      }
-    ],
-    "cleanUrls": true,
-    "trailingSlash": false
+    ]
   }
 }

@@ -1,7 +1,8 @@
 import {
   CLEAR_ADMIN_TOAST,
   SET_PENDING_UPDATES,
-  CLEAR_PENDING_UPDATES
+  CLEAR_PENDING_UPDATES,
+  CLEAR_UPDATES_ERROR
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';

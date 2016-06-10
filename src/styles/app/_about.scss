@@ -24,6 +24,32 @@
   margin-bottom: 20px;
 }
 
+.contact__social_icons {
+
+  &.about {
+    padding-top: 80px;
+    font-size: 2rem;
+    clear: both;
+    @include flex-perfect-center();
+
+    a {
+      color: $contact-black;
+      margin-bottom: 20px;
+
+      i {
+        @include quick-cubic-transition(color);
+      }
+
+      &:hover {
+        color: $colors-gray-light;
+      }
+
+      &:focus {
+        outline: none;
+      }
+    }
+  }
+}
 
 @media (max-width: 960px) {
   .about__left_col, .about__right_col {
@@ -34,6 +60,9 @@
     margin: 0 auto;
     width: 50%;
   }
+  .about__left_col {
+    margin-bottom: 20px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -43,5 +72,8 @@
   }
   .about__image {
     margin: 0;
+  }
+  .about__left_col {
+    margin-bottom: 20px;
   }
 }

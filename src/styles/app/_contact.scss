@@ -1,4 +1,3 @@
-$contact-black: lighten($colors-alt-black, 10%);
 
 @mixin contact__placeholder-style() {
   color: $contact-black;
@@ -47,23 +46,6 @@ $contact-black: lighten($colors-alt-black, 10%);
 
     &:hover {
       color: $contact-black;
-    }
-
-    &:focus {
-      outline: none;
-    }
-  }
-
-  .contact__social_link {
-    color: $contact-black;
-    margin-bottom: 20px;
-
-    i {
-      @include quick-cubic-transition(color);
-    }
-
-    &:hover {
-      color: $colors-gray-light;
     }
 
     &:focus {

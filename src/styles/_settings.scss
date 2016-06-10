@@ -12,6 +12,7 @@ $alt-font-family: Marvel, 'sans-serif';
 
 $colors-black: black;
 $colors-alt-black: rgb(31, 31, 31);
+$contact-black: lighten($colors-alt-black, 10%);
 $colors-gray: #999;
 $colors-gray-light: lighten($colors-alt-black, 37%);
 $colors-white: white;

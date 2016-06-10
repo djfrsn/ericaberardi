@@ -3,10 +3,10 @@ export const ENV = 'qa';
 export const FIREBASE_URL = 'https://ericaberardi.firebaseio.com/dev';
 
 export const FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyCxF2fuo32wrh2GbG7fLNl5Oybp0_gTDuQ',
-  authDomain: 'ericaberardi.firebaseapp.com',
-  databaseURL: 'https://ericaberardi.firebaseio.com',
-  storageBucket: 'project-7692361988837988531.appspot.com'
+  apiKey: 'AIzaSyBnlzFUCPFfecUPbNhu0OgqeVXDy1aog2Y',
+  authDomain: 'erica-berardi.firebaseapp.com',
+  databaseURL: 'https://erica-berardi.firebaseio.com',
+  storageBucket: 'erica-berardi.appspot.com',
 };
 
 // Route paths

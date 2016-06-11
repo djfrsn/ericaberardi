@@ -103,13 +103,13 @@ function getPendingImages(categories) {
 
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
 // each key/value pair contains all pending updates for each route
-function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
+function dispatchPendingUpdates(dispatch, category, admin, snapshot) {
   let pendingUpdates = { ...admin.pendingUpdates }; // apply current pending updates
 
-  if (Object.keys(pendingData).length > 0) { // register pending updates if any exist
+  if (Object.keys(snapshot).length > 0) { // register pending updates if any exist
     pendingUpdates[category] = {}; // reset pending updates for a category
     if (category === 'galleries') {
-      forIn(pendingData, (prop, key) => {
+      forIn(snapshot, (prop, key) => {
 
         let pendingProp = {};
         forIn(prop, (child, key) => {
@@ -123,18 +123,29 @@ function dispatchPendingUpdates(dispatch, category, admin, pendingData) {
           pendingUpdates[category][key] = pendingProp; // update new pendingProp
         }
         else if (isImages(category, key)) { // images are nested differently than categories....
-          pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
+          const pendingImages = getPendingImages(prop);
+          let hasPendingImages = false;
+          forIn(pendingImages, images => {
+            if (Object.keys(images).length > 0) {
+              hasPendingImages = true;
+            }
+          });
+          if (hasPendingImages) {
+            pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
+          }
         }
       });
     }
   }
 
   const pendingUpdatesCount = getPendingUpdatesCount(pendingUpdates);
-
-  dispatch({
-    type: SET_PENDING_UPDATES,
-    payload: { pendingUpdates, pendingUpdatesCount }
-  });
+  // show available pending updates
+  if (pendingUpdatesCount > 0) {
+    dispatch({
+      type: SET_PENDING_UPDATES,
+      payload: { pendingUpdates, pendingUpdatesCount }
+    });
+  }
 }
 
 // a category is based on a childUrl for the app routes i.e /about
@@ -296,22 +307,23 @@ export function removePendingUpdates(successCallback) {
       const database = firebase.database();
       forIn(pendingUpdates, (update, category) => {
         if (category === 'galleries') {
+          debugger
           // delete categories, images & meta
         }
       });
-      database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
-        dispatch({
-          type: CLEAR_PENDING_UPDATES
-        });
-        if (utils.isFunction(successCallback)) {
-          successCallback(); // TODO: break utils into named functions
-        }
-      }).catch(error => {
-        dispatch({
-          type: CLEAR_UPDATES_ERROR,
-          payload: error
-        });
-      });
+      // database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
+      //   dispatch({
+      //     type: CLEAR_PENDING_UPDATES
+      //   });
+      //   if (utils.isFunction(successCallback)) {
+      //     successCallback(); // TODO: break utils into named functions
+      //   }
+      // }).catch(error => {
+      //   dispatch({
+      //     type: CLEAR_UPDATES_ERROR,
+      //     payload: error
+      //   });
+      // });
     }
   };
 }

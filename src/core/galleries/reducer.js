@@ -12,6 +12,7 @@ import {
   DELETE_GALLERY_IMAGES,
   RESET_IMAGES_TAGGED_FOR_DELETION,
   TAG_IMAGE_FOR_DELETION,
+  CHANGE_GALLERY_IMAGE_ORDER,
   CHANGE_MAIN_CATEGORY_IMAGE,
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
@@ -182,6 +183,11 @@ export function galleriesReducer(state = initialState, action) {
       return resetTaggedForDeleteGalleries(state, action);
 
     case CHANGE_MAIN_CATEGORY_IMAGE:
+      return {
+        ...state
+      };
+
+    case CHANGE_GALLERY_IMAGE_ORDER:
       return {
         ...state
       };

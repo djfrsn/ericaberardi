@@ -29,6 +29,8 @@ export class Galleries extends Component {
 
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    changeCategoryMainImage: PropTypes.func.isRequired,
+    changeGalleryImageOrder: PropTypes.func.isRequired,
     clearGalleriesToast: PropTypes.func.isRequired,
     createCategory: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
@@ -134,6 +136,15 @@ export class Galleries extends Component {
     if (this.props.galleries.galleryDeleteEnabled) {
       this.props.resetTaggedForGalleryDelete(); // reset taggedgalleries on toggle off
     }
+  }
+  onChangeGalleryImageOrder = e => {
+    e.preventDefault();
+    debugger
+    this.props.changeGalleryImageOrder();
+  }
+  onChangeCategoryMainImage = e => {
+    e.preventDefault();
+    this.props.changeCategoryMainImage();
   }
   onDeleteImages = () => {
     if (this.props.galleries.taggedForDeleteCount > 0) {

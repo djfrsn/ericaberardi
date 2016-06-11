@@ -8,6 +8,7 @@ import {
   DELETE_GALLERY_IMAGES,
   TAG_IMAGE_FOR_DELETION,
   RESET_IMAGES_TAGGED_FOR_DELETION,
+  CHANGE_GALLERY_IMAGE_ORDER,
   CHANGE_MAIN_CATEGORY_IMAGE,
   HIGHLIGHT_GALLERIES_LINK,
   CREATE_CATEGORY_SUCCESS,
@@ -179,6 +180,14 @@ export function tagImgForDeletion(data) {
     dispatch({
       type: TAG_IMAGE_FOR_DELETION,
       payload: { imageId: data.imageId, categoryId: data.categoryId }
+    });
+  };
+}
+
+export function changeGalleryImageOrder(opts) {
+  return dispatch => {
+    dispatch({
+      type: CHANGE_GALLERY_IMAGE_ORDER
     });
   };
 }

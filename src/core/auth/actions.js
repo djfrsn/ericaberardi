@@ -5,6 +5,7 @@ import {
   SIGN_OUT_SUCCESS,
   RESET_AUTH_MESSAGES
 } from './action-types';
+import { POST_LOGIN_PATH, POST_LOGOUT_PATH } from 'config';
 
 export function hydrateAuth() {
   return (dispatch, getState) => {
@@ -50,10 +51,9 @@ function authenticate(provider) {
   };
 }
 
-export function signInWithEmail(email, password) {
+export function signInWithEmail(email, password, router) {
   return (dispatch, getState) => {
     const { firebase } = getState();
-
     firebase.auth().signInWithEmailAndPassword(email, password).then(authData => {
       dispatch({
         type: SIGN_IN_SUCCESS,
@@ -62,6 +62,7 @@ export function signInWithEmail(email, password) {
           timestamp: Date.now()
         }
       });
+      router.replace(POST_LOGIN_PATH);
     }).catch(function(error) {
       dispatch({
         type: SIGN_IN_ERROR,
@@ -115,7 +116,7 @@ export function signInWithTwitter() {
 }
 
 
-export function signOut() {
+export function signOut(router) {
   return (dispatch, getState) => {
     const { firebase } = getState();
     firebase.auth().signOut().then(function() {
@@ -123,6 +124,7 @@ export function signOut() {
       dispatch({
         type: SIGN_OUT_SUCCESS
       });
+      router.replace(POST_LOGOUT_PATH);
     });
   };
 }

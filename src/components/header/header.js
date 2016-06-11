@@ -27,7 +27,7 @@ function getDigits(digits) {
 
 export class Header extends Component {
   static contextTypes = {
-    history: React.PropTypes.object.isRequired
+    router: React.PropTypes.object.isRequired
   };
   static propTypes = {
     admin: PropTypes.object.isRequired,
@@ -62,6 +62,9 @@ export class Header extends Component {
     const hdrLink = 'header__link';
     link.className = on ? `${hdrLink} active` : hdrLink;
   }
+  onSignOut = () => {
+    this.props.signOut(this.context.router);
+  }
   reRender = () => {
     this.forceUpdate(); // ugly hack since activeClassName works interminttenly
   }
@@ -85,7 +88,7 @@ export class Header extends Component {
               <li><Link to="/about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>
               <li><Link to="/contact" className="header__link" onClick={this.reRender} activeClassName="active">Contact</Link></li>
               {auth.authenticated ? <li><Link to="/dashboard" className={dashboardLinkClass} onClick={this.reRender} activeClassName="active" data-pendingupdatescount={pendingUpdatesCount}>Dashboard</Link></li> : null}
-              {auth.authenticated ? <li><Link to="/" className="header__link" onClick={this.props.signOut} >Sign out</Link></li> : null}
+              {auth.authenticated ? <li><Link to="/" className="header__link" onClick={this.onSignOut} >Sign out</Link></li> : null}
             </ul>
           </div>
         </div>

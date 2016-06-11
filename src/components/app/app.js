@@ -1,7 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Header from '../header/header';
 import { connect } from 'react-redux';
-// import { POST_LOGIN_PATH } from 'config';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
 
@@ -14,28 +13,8 @@ export class App extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     children: PropTypes.object.isRequired,
-    history: PropTypes.object.isRequired,
-    signOut: PropTypes.func.isRequired
+    history: PropTypes.object.isRequired
   };
-
-  constructor(props, context) {
-    super(props, context);
-    this.signOut = this.signOut.bind(this);
-  }
-
-  componentWillReceiveProps(nextProps) {
-    // const { router } = this.context;
-    const { auth } = this.props;
-
-    if (!auth.authenticated && nextProps.auth.authenticated) {
-      // router.replace(POST_LOGIN_PATH);
-    }
-  }
-
-  signOut() {
-    this.props.signOut();
-    window.location.replace('/');
-  }
 
   render() {
     const { children } = this.props;

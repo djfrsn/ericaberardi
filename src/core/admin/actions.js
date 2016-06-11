@@ -297,33 +297,73 @@ export function publishPendingUpdates(successCallback, errorCallback) {
     });
   };
 }
+
+function clearPendingUpdates(dispatch) {
+  dispatch({
+    type: CLEAR_PENDING_UPDATES
+  });
+}
+
+function removePendingGalleriesData(opts) {
+  const data = opts.data;
+  const database = opts.firebase.database();
+  const storage = opts.firebase.storage();
+  let callbackCount = 1;
+  // delete meta & delete img
+  forIn(data, (data, subCategory) => {
+
+    if (subCategory === 'categories') {
+      // delete categories data
+      forIn(data, category => {
+        database.ref(`${ENV}/galleries/categories/${category.id}`).set(null).then(() => {
+          if (opts.pendingUpdatesCount === callbackCount) {
+            clearPendingUpdates(opts.dispatch);
+            if (utils.isFunction(opts.successCallback)) {
+              opts.successCallback(); // call final publish/success callback
+            }
+          }
+          callbackCount++;
+        });
+      });
+    }
+
+    if (subCategory === 'images') {
+      forIn(data, images => {
+        if (Object.keys(images).length > 0) {
+          forIn(images, image => {
+            database.ref(`${ENV}/galleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
+              if (opts.pendingUpdatesCount === callbackCount) {
+                clearPendingUpdates(opts.dispatch);
+                if (utils.isFunction(opts.successCallback)) {
+                  opts.successCallback(); // call final publish/success callback
+                }
+              }
+              callbackCount++;
+            });
+
+            storage.ref().child(image.fullPath).delete();
+          });
+        }
+      });
+    }
+
+  });
+}
+
 // strategy
 // check pending content by category & create new state without this data
 export function removePendingUpdates(successCallback) {
   return (dispatch, getState) => {
     const { firebase, admin } = getState();
     const pendingUpdates = admin.pendingUpdates;
+    const pendingUpdatesCount = admin.pendingUpdatesCount;
     if (Object.keys(pendingUpdates).length >= 1) {
-      const database = firebase.database();
-      forIn(pendingUpdates, (update, category) => {
+      forIn(pendingUpdates, (data, category) => {
         if (category === 'galleries') {
-          debugger
-          // delete categories, images & meta
+          // delete pending categories, images & meta
+          removePendingGalleriesData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
         }
       });
-      // database.ref(`${ENV}/pendingUpdates`).set(null).then(() => {
-      //   dispatch({
-      //     type: CLEAR_PENDING_UPDATES
-      //   });
-      //   if (utils.isFunction(successCallback)) {
-      //     successCallback(); // TODO: break utils into named functions
-      //   }
-      // }).catch(error => {
-      //   dispatch({
-      //     type: CLEAR_UPDATES_ERROR,
-      //     payload: error
-      //   });
-      // });
     }
   };
 }

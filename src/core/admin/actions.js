@@ -323,6 +323,8 @@ function removePendingGalleriesData(opts) {
             }
           }
           callbackCount++;
+        }).catch(error => {
+          database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${category.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/categories/${category.id}`, error});
         });
       });
     }
@@ -339,9 +341,12 @@ function removePendingGalleriesData(opts) {
                 }
               }
               callbackCount++;
+            }).catch(error => {
+              database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${image.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/images/${image.categoryId}/${image.id}`, error});
             });
-
-            storage.ref().child(image.fullPath).delete();
+            storage.ref().child(image.fullPath).delete().catch(error => {
+              database.ref(`${ENV}/logs/errors/galleries/shouldDelete/images/${image.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${image.fullPath}`, error});
+            });
           });
         }
       });

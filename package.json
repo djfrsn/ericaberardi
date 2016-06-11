@@ -41,6 +41,7 @@
     "imports-loader": "^0.6.5",
     "lodash.filter": "^4.4.0",
     "lodash.findindex": "^4.4.0",
+    "lodash.findkey": "^4.4.0",
     "lodash.forin": "^4.2.0",
     "lodash.mapvalues": "^4.4.0",
     "react": "~0.14.7",

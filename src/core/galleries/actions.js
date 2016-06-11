@@ -8,6 +8,7 @@ import {
   DELETE_GALLERY_IMAGES,
   TAG_IMAGE_FOR_DELETION,
   RESET_IMAGES_TAGGED_FOR_DELETION,
+  CHANGE_MAIN_CATEGORY_IMAGE,
   HIGHLIGHT_GALLERIES_LINK,
   CREATE_CATEGORY_SUCCESS,
   CREATE_CATEGORY_ERROR,
@@ -24,6 +25,7 @@ export function clearGalleriesToast() {
     });
   };
 }
+
 export function sendGalleriesToast(toast) {
   return dispatch => {
     dispatch({
@@ -177,6 +179,14 @@ export function tagImgForDeletion(data) {
     dispatch({
       type: TAG_IMAGE_FOR_DELETION,
       payload: { imageId: data.imageId, categoryId: data.categoryId }
+    });
+  };
+}
+
+export function changeCategoryMainImage(opts) {
+  return dispatch => {
+    dispatch({
+      type: CHANGE_MAIN_CATEGORY_IMAGE
     });
   };
 }

@@ -15,6 +15,7 @@ function getImages(opts) {
     if (image.src && !protectedImage) {
       images.push(
         <div key={image.id} id={image.id} className={containerClassName} style={{width: `${containerWidth}%` }}>
+          <a href="#!" onClick={opts.scope.onChangeCategoryMainImage} className="gallery__image_star"></a>
           <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>
             <img src={image.src} className={imageClassName} />
           </a>

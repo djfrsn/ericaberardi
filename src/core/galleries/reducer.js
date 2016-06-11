@@ -12,6 +12,7 @@ import {
   DELETE_GALLERY_IMAGES,
   RESET_IMAGES_TAGGED_FOR_DELETION,
   TAG_IMAGE_FOR_DELETION,
+  CHANGE_MAIN_CATEGORY_IMAGE,
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import forIn from 'lodash.forin';
@@ -179,6 +180,11 @@ export function galleriesReducer(state = initialState, action) {
 
     case RESET_IMAGES_TAGGED_FOR_DELETION:
       return resetTaggedForDeleteGalleries(state, action);
+
+    case CHANGE_MAIN_CATEGORY_IMAGE:
+      return {
+        ...state
+      };
 
     case HIGHLIGHT_GALLERIES_LINK:
       return {

@@ -139,7 +139,7 @@ export class Galleries extends Component {
   onChangeGalleryImageOrder = e => {
     e.preventDefault();
     this.props.changeGalleryImageOrder({
-      imageId: e.currentTarget.parentElement.id,
+      imageId: e.currentTarget.parentElement.parentElement.id,
       gallery: this.state.gallery,
       desiredOrderBy: e.currentTarget.selectedOptions[0].value
     });

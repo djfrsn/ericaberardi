@@ -1,0 +1,25 @@
+.select-style {
+    padding: 0;
+    margin: 0;
+    width: 120px;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.select-style select {
+    padding: 5px 8px;
+    border: none;
+    box-shadow: none;
+    color: $colors-white;
+    cursor: pointer;
+    background-color: $colors-black;
+    border-radius: 3px;
+    background-image: none;
+    -webkit-appearance: none;
+       -moz-appearance: none;
+            appearance: none;
+}
+
+.select-style select:focus {
+    outline: none;
+}

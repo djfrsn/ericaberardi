@@ -19,7 +19,7 @@ const store = configureStore({
 const history = syncHistoryWithStore(browserHistory, store);
 
 firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes to update protected data
-  store.dispatch(galleriesActions.hydrateGalleries()); // hydrate to hide/show pending content
+  store.dispatch(galleriesActions.hydrateGalleries()); // hydrate to hide/show protected content
   // TODO: setPendingUpdates without args to set the state to false
   if (user) {
     store.dispatch(authActions.hydrateAuth());

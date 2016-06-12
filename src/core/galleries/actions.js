@@ -3,7 +3,6 @@ import {
   SEND_GALLERIES_TOAST,
   CLEAR_GALLERIES_TOAST,
   HYDRATE_GALLERIES,
-  HYDRATE_PENDING_GALLERIES,
   TOGGLE_GALLERY_DELETE,
   DELETE_GALLERY_IMAGES,
   TAG_IMAGE_FOR_DELETION,
@@ -18,6 +17,8 @@ import {
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
+import forEach from 'lodash.foreach';
+import orderBy from 'lodash.orderBy';
 
 export function clearGalleriesToast() {
   return dispatch => {
@@ -36,23 +37,39 @@ export function sendGalleriesToast(toast) {
   };
 }
 
+function parseImages(images) {
+  let parsedImages = {};
+
+  forIn(images, (imgs, category) => {
+    parsedImages[category] = {};
+    // ensure orderBy numbering starts with 1, as deleting images can cause the count to get thrown off
+    let imgsOrderBy = 1;
+    forEach(orderBy({ ...imgs }, ['orderBy'], ['asc']), img => {
+      parsedImages[category][img.id] = { ...img, orderBy: imgsOrderBy };
+      ++imgsOrderBy;
+    });
+
+  });
+
+  return parsedImages;
+}
+
 export function hydrateGalleries(data) {
   return (dispatch, getState) => {
     const { auth, galleries } = getState();
-    const snapshot = data ? data : { categories: galleries.categories, images: galleries.images };
+    const snapshotRaw = data ? data : { categories: galleries.categories, images: galleries.images };
+    const images = snapshotRaw.images;
+    let parsedImages = {};
+
+    if (Object.keys(images).length > 0) {
+      parsedImages = parseImages(images);
+    }
+
+    const snapshot = { ...snapshotRaw, images: parsedImages };
+
     dispatch({
       type: HYDRATE_GALLERIES,
       payload: { snapshot, auth }
-    });
-  };
-}
-
-
-export function hydratePendingGalleries(snapshot) {
-  return dispatch => {
-    dispatch({
-      type: HYDRATE_PENDING_GALLERIES,
-      payload: snapshot
     });
   };
 }

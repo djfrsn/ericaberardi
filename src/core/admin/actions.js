@@ -117,7 +117,7 @@ function dispatchPendingUpdates(dispatch, category, admin, snapshot) {
   let pendingUpdates = { ...admin.pendingUpdates }; // apply current pending updates
 
   pendingUpdates[category] = {}; // reset pending updates for a category
-debugger
+
   if (Object.keys(snapshot).length > 0) { // register pending updates if any exist
     if (category === 'galleries') {
       forIn(snapshot, (prop, key) => {
@@ -128,7 +128,7 @@ debugger
             pendingProp[key] = child;
           }
         });
-debugger
+
         const parentPending = Object.keys(pendingProp).length > 0;
         if (parentPending) {
           pendingUpdates[category][key] = pendingProp; // update new pendingProp
@@ -140,9 +140,8 @@ debugger
             if (Object.keys(images).length > 0) {
               hasPendingImages = true;
             }
-          });debugger
+          });
           if (hasPendingImages) {
-            debugger
             pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
           }
         }
@@ -152,11 +151,15 @@ debugger
 
   const pendingUpdatesCount = getPendingUpdatesCount(pendingUpdates);
   // show available pending updates
-  debugger
   if (pendingUpdatesCount > 0) {
     dispatch({
       type: SET_PENDING_UPDATES,
       payload: { pendingUpdates, pendingUpdatesCount }
+    });
+  }
+  else {
+    dispatch({
+      type: CLEAR_PENDING_UPDATES
     });
   }
 }

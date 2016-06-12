@@ -46,7 +46,8 @@ export function deleteGalleriesCategory(opts) {
           // we failed to delete a categories images.....log error
           database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/images/${categoryId}`, error});
         });
-      } else {
+      }
+      else {
         opts.sweetalert({
           title: 'Error!',
           text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Try adding more galleries and images before deleting the ' + opts.category + ' gallery.</span>',

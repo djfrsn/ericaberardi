@@ -110,6 +110,12 @@
   }
 }
 
+//===================================================================
+//  GALLERY ADMIN STYLES
+//===================================================================
+/*
+* Image Upload Controls
+*/
 .gallery__dropzone_container {
   font-family: $alt-font-family;
   margin: 0 0 60px;
@@ -146,6 +152,37 @@
   font-size: 1.4em;
 }
 
+/*
+* Misc Image Controls
+*/
+$misc-controls-position: 15px;
+.gallery__image_orderBy, .gallery__image_star {
+  @include quick-cubic-transition(all);
+  position: absolute;
+  top: $misc-controls-position;
+}
+
+.gallery__image_orderBy {
+  left: $misc-controls-position;
+}
+
+.gallery__image_star {
+  color: $ericaYellow;
+  right: $misc-controls-position;
+  text-decoration: none;
+
+  &.fa-star-o {
+    color: $colors-alt-black;
+
+    &:hover {
+      color: $ericaYellow;
+    }
+  }
+}
+
+/*
+* Delete Controls
+*/
 .gallery__delete_controls {
   @include flex-perfect-center;
   font-size: 1.5rem;

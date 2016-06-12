@@ -33,7 +33,7 @@ function getImages(opts) {
     if (image.src && !protectedImage) {
       images.push(
         <div key={image.id} id={image.id} orderby={image.orderBy} className={containerClassName} style={{width: `${containerWidth}%` }}>
-          {authenticated ? <select name="imageOrderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
+          {authenticated ? <select name="imageOrderBy" className="gallery__image_orderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
             {sortedOrderByOptions}
           </select> : null}
           {authenticated ? <a href="#!" onClick={opts.scope.onChangeCategoryPreviewImage} className={imageStarClassName}></a> : null}

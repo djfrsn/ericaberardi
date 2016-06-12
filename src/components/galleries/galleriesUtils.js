@@ -113,7 +113,7 @@ export function mq() {
 export function resizeGallery(scope) {
   const needResizeLayout = scope.masonry.masonry.needsResizeLayout();
   if (needResizeLayout) {
-    this.hydrateActiveGallery(scope.props, scope);
+    this.hydrateActiveGallery(scope.props, scope); // runs getContainerWidth to set img width based on screen size
   }
 }
 export function getContainerWidth( opts ) {

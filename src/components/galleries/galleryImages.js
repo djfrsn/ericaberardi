@@ -23,7 +23,7 @@ function getImages(opts) {
   sortedOrderByOptions = orderBy(sortedOrderByOptions, 'value', 'asc');
 
   forIn(opts.gallery, image => {
-    const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'});
+    const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'}).containerWidth;
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !image.show });
     const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: image.shouldDelete, ['pending']: image.pending });
     const starType = image.categoryPreviewImage ? 'fa-star' : 'fa-star-o';

@@ -16,7 +16,7 @@ export function clearAdminToast() {
   };
 }
 
-export function deleteGalleries(opts) {
+export function deleteGalleriesCategory(opts) {
   return (dispatch, getState) => {
     const { firebase, galleries } = getState();
     const database = firebase.database();
@@ -31,19 +31,29 @@ export function deleteGalleries(opts) {
     };
 
     if (categoryId) {
-      database.ref(`${ENV}/galleries/categories/${categoryId}`).set(null).then(() => {
-        callbackCount++;
-        successCallback();
-      }).catch(() => {
-        opts.deleteErrorAlert();
-      });
-      database.ref(`${ENV}/galleries/images/${categoryId}`).set(null).then(() => {
-        callbackCount++;
-        successCallback();
-      }).catch(error => {
-        // we failed to delete a categories images.....log error
-        database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleries', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/images/${categoryId}`, error});
-      });
+      const changesValidated = validatePendingChanges('galleries', galleries); // ensure galleries minimums are met before allowing a cateogry to be deleted
+      if (changesValidated) {
+        database.ref(`${ENV}/galleries/categories/${categoryId}`).set(null).then(() => {
+          callbackCount++;
+          successCallback();
+        }).catch(() => {
+          opts.deleteErrorAlert();
+        });
+        database.ref(`${ENV}/galleries/images/${categoryId}`).set(null).then(() => {
+          callbackCount++;
+          successCallback();
+        }).catch(error => {
+          // we failed to delete a categories images.....log error
+          database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/images/${categoryId}`, error});
+        });
+      } else {
+        opts.sweetalert({
+          title: 'Error!',
+          text: '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">Try adding more galleries and images before deleting the ' + opts.category + ' gallery.</span>',
+          type: 'error',
+          html: true
+        });
+      }
     }
     else {
       opts.sweetalert.showInputError('This isn\"t a valid category name!');

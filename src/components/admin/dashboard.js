@@ -6,7 +6,7 @@ import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
 import { toastActions } from 'core/toast';
 import pendingUpdatesList from './pendingUpdatesList';
-import { confirmationAlert, undoAlert, deleteGalleriesAlert, changeEmailAlert, changePasswordAlert } from './dashboardAlerts';
+import { confirmationAlert, undoAlert, deleteGalleriesCategoryAlert, changeEmailAlert, changePasswordAlert } from './dashboardAlerts';
 
 export class DashBoard extends Component {
   static propTypes = {
@@ -14,7 +14,7 @@ export class DashBoard extends Component {
     auth: PropTypes.object.isRequired,
     changeEmail: PropTypes.func.isRequired,
     clearAdminToast: PropTypes.func.isRequired,
-    deleteGalleries: PropTypes.func.isRequired,
+    deleteGalleriesCategory: PropTypes.func.isRequired,
     galleries: PropTypes.object.isRequired,
     publishPendingUpdates: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired
@@ -34,8 +34,8 @@ export class DashBoard extends Component {
   changePassword = () => {
     changePasswordAlert(this);
   }
-  deleteGalleries = () => {
-    deleteGalleriesAlert(this);
+  deleteGalleriesCategory = () => {
+    deleteGalleriesCategoryAlert(this);
   }
   confirmUndo = () => {
     undoAlert(this);
@@ -56,7 +56,7 @@ export class DashBoard extends Component {
           <span className="dashboard__link_divider">&#8226;</span>
           <a onClick={this.changePassword} className="dashboard__link" >Change Password</a>
           <span className="dashboard__link_divider">&#8226;</span>
-          <a href="#" className="dashboard__link" onClick={this.deleteGalleries}>Delete Galleries Category</a>
+          <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory}>Delete Galleries Category</a>
           <div className={pendingChangesClass}>
             {pendingUpdatesTitle}
             <div className="pending-changes__list_wrapper">

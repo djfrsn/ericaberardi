@@ -47,7 +47,7 @@ function deleteErrorAlert() {
   });
 }
 
-export function deleteGalleriesAlert(scope) {
+export function deleteGalleriesCategoryAlert(scope) {
   sweetalert({
     title: 'Delete Galleries Category',
     text: 'Type the name of a galleries category to delete it.',
@@ -64,7 +64,7 @@ export function deleteGalleriesAlert(scope) {
       sweetalert.showInputError('You need to write something!');
       return false;
     }
-    scope.props.deleteGalleries({category, deleteSuccessAlert, deleteErrorAlert, sweetalert});
+    scope.props.deleteGalleriesCategory({category, deleteSuccessAlert, deleteErrorAlert, sweetalert});
   });
 }
 

@@ -7,13 +7,14 @@ import * as gUtils from './galleriesUtils';
 
 function getImages(opts) {
   let images = [];
-  let indexCount = 1;
   let imageIndexOptions = [];
+
   forIn(opts.gallery, image => {
     imageIndexOptions.push(
       <option key={`orderby-${image.id}`} data-id={image.id} value={image.orderBy}>{image.orderBy}</option>
     );
   });
+  // TODO: try sorting the values here
   forIn(opts.gallery, image => {
     const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'});
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !image.show });
@@ -34,7 +35,6 @@ function getImages(opts) {
       );
     }
   });
-  indexCount++;
 
   let orderedImages = [];
   forEach(images, image => {

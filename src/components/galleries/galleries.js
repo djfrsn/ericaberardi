@@ -25,8 +25,7 @@ const masonryOptions = {
 export class Galleries extends Component {
   static contextTypes = {
     router: React.PropTypes.object.isRequired
-  };
-
+  }
   static propTypes = {
     auth: PropTypes.object.isRequired,
     changeCategoryMainImage: PropTypes.func.isRequired,
@@ -142,7 +141,7 @@ export class Galleries extends Component {
     this.props.changeGalleryImageOrder({
       imageId: e.currentTarget.parentElement.id,
       gallery: this.state.gallery,
-      desiredIndex: e.currentTarget.selectedOptions[0].value
+      desiredOrderBy: e.currentTarget.selectedOptions[0].value
     });
   }
   onChangeCategoryMainImage = e => {

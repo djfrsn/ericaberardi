@@ -105,6 +105,15 @@ function taggedForDeleteGalleries(state, action) {
   };
 }
 
+function mergeImages(state, payload) {
+  const { newGallery, categoryId } = payload;
+  let images = { ...state.images };
+
+  images[categoryId] = newGallery;
+
+  return {images};
+}
+
 function getGalleryData(payload) {
   const { categories, images } = payload.snapshot;
   return {
@@ -189,7 +198,8 @@ export function galleriesReducer(state = initialState, action) {
 
     case CHANGE_GALLERY_IMAGE_ORDER:
       return {
-        ...state
+        ...state,
+        ...mergeImages(state, action.payload)
       };
 
     case HIGHLIGHT_GALLERIES_LINK:

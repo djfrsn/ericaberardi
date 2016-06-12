@@ -69,10 +69,11 @@ export class Galleries extends Component {
     this.path = gUtils.parsePath(pathname).path;
 
     const routeChange = pathname !== galleriesPathname || pathname === '/galleries';
-    const galleryChange = !deepEqual(nextProps.galleries.images, this.props.galleries.images) || !deepEqual(nextProps.galleries['pending-galleries'], this.props.galleries['pending-galleries']);
+    const galleryChange = !deepEqual(nextProps.galleries.images, this.props.galleries.images);
+    const categoriesChange = !deepEqual(nextProps.galleries.categories, this.props.galleries.categories);
 
-    if (routeChange || galleryChange) {
-      this.galleriesPathname = pathname; // update active gallery on route/gallersState change
+    if (routeChange || galleryChange || categoriesChange) {
+      this.galleriesPathname = pathname; // update active gallery on route/galleriessState change
       this.hydrateActiveGallery(nextProps, this);
     }
     if (toast.type) {

@@ -175,9 +175,12 @@ export function onGalleryDeleteImages(successCallback) {
 
     setTimeout(() => {
       if (!success) {
+        dispatch({
+          type: RESET_IMAGES_TAGGED_FOR_DELETION
+        });
         successCallback('error', 'An attempt to delete images was made, although some files may not have been deleted!');
       } // timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
-    }, 45000);
+    }, 30000);
 
     dispatch({
       type: DELETE_GALLERY_IMAGES
@@ -304,7 +307,6 @@ export function uploadGalleryImage(data) {
 
     const { category, categoryId } = data;
     const storage = firebase.storage();
-    const storageRef = storage.ref().child(category);
     let shouldDispatch = false;
     const filesLength = data.files.length - 1;
     const orderedGallery = orderBy({ ...data.gallery }, ['orderBy'], ['asc']);
@@ -313,7 +315,8 @@ export function uploadGalleryImage(data) {
 
     data.files.forEach((file, key) => {
 
-      const imageRef = storageRef.child(file.name);
+      const storageRef = storage.ref().child(file.name);
+      const imageRef = storageRef.child(`${categoryId}/${file.name}`);
       const uploadImage = imageRef.put(file);
 
       uploadImage.on('state_changed', () => {

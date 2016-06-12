@@ -198,9 +198,6 @@ export function changeGalleryImageOrder(opts) {
       }
     });
 
-    // filter object for opts.imageId to avoid incrementing it's orderBy
-    // imagesToIncrement = omit(imagesToIncrement, [opts.imageId]);
-    // then every image after that one should have their order by incremented
     forIn(imagesToIncrement, image => {
       updatedGalleryImages[image.id] = { ...image, orderBy: ++image.orderBy };
     });
@@ -209,13 +206,7 @@ export function changeGalleryImageOrder(opts) {
     updatedGalleryImages[opts.imageId] = { ...opts.gallery[opts.imageId], orderBy: parseFloat(opts.desiredOrderBy) };
 
     let newGallery = { ...opts.gallery, ...updatedGalleryImages };
-
     const categoryId = newGallery[opts.imageId].categoryId;
-    console.log('CHANGE_GALLERY_IMAGE_ORDER');
-    // dispatch({
-    //   type: CHANGE_GALLERY_IMAGE_ORDER,
-    //   payload: { newGallery, categoryId }
-    // });
     // set that data in firebase & reducer should merge the updated gallery with galleries props
     database.ref(`${ENV}/galleries/images/${categoryId}`).set(newGallery).then(() => {
       dispatch({
@@ -227,7 +218,7 @@ export function changeGalleryImageOrder(opts) {
         type: SEND_GALLERIES_TOAST,
         payload: {
           firstLine: 'Error!',
-          secondLine: `Failed to update image order!`,
+          secondLine: 'Failed to update image order!',
           type: 'error'
         }
       });

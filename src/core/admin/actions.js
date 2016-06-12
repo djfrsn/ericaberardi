@@ -1,8 +1,7 @@
 import {
   CLEAR_ADMIN_TOAST,
   SET_PENDING_UPDATES,
-  CLEAR_PENDING_UPDATES,
-  CLEAR_UPDATES_ERROR
+  CLEAR_PENDING_UPDATES
 } from './action-types';
 import { ENV } from 'config';
 import forIn from 'lodash.forin';
@@ -229,7 +228,7 @@ function validatePendingChanges(category, state) {
   return validChanges;
 }
 
-// This method should work for any category
+// This method should work for any category, data for each category must be structured similar for this to work
 function publishContent(opts) {
   const { firebase } = opts.getState();
   const changesValidated = validatePendingChanges(opts.category, opts.state);

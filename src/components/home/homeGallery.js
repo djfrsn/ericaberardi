@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router';
 import forIn from 'lodash.forin';
-import utils from 'utils';
 
 export default opts => {
   const galleries = opts.images;

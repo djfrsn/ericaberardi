@@ -231,7 +231,10 @@ export function uploadGalleryImage(data) {
     const storageRef = storage.ref().child(category);
     let shouldDispatch = false;
     const filesLength = data.files.length - 1;
-
+    const galleryKeys = Object.keys(data.gallery);
+    const lastImgId = galleryKeys.slice(galleryKeys.length - 1)[0];
+    let lastImgOrderBy = data.gallery[lastImgId].orderBy;
+    // get orderbyStart #
     data.files.forEach((file, key) => {
 
       const imageRef = storageRef.child(file.name);
@@ -250,8 +253,9 @@ export function uploadGalleryImage(data) {
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
-
-        const imageData = { id, src, category, categoryId, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
+        const orderBy = ++lastImgOrderBy;
+        // get last image and increment orderby count
+        const imageData = { id, src, category, categoryId, orderBy, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 
         if (filesLength === key) { // dispatch success message after last image is successfully uploaded
           shouldDispatch = true;

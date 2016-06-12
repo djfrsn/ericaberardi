@@ -139,8 +139,11 @@ export class Galleries extends Component {
   }
   onChangeGalleryImageOrder = e => {
     e.preventDefault();
-    debugger
-    this.props.changeGalleryImageOrder();
+    this.props.changeGalleryImageOrder({
+      imageId: e.currentTarget.parentElement.id,
+      gallery: this.state.gallery,
+      desiredIndex: e.currentTarget.selectedOptions[0].value
+    });
   }
   onChangeCategoryMainImage = e => {
     e.preventDefault();

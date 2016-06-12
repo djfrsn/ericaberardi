@@ -186,6 +186,8 @@ export function tagImgForDeletion(data) {
 
 export function changeGalleryImageOrder(opts) {
   return dispatch => {
+    console.log(opts);
+    debugger
     dispatch({
       type: CHANGE_GALLERY_IMAGE_ORDER
     });

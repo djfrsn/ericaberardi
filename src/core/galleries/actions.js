@@ -61,8 +61,10 @@ export function hydrateGalleries(data) {
     const images = snapshotRaw.images;
     let parsedImages = {};
 
-    if (Object.keys(images).length > 0) {
-      parsedImages = parseImages(images);
+    if (images) {
+      if (Object.keys(images).length > 0) {
+        parsedImages = parseImages(images);
+      }
     }
 
     const snapshot = { ...snapshotRaw, images: parsedImages };

@@ -185,8 +185,9 @@ export function tagImgForDeletion(data) {
 }
 
 export function changeGalleryImageOrder(opts) {
-  return dispatch => {
-
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    const database = firebase.database();
 
     let updatedGalleryImages = {};
 
@@ -211,26 +212,26 @@ export function changeGalleryImageOrder(opts) {
 
     const categoryId = newGallery[opts.imageId].categoryId;
     console.log('CHANGE_GALLERY_IMAGE_ORDER');
-    dispatch({
-      type: CHANGE_GALLERY_IMAGE_ORDER,
-      payload: { newGallery, categoryId }
-    });
-    // set that data in firebase & reducer should merge the updated gallery with galleries props
-    // database.ref(`${ENV}/galleries/images/${categoryId}`).set(newGallery).then(() => {
-      // dispatch({
-      //   type: CHANGE_GALLERY_IMAGE_ORDER,
-      //   payload: { newGallery, categoryId }
-      // });
-    // }).catch(() => {
-    //   dispatch({
-    //     type: SEND_GALLERIES_TOAST,
-    //     payload: {
-    //       firstLine: 'Error!',
-    //       secondLine: `Failed to update order for ${image.name}!`,
-    //       type: 'error'
-    //     }
-    //   });
+    // dispatch({
+    //   type: CHANGE_GALLERY_IMAGE_ORDER,
+    //   payload: { newGallery, categoryId }
     // });
+    // set that data in firebase & reducer should merge the updated gallery with galleries props
+    database.ref(`${ENV}/galleries/images/${categoryId}`).set(newGallery).then(() => {
+      dispatch({
+        type: CHANGE_GALLERY_IMAGE_ORDER,
+        payload: { newGallery, categoryId }
+      });
+    }).catch(() => {
+      dispatch({
+        type: SEND_GALLERIES_TOAST,
+        payload: {
+          firstLine: 'Error!',
+          secondLine: `Failed to update image order!`,
+          type: 'error'
+        }
+      });
+    });
   };
 }
 

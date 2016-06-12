@@ -7,14 +7,21 @@ import * as gUtils from './galleriesUtils';
 
 function getImages(opts) {
   let images = [];
-  let imageIndexOptions = [];
+  let orderByOptions = [];
 
   forIn(opts.gallery, image => {
-    imageIndexOptions.push(
+    orderByOptions.push(
       <option key={`orderby-${image.id}`} data-id={image.id} value={image.orderBy}>{image.orderBy}</option>
     );
   });
-  // TODO: try sorting the values here
+
+  let sortedOrderByOptions = [];
+  forEach(orderByOptions, option => {
+    sortedOrderByOptions.push({...option, value: option.props.value});
+  });
+  // Keep option values sorted
+  sortedOrderByOptions = orderBy(sortedOrderByOptions, 'value', 'asc');
+
   forIn(opts.gallery, image => {
     const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'});
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !image.show });
@@ -25,7 +32,7 @@ function getImages(opts) {
       images.push(
         <div key={image.id} id={image.id} orderby={image.orderBy} className={containerClassName} style={{width: `${containerWidth}%` }}>
           {opts.scope.props.auth.authenticated ? <select name="imageOrderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
-            {imageIndexOptions}
+            {sortedOrderByOptions}
           </select> : null}
           <a href="#!" onClick={opts.scope.onChangeCategoryMainImage} className="gallery__image_star"></a>
           <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>
@@ -38,10 +45,10 @@ function getImages(opts) {
 
   let orderedImages = [];
   forEach(images, image => {
-    orderedImages.push({...image, orderby: image.props.orderby});
+    orderedImages.push({...image, orderBy: image.props.orderby});
   });
 
-  return orderBy(orderedImages, 'orderby', 'asc');
+  return orderBy(orderedImages, 'orderBy', 'asc');
 }
 
 export default opts => {

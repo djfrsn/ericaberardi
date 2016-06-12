@@ -207,8 +207,11 @@ export function changeGalleryImageOrder(opts) {
     const database = firebase.database();
 
     let updatedGalleryImages = {};
-
+    // if first img, we should decrement the orderBy, otherwise increment
     let imagesToIncrement = {};
+    const orderedGallery = orderBy({ ...opts.gallery }, ['orderBy'], ['asc']);
+    const isFirstImage = opts.imageId === orderedGallery[0].id;
+
     forIn(opts.gallery, image => { // get images with greaterOrderBy than desiredOrderBy
       if (image.orderBy >= opts.desiredOrderBy) {
         imagesToIncrement[image.id] = image;
@@ -216,7 +219,7 @@ export function changeGalleryImageOrder(opts) {
     });
 
     forIn(imagesToIncrement, image => {
-      updatedGalleryImages[image.id] = { ...image, orderBy: ++image.orderBy };
+      updatedGalleryImages[image.id] = { ...image, orderBy: isFirstImage ? --image.orderBy : ++image.orderBy };
     });
 
     // update image obj with desired orderBy,

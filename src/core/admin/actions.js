@@ -168,7 +168,7 @@ function dispatchPendingUpdates(dispatch, category, admin, snapshot) {
 export function setPendingUpdates(category, snapshot) {
   return (dispatch, getState) => {
     const { admin } = getState();
-    console.log(snapshot);
+
     if (snapshot) {
       switch (category) {
         case 'galleries':

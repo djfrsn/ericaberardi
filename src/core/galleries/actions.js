@@ -302,10 +302,9 @@ export function uploadGalleryImage(data) {
     const storageRef = storage.ref().child(category);
     let shouldDispatch = false;
     const filesLength = data.files.length - 1;
-    const galleryKeys = Object.keys(data.gallery);
-    const lastImgId = galleryKeys.slice(galleryKeys.length - 1)[0];
-    const lastImg = data.gallery[lastImgId];
-    let lastImgOrderBy = lastImg ? lastImg.orderBy : 0; // get orderbyStart #
+    const orderedGallery = orderBy({ ...data.gallery }, ['orderBy'], ['asc']);
+    const hasImgs = orderedGallery.length > 0;
+    let lastImgOrderBy = hasImgs ? orderedGallery[orderedGallery.length - 1].orderBy : 0; // get orderbyStart #
 
     data.files.forEach((file, key) => {
 
@@ -325,7 +324,7 @@ export function uploadGalleryImage(data) {
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
-        const categoryPreviewImage = !lastImg ? true : false; // set to true if no images exist in the gallery category
+        const categoryPreviewImage = !hasImgs ? true : false; // set to true if no images exist in the gallery category
         const orderBy = ++lastImgOrderBy;
         // get last image and increment orderby count
         const imageData = { id, src, category, categoryId, orderBy, categoryPreviewImage, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };

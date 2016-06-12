@@ -33,19 +33,25 @@ export default opts => {
         <div key={key} className={`gallery-col-${key}`}>
         {
           columnsMeta[column].map(category => {
+            const images = galleries[category.id] || {};
+            let previewImage;
+            forIn(images, image => {
+              if (image.categoryPreviewImage) {
+                previewImage = image;
+              }
+            });
             // return random img for each category
-            const elements = galleries[category.id] || {};
-            const elementKeys = Object.keys(elements);
-            const ri = utils.randomInt(0, elementKeys.length);
-            const element = elements[elementKeys[ri]];
+            // const previewImageKeys = Object.keys(images);
+            // const ri = utils.randomInt(0, previewImageKeys.length);
+            // const previewImage = images[previewImageKeys[ri]];
 
-            return element ? (
-              <div key={element.id} id={element.id} className="image__container">
-                <img src={element.src} />
-                <Link to={`galleries/${element.category.toLowerCase()}`} className="gallery__link" >
+            return previewImage ? (
+              <div key={previewImage.id} id={previewImage.id} className="image__container">
+                <img src={previewImage.src} />
+                <Link to={`galleries/${previewImage.category.toLowerCase()}`} className="gallery__link" >
                   <div className="overlay">
                     <div className="overlay__content">
-                      <div className="gallery-image-text">{element.category}</div>
+                      <div className="gallery-image-text">{previewImage.category}</div>
                     </div>
                   </div>
                 </Link>

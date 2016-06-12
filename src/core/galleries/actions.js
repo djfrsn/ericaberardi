@@ -9,7 +9,7 @@ import {
   TAG_IMAGE_FOR_DELETION,
   RESET_IMAGES_TAGGED_FOR_DELETION,
   CHANGE_GALLERY_IMAGE_ORDER,
-  CHANGE_MAIN_CATEGORY_IMAGE,
+  CHANGE_CATEGORY_PREVIEW_IMAGE,
   HIGHLIGHT_GALLERIES_LINK,
   CREATE_CATEGORY_SUCCESS,
   CREATE_CATEGORY_ERROR,
@@ -226,10 +226,32 @@ export function changeGalleryImageOrder(opts) {
   };
 }
 
-export function changeCategoryMainImage(opts) {
-  return dispatch => {
-    dispatch({
-      type: CHANGE_MAIN_CATEGORY_IMAGE
+export function changeCategoryPreviewImage(opts) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    const database = firebase.database();
+
+    let newGallery = {};
+    const categoryId = opts.gallery[opts.imageId].categoryId;
+
+    forIn(opts.gallery, image => {
+      newGallery[image.id] = { ...image, categoryPreviewImage: opts.imageId !== image.id ? false : true };
+    });
+
+    database.ref(`${ENV}/galleries/images/${categoryId}`).set(newGallery).then(() => {
+      dispatch({
+        type: CHANGE_CATEGORY_PREVIEW_IMAGE,
+        payload: { newGallery, categoryId }
+      });
+    }).catch(() => {
+      dispatch({
+        type: SEND_GALLERIES_TOAST,
+        payload: {
+          firstLine: 'Error!',
+          secondLine: 'Failed to update category preview image!',
+          type: 'error'
+        }
+      });
     });
   };
 }
@@ -265,8 +287,9 @@ export function uploadGalleryImage(data) {
     const filesLength = data.files.length - 1;
     const galleryKeys = Object.keys(data.gallery);
     const lastImgId = galleryKeys.slice(galleryKeys.length - 1)[0];
-    let lastImgOrderBy = data.gallery[lastImgId].orderBy;
-    // get orderbyStart #
+    const lastImg = data.gallery[lastImgId];
+    let lastImgOrderBy = lastImg ? lastImg.orderBy : 0; // get orderbyStart #
+
     data.files.forEach((file, key) => {
 
       const imageRef = storageRef.child(file.name);
@@ -285,15 +308,16 @@ export function uploadGalleryImage(data) {
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
+        const categoryPreviewImage = !lastImg ? true : false; // set to true if no images exist in the gallery category
         const orderBy = ++lastImgOrderBy;
         // get last image and increment orderby count
-        const imageData = { id, src, category, categoryId, orderBy, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
+        const imageData = { id, src, category, categoryId, orderBy, categoryPreviewImage, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 
         if (filesLength === key) { // dispatch success message after last image is successfully uploaded
           shouldDispatch = true;
         }
 
-        pushImageData(dispatch, firebase, imageData, shouldDispatch);
+        pushImageData(dispatch, firebase, imageData, shouldDispatch); // add imageData to db & dispatch success event
       });
     });
   };

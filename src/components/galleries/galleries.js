@@ -28,7 +28,7 @@ export class Galleries extends Component {
   }
   static propTypes = {
     auth: PropTypes.object.isRequired,
-    changeCategoryMainImage: PropTypes.func.isRequired,
+    changeCategoryPreviewImage: PropTypes.func.isRequired,
     changeGalleryImageOrder: PropTypes.func.isRequired,
     clearGalleriesToast: PropTypes.func.isRequired,
     createCategory: PropTypes.func.isRequired,
@@ -144,9 +144,12 @@ export class Galleries extends Component {
       desiredOrderBy: e.currentTarget.selectedOptions[0].value
     });
   }
-  onChangeCategoryMainImage = e => {
+  onChangeCategoryPreviewImage = e => {
     e.preventDefault();
-    this.props.changeCategoryMainImage();
+    this.props.changeCategoryPreviewImage({
+      imageId: e.currentTarget.parentElement.id,
+      gallery: this.state.gallery
+    });
   }
   onDeleteImages = () => {
     if (this.props.galleries.taggedForDeleteCount > 0) {

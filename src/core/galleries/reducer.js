@@ -13,7 +13,7 @@ import {
   RESET_IMAGES_TAGGED_FOR_DELETION,
   TAG_IMAGE_FOR_DELETION,
   CHANGE_GALLERY_IMAGE_ORDER,
-  CHANGE_MAIN_CATEGORY_IMAGE,
+  CHANGE_CATEGORY_PREVIEW_IMAGE,
   HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import forIn from 'lodash.forin';
@@ -191,9 +191,10 @@ export function galleriesReducer(state = initialState, action) {
     case RESET_IMAGES_TAGGED_FOR_DELETION:
       return resetTaggedForDeleteGalleries(state, action);
 
-    case CHANGE_MAIN_CATEGORY_IMAGE:
+    case CHANGE_CATEGORY_PREVIEW_IMAGE:
       return {
-        ...state
+        ...state,
+        ...mergeImages(state, action.payload)
       };
 
     case CHANGE_GALLERY_IMAGE_ORDER:

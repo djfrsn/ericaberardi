@@ -8,7 +8,7 @@ import * as gUtils from './galleriesUtils';
 function getImages(opts) {
   let images = [];
   let orderByOptions = [];
-
+  const authenticated = opts.scope.props.auth.authenticated;
   forIn(opts.gallery, image => {
     orderByOptions.push(
       <option key={`orderby-${image.id}`} data-id={image.id} value={image.orderBy}>{image.orderBy}</option>
@@ -26,15 +26,17 @@ function getImages(opts) {
     const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'});
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !image.show });
     const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: image.shouldDelete, ['pending']: image.pending });
+    const starType = image.categoryPreviewImage ? 'fa-star' : 'fa-star-o';
+    const imageStarClassName = cn({ ['gallery__image_star']: true, ['fa']: true, [starType]: true });
     const imageLinkClass = opts.scope.props.galleries.galleryDeleteEnabled ? 'lbx-disabled' : '';
-    const protectedImage = image.pending && !opts.scope.props.auth.authenticated;
+    const protectedImage = image.pending && !authenticated;
     if (image.src && !protectedImage) {
       images.push(
         <div key={image.id} id={image.id} orderby={image.orderBy} className={containerClassName} style={{width: `${containerWidth}%` }}>
-          {opts.scope.props.auth.authenticated ? <select name="imageOrderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
+          {authenticated ? <select name="imageOrderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
             {sortedOrderByOptions}
           </select> : null}
-          <a href="#!" onClick={opts.scope.onChangeCategoryMainImage} className="gallery__image_star"></a>
+          {authenticated ? <a href="#!" onClick={opts.scope.onChangeCategoryPreviewImage} className={imageStarClassName}></a> : null}
           <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>
             <img src={image.src} className={imageClassName} />
           </a>

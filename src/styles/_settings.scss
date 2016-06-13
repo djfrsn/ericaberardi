@@ -57,11 +57,11 @@ $grid-max-width: 70% !default;
   font-family: $family;
 }
 
-@mixin flex-perfect-center() {
+@mixin flex-perfect-center($alignment: center) {
   display: flex;
   flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  align-items: $alignment;
+  justify-content: $alignment;
 }
 
 @mixin interaction-base() {

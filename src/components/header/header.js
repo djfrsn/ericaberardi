@@ -76,7 +76,7 @@ export class Header extends Component {
     return (
       <header className="header">
         <div className="g-row">
-          <div className="g-col">
+          <div className="g-col header__wrapper">
             <Link to="/" onClick={this.reRender} className="home__link" >
               <h1 className="header__title">Erica Berardi</h1>
               <h2 className="header__sub_title">Photography <span>LLC</span></h2>

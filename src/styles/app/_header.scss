@@ -2,6 +2,10 @@
 //  HEADER
 //===================================================================
 
+.header__wrapper {
+  display: flex;
+}
+
 .header {
   margin-top: 45px;
   padding: 10px 0;
@@ -12,11 +16,12 @@
 }
 
 .home__link {
+  @include flex-perfect-center(flex-start);
+  flex: 1;
   color: inherit;
 }
 
 .header__title {
-  float: left;
   font-size: 1.5em;
   font-weight: 400;
   text-rendering: auto;
@@ -25,7 +30,6 @@
 
 .header__sub_title {
   color: $colors-gray;
-  float: left;
   margin: 4px 0 0 3px;
   font-size: 0.8em;
 
@@ -35,13 +39,13 @@
 }
 
 .header__links {
-  @include clearfix;
-  float: right;
+  @include flex-perfect-center(flex-end);
+  flex-wrap: wrap;
+  flex: 2;
   padding: 15px 0 0;
   line-height: 24px;
 
   li {
-    float: left;
     @extend .link;
 
     a {

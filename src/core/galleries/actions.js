@@ -45,7 +45,13 @@ function parseImages(images) {
     parsedImages[category] = {};
     // ensure orderBy numbering starts with 1, as deleting images can cause the count to get thrown off
     let imgsOrderBy = 1;
-    forEach(orderBy({ ...imgs }, ['orderBy'], ['asc']), img => {
+
+    let imgArry = [];
+    forIn(imgs, img => {
+      imgArry.push(img);
+    });
+
+    forEach(orderBy(imgArry, ['orderBy'], ['asc']), img => {
       parsedImages[category][img.id] = { ...img, orderBy: imgsOrderBy };
       ++imgsOrderBy;
     });
@@ -269,6 +275,7 @@ export function changeCategoryPreviewImage(opts) {
         type: CHANGE_CATEGORY_PREVIEW_IMAGE,
         payload: { newGallery, categoryId }
       });
+
     }).catch(() => {
       dispatch({
         type: SEND_GALLERIES_TOAST,

@@ -120,7 +120,7 @@
   font-family: $alt-font-family;
   margin: 0 auto 60px;
   font-size: 1.4rem;
-  width: 60%;
+  width: 80%;
 }
 
 .gallery__dropzone {
@@ -252,11 +252,10 @@ $delete-margin-right: 20px;
   }
 }
 
-.gallery__dropzone_container {
-  font-family: $alt-font-family;
-  margin: 0 auto 60px;
-  font-size: 1.4rem;
-  width: 60%;
+@media (min-width: 1440px) {
+  .gallery__dropzone_container {
+    width: 70%;
+  }
 }
 
 @media (max-width: 960px) {
@@ -264,6 +263,7 @@ $delete-margin-right: 20px;
     width: 80%;
   }
 }
+
 @media (max-width: 480px) {
   .gallery__dropzone_container {
     width: 90%;

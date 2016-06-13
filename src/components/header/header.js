@@ -61,6 +61,7 @@ export class Header extends Component {
     let link = ReactDOM.findDOMNode(this.galleriesLink);
     const hdrLink = 'header__link';
     link.className = on ? `${hdrLink} active` : hdrLink;
+    console.log(link.className);
   }
   onSignOut = () => {
     this.props.signOut(this.context.router);
@@ -82,7 +83,7 @@ export class Header extends Component {
               <h2 className="header__sub_title">Photography <span>LLC</span></h2>
             </Link>
             <ul className="header__links">
-              <li><Link to="/galleries" className="header__link" onClick={this.reRender} activeClassName="active" ref={ref => { this.galleriesLink = ref; }}>Galleries</Link></li>
+              <li><Link to="/galleries" className="header__link" onClick={this.reRender} ref={ref => { this.galleriesLink = ref; }}>Galleries</Link></li>
               <li><Link to="/news-reporting" className="header__link" onClick={this.reRender} activeClassName="active">News Reporting</Link></li>
               <li><Link to="/pricing" className="header__link" onClick={this.reRender} activeClassName="active">Pricing</Link></li>
               <li><Link to="/about" className="header__link" onClick={this.reRender} activeClassName="active">About</Link></li>

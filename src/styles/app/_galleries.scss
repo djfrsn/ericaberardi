@@ -118,8 +118,9 @@
 */
 .gallery__dropzone_container {
   font-family: $alt-font-family;
-  margin: 0 0 60px;
+  margin: 0 auto 60px;
   font-size: 1.4rem;
+  width: 60%;
 }
 
 .gallery__dropzone {
@@ -248,5 +249,23 @@ $delete-margin-right: 20px;
 
   &:hover {
     color: red;
+  }
+}
+
+.gallery__dropzone_container {
+  font-family: $alt-font-family;
+  margin: 0 auto 60px;
+  font-size: 1.4rem;
+  width: 60%;
+}
+
+@media (max-width: 960px) {
+  .gallery__dropzone_container {
+    width: 80%;
+  }
+}
+@media (max-width: 480px) {
+  .gallery__dropzone_container {
+    width: 90%;
   }
 }

@@ -16,6 +16,7 @@ import {
   UPLOAD_GALLERY_IMAGE_ERROR
 } from './action-types';
 import { ENV } from 'config';
+import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
@@ -305,16 +306,29 @@ export function uploadGalleryImage(data) {
   return (dispatch, getState) => {
     const { firebase } = getState();
 
-    const { category, categoryId } = data;
+    const { files, category, categoryId, unapprovedUploadAlert } = data;
     const storage = firebase.storage();
     let shouldDispatch = false;
     const filesLength = data.files.length - 1;
     const orderedGallery = orderBy({ ...data.gallery }, ['orderBy'], ['asc']);
     const hasImgs = orderedGallery.length > 0;
     let lastImgOrderBy = hasImgs ? orderedGallery[orderedGallery.length - 1].orderBy : 0; // get orderbyStart #
+    let unapprovedFiles = [];
+    let approvedFiles = filter(files, file => {
+      // 600k file limit
+      if (file.size < 600000) {
+        return file;
+      }
+      else {
+        unapprovedFiles.push(file);
+      }
+    });
+    // if above limit show sweet alert w/ list of images that couldn't be uploaded
+    if (unapprovedFiles.length > 0) {
+      unapprovedUploadAlert(unapprovedFiles);
+    }
 
-    data.files.forEach((file, key) => {
-
+    forEach(approvedFiles, (file, key) => {
       const storageRef = storage.ref().child(file.name);
       const imageRef = storageRef.child(`${categoryId}/${file.name}`);
       const uploadImage = imageRef.put(file);
@@ -332,7 +346,7 @@ export function uploadGalleryImage(data) {
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
-        const categoryPreviewImage = !hasImgs ? true : false; // set to true if no images exist in the gallery category
+        const categoryPreviewImage = !hasImgs && key === 0 ? true : false; // set to true if no images exist in the gallery category
         const orderBy = ++lastImgOrderBy;
         // get last image and increment orderby count
         const imageData = { id, src, category, categoryId, orderBy, categoryPreviewImage, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
@@ -344,5 +358,6 @@ export function uploadGalleryImage(data) {
         pushImageData(dispatch, firebase, imageData, shouldDispatch); // add imageData to db & dispatch success event
       });
     });
+
   };
 }

@@ -11,7 +11,7 @@ import { authActions } from 'core/auth';
 import { galleriesActions } from 'core/galleries';
 import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
-import { deleteImagesAlert } from './galleriesAlerts';
+import { deleteImagesAlert, unapprovedUploadAlert } from './galleriesAlerts';
 import * as gUtils from './galleriesUtils';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
@@ -102,7 +102,7 @@ export class Galleries extends Component {
     }
   }
   onDropAccept = files => {
-    this.props.uploadGalleryImage({ files, gallery: this.state.gallery, categoryId: this.state.activeGalleryId, category: this.path });
+    this.props.uploadGalleryImage({ files, unapprovedUploadAlert, gallery: this.state.gallery, categoryId: this.state.activeGalleryId, category: this.path });
   }
   onImageClick = e => {
     e.preventDefault();

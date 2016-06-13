@@ -219,14 +219,14 @@ export function changeGalleryImageOrder(opts) {
     const isFirstImage = opts.imageId === orderedGallery[0].id;
 
     forIn(opts.gallery, image => { // get images with greaterOrderBy than desiredOrderBy
-      if (image.orderBy >= opts.desiredOrderBy) {
+      if (image.orderBy >= opts.desiredOrderBy) { // we'll increment these images orderBy to keep things in sync
         imagesToIncrement[image.id] = image;
       }
     });
 
     forIn(imagesToIncrement, image => {
       updatedGalleryImages[image.id] = { ...image, orderBy: isFirstImage ? --image.orderBy : ++image.orderBy };
-    });
+    }); // if the first image is being moved we should decrement all img orderBy #'s
 
     // update image obj with desired orderBy,
     updatedGalleryImages[opts.imageId] = { ...opts.gallery[opts.imageId], orderBy: parseFloat(opts.desiredOrderBy) };

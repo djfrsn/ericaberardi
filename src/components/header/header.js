@@ -61,7 +61,6 @@ export class Header extends Component {
     let link = ReactDOM.findDOMNode(this.galleriesLink);
     const hdrLink = 'header__link';
     link.className = on ? `${hdrLink} active` : hdrLink;
-    console.log(link.className);
   }
   onSignOut = () => {
     this.props.signOut(this.context.router);

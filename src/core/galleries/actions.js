@@ -276,7 +276,6 @@ export function changeCategoryPreviewImage(opts) {
         type: CHANGE_CATEGORY_PREVIEW_IMAGE,
         payload: { gallery, categoryId }
       });
-
     }).catch(() => {
       dispatch({
         type: SEND_GALLERIES_TOAST,

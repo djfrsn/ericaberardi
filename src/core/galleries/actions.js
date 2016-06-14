@@ -264,17 +264,17 @@ export function changeCategoryPreviewImage(opts) {
     const { firebase } = getState();
     const database = firebase.database();
 
-    let newGallery = {};
+    let gallery = {};
     const categoryId = opts.gallery[opts.imageId].categoryId;
 
     forIn(opts.gallery, image => {
-      newGallery[image.id] = { ...image, categoryPreviewImage: opts.imageId !== image.id ? false : true };
+      gallery[image.id] = { ...image, categoryPreviewImage: opts.imageId !== image.id ? false : true };
     });
 
-    database.ref(`${ENV}/galleries/images/${categoryId}`).set(newGallery).then(() => {
+    database.ref(`${ENV}/galleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
         type: CHANGE_CATEGORY_PREVIEW_IMAGE,
-        payload: { newGallery, categoryId }
+        payload: { gallery, categoryId }
       });
 
     }).catch(() => {

@@ -2,6 +2,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import cn from 'classnames';
+import debounce from 'lodash.debounce';
 import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
 import deepEqual from 'deep-equal';
@@ -55,9 +56,9 @@ export class Galleries extends Component {
     this.props.highlightGalleriesLink(true);
   }
   componentDidMount() {
-    window.onresize = () => {
+    window.onresize = debounce(() => {
       gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
-    };
+    }, 500);
     this.loadImagesSeq();
     const { pathname } = this.props.location;
     this.path = gUtils.parsePath(pathname).path; // stores currentCategory

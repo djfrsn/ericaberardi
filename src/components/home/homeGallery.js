@@ -46,13 +46,14 @@ export default opts => {
 
             return previewImage ? (
               <div key={previewImage.id} id={previewImage.id} className="image__container">
-                <img src={previewImage.src} />
                 <Link to={`galleries/${previewImage.category.toLowerCase()}`} className="gallery__link" >
-                  <div className="overlay">
-                    <div className="overlay__content">
-                      <div className="gallery-image-text">{previewImage.category}</div>
+                  <h2 className="home__gallery_title">{previewImage.category}</h2>
+                  <img src={previewImage.src} />
+                    <div className="overlay">
+                      <div className="overlay__content">
+                        <div className="gallery-image-text">{previewImage.category}</div>
+                      </div>
                     </div>
-                  </div>
                 </Link>
               </div>
             ) : null;

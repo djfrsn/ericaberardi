@@ -1,0 +1,23 @@
+.gallery__link {
+  text-decoration: none;
+}
+
+.home__gallery_title {
+  display: none;
+}
+
+@media (max-width: 960px) {
+  .image__container {
+    margin-top: 40px;
+  }
+  .overlay {
+    display: none;
+  }
+  .home__gallery_title {
+    display: initial;
+    font-size: 1.5em;
+    font-weight: normal;
+    text-transform: capitalize;
+    text-align: center;
+  }
+}

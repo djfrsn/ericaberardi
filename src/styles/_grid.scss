@@ -24,3 +24,11 @@
   width: 0;
   height: 0;
 }
+
+
+
+@media (min-width: 1860px) {
+  .g-row {
+    max-width: 70%;
+  }
+}

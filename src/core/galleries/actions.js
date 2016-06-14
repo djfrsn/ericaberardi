@@ -218,32 +218,33 @@ export function changeGalleryImageOrder(opts) {
     const { firebase } = getState();
     const database = firebase.database();
 
-    let updatedGalleryImages = {};
-    // if first img, we should decrement the orderBy, otherwise increment
-    let imagesToIncrement = {};
     const orderedGallery = orderBy({ ...opts.gallery }, ['orderBy'], ['asc']);
-    const isFirstImage = opts.imageId === orderedGallery[0].id;
+    let newOrderedGallery = [];
+    let insertedImage;
 
-    forIn(opts.gallery, image => { // get images with greaterOrderBy than desiredOrderBy
-      if (image.orderBy >= opts.desiredOrderBy) { // we'll increment these images orderBy to keep things in sync
-        imagesToIncrement[image.id] = image;
+    forIn(orderedGallery, image => {
+      if (image.id !== opts.imageId) {
+        newOrderedGallery.push(image); // create images array without image we are changing position for
+      }
+      else {
+        insertedImage = image;
       }
     });
 
-    forIn(imagesToIncrement, image => {
-      updatedGalleryImages[image.id] = { ...image, orderBy: isFirstImage ? --image.orderBy : ++image.orderBy };
-    }); // if the first image is being moved we should decrement all img orderBy #'s
+    newOrderedGallery.splice(--opts.desiredOrderBy, 0, insertedImage); // place the insertedImage into the desiredOrderBy position
 
-    // update image obj with desired orderBy,
-    updatedGalleryImages[opts.imageId] = { ...opts.gallery[opts.imageId], orderBy: parseFloat(opts.desiredOrderBy) };
+    let gallery = {};
 
-    let newGallery = { ...opts.gallery, ...updatedGalleryImages };
-    const categoryId = newGallery[opts.imageId].categoryId;
+    forEach(newOrderedGallery, (image, key) => {
+      gallery[image.id] = { ...image, orderBy: ++key }; // create new gallery object
+    });
+
+    const categoryId = gallery[opts.imageId].categoryId;
     // set that data in firebase & reducer should merge the updated gallery with galleries props
-    database.ref(`${ENV}/galleries/images/${categoryId}`).set(newGallery).then(() => {
+    database.ref(`${ENV}/galleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
         type: CHANGE_GALLERY_IMAGE_ORDER,
-        payload: { newGallery, categoryId }
+        payload: { gallery, categoryId }
       });
     }).catch(() => {
       dispatch({

@@ -106,10 +106,10 @@ function taggedForDeleteGalleries(state, action) {
 }
 
 function mergeImages(state, payload) {
-  const { newGallery, categoryId } = payload;
+  const { gallery, categoryId } = payload;
   let images = { ...state.images };
 
-  images[categoryId] = newGallery;
+  images[categoryId] = gallery;
 
   return {images};
 }

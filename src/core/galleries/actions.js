@@ -20,6 +20,9 @@ import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
+import watermark from 'watermarkjs';
+
+const wtext = watermark.text;
 
 export function clearGalleriesToast() {
   return dispatch => {
@@ -309,6 +312,22 @@ export function pushImageData(dispatch, firebase, imageData, shouldDispatch) {
   });
 }
 
+function imageWatermark(target, logo) {
+  let context = target.getContext('2d');
+  const text = 'Erica Berardi Photography';
+  const metrics = context.measureText(text);
+  const x = (target.width / 5) - (metrics.width + 24);
+  const y = (target.height / 1.4) + 48 * 4;
+
+  context.translate(x, y);
+  context.globalAlpha = 0.5;
+  context.fillStyle = '#fff';
+  context.font = '64px Josefin Slab';
+  //context.fillText(text, 0, 0);
+  context.drawImage(logo, 10, 10);
+  return target;
+}
+
 export function uploadGalleryImage(data) {
   return (dispatch, getState) => {
     const { firebase } = getState();
@@ -336,34 +355,43 @@ export function uploadGalleryImage(data) {
     }
 
     forEach(approvedFiles, (file, key) => {
-      const storageRef = storage.ref().child(file.name);
-      const imageRef = storageRef.child(`${categoryId}/${file.name}`);
-      const uploadImage = imageRef.put(file);
-
-      uploadImage.on('state_changed', () => {
-        // Observe state change events such as progress, pause, and resume
-      }, error => {
-        dispatch({
-          type: UPLOAD_GALLERY_IMAGE_ERROR,
-          payload: error
+      watermark([file, '/images/eb_logo.png'])
+        .image(imageWatermark)
+        .then((img) => {
+          console.log(wtext);
+          document.querySelector('.gallery').appendChild(img);
         });
-      }, () => {
-        // Handle successful uploads on complete
-        const id = firebase.database(`${ENV}/galleries/images`).ref().child(`${categoryId}`).push().key;
-        const src = uploadImage.snapshot.downloadURL;
-        const imageMeta = uploadImage.snapshot.metadata;
-        const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
-        const categoryPreviewImage = !hasImgs && key === 0 ? true : false; // set to true if no images exist in the gallery category
-        const orderBy = ++lastImgOrderBy;
-        // get last image and increment orderby count
-        const imageData = { id, src, category, categoryId, orderBy, categoryPreviewImage, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
 
-        if (filesLength === key) { // dispatch success message after last image is successfully uploaded
-          shouldDispatch = true;
-        }
+      //const storageRef = storage.ref().child(file.name);
+      //const imageRef = storageRef.child(`${categoryId}/${file.name}`);
+      //const uploadImage = imageRef.put(file);
 
-        pushImageData(dispatch, firebase, imageData, shouldDispatch); // add imageData to db & dispatch success event
-      });
+      // uploadImage.on('state_changed', () => {
+      //   // Observe state change events such as progress, pause, and resume
+      // }, error => {
+      //   dispatch({
+      //     type: UPLOAD_GALLERY_IMAGE_ERROR,
+      //     payload: error
+      //   });
+      // }, () => {
+      //   // Handle successful uploads on complete
+      //   const id = firebase.database(`${ENV}/galleries/images`).ref().child(`${categoryId}`).push().key;
+      //   const src = uploadImage.snapshot.downloadURL;
+      //   const imageMeta = uploadImage.snapshot.metadata;
+      //   const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;
+      //   const categoryPreviewImage = !hasImgs && key === 0 ? true : false; // set to true if no images exist in the gallery category
+      //   const orderBy = ++lastImgOrderBy;
+      //   // get last image and increment orderby count
+      //   const imageData = { id, src, category, categoryId, orderBy, categoryPreviewImage, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
+
+      //   if (filesLength === key) { // dispatch success message after last image is successfully uploaded
+      //     shouldDispatch = true;
+      //   }
+
+      //   pushImageData(dispatch, firebase, imageData, shouldDispatch); // add imageData to db & dispatch success event
+      // });
+      // remove any remaining canvas references
+      // watermark.destroy();
     });
 
   };

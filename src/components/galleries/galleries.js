@@ -138,6 +138,14 @@ export class Galleries extends Component {
       this.props.resetTaggedForGalleryDelete(); // reset taggedgalleries on toggle off
     }
   }
+  onChangeGalleryCategoryOrder = e => {
+    e.preventDefault();
+    // this.props.changeGalleryImageOrder({
+    //   imageId: e.currentTarget.parentElement.parentElement.id,
+    //   gallery: this.state.gallery,
+    //   desiredOrderBy: e.currentTarget.selectedOptions[0].value
+    // });
+  }
   onChangeGalleryImageOrder = e => {
     e.preventDefault();
     this.props.changeGalleryImageOrder({

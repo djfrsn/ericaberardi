@@ -2,6 +2,9 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import forIn from 'lodash.forin';
 import { lightboxActions } from 'core/lightbox';
+import Hammer from 'hammerjs';
+const SWIPE_LEFT = 2;
+const SWIPE_RIGHT = 4;
 
 export default class Lightbox extends Component {
   static propTypes = {
@@ -9,13 +12,26 @@ export default class Lightbox extends Component {
     onClose: PropTypes.func.isRequired,
     onSwipe: PropTypes.func.isRequired
   }
+  componentDidMount() {
+    this.registerHammer();
+  }
+  componentWillUnmount() {
+    this.registerHammer = null;
+  }
   onLightboxClick = e => {
     if (e.target.dataset.closelightbox) {
       this.props.onClose(); // detect click off lightbox img to close
     }
   }
+  registerHammer = () => {
+    this.hammertime = new Hammer(this.lightbox);
+    this.hammertime.on('swipe', this.onSwipe);
+  }
   onSwipe = e => {
-    this.props.onSwipe({ direction: e.currentTarget.dataset.direction });
+    const swipeEvent = e.direction;
+    const swipeDirection = e.direction === SWIPE_LEFT ? 'right' : 'left';
+    const direction = !swipeEvent ? e.currentTarget.dataset.direction : swipeDirection;
+    this.props.onSwipe({ direction: direction });
   }
   render() {
     const { slides, show } = this.props.lightbox;
@@ -41,7 +57,7 @@ export default class Lightbox extends Component {
       });
     }
     return (
-      <div className={lightboxClass} data-closelightbox="true" onClick={this.onLightboxClick}>
+      <div className={lightboxClass} data-closelightbox="true" ref={ref => this.lightbox = ref} onClick={this.onLightboxClick}>
         <div className="lbx-content" data-closelightbox="true">
           <div className="lbx-controls">
             <span className="lbx-slide__counter" data-closelightbox="true">{activeSlideIndex}/{slidesLength}</span>

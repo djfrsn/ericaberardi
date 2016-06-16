@@ -209,7 +209,7 @@ function getPendingChangeMinimums(category) {
 
   switch (category) {
     case 'galleries':
-      minCategoryCount = 3;
+      minCategoryCount = 5;
       minChildCount = 4;
       break;
 

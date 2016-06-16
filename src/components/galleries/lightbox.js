@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import forIn from 'lodash.forin';
 import { lightboxActions } from 'core/lightbox';
 import Hammer from 'hammerjs';
-const SWIPE_LEFT = 2;
-const SWIPE_RIGHT = 4;
 
 export default class Lightbox extends Component {
   static propTypes = {
@@ -14,13 +12,24 @@ export default class Lightbox extends Component {
   }
   componentDidMount() {
     this.registerHammer();
+    document.addEventListener( 'keydown', this.listenToKeyPress );
   }
   componentWillUnmount() {
     this.registerHammer = null;
+    document.removeEventListener( 'keydown', this.listenToKeyPress );
   }
   onLightboxClick = e => {
     if (e.target.dataset.closelightbox) {
       this.props.onClose(); // detect click off lightbox img to close
+    }
+  }
+  listenToKeyPress = e => {
+    const keyCode = e.keyCode || e.which;
+    if (keyCode === 37) {
+      this.onSwipe({direction: 4});
+    } // pass fake hammer event 4 = left, 2 = right
+    else if (keyCode === 39) {
+      this.onSwipe({direction: 2});
     }
   }
   registerHammer = () => {
@@ -29,7 +38,7 @@ export default class Lightbox extends Component {
   }
   onSwipe = e => {
     const swipeEvent = e.direction;
-    const swipeDirection = e.direction === SWIPE_LEFT ? 'right' : 'left';
+    const swipeDirection = e.direction === Hammer.DIRECTION_LEFT ? 'right' : 'left';
     const direction = !swipeEvent ? e.currentTarget.dataset.direction : swipeDirection;
     this.props.onSwipe({ direction: direction });
   }

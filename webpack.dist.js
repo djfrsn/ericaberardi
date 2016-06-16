@@ -3,7 +3,6 @@ const config = require('./webpack.base');
 
 // plugins
 const AggressiveMergingPlugin = webpack.optimize.AggressiveMergingPlugin;
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const DedupePlugin = webpack.optimize.DedupePlugin;
 const DefinePlugin = webpack.DefinePlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
@@ -15,7 +14,6 @@ const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 module.exports = {
   cache: false,
   debug: true,
-  devtool: 'source-map',
   entry: config.entry,
   output: config.output,
   resolve: config.resolve,
@@ -41,7 +39,6 @@ module.exports = {
     new OccurenceOrderPlugin(),
     new DedupePlugin(),
     new AggressiveMergingPlugin(),
-    new CommonsChunkPlugin('vendor', '[name].js'),
     new HtmlWebpackPlugin({
       chunksSortMode: 'none',
       filename: 'index.html',

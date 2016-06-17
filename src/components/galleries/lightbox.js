@@ -7,7 +7,7 @@ import Hammer from 'hammerjs';
 export default class Lightbox extends Component {
   static propTypes = {
     lightbox: PropTypes.object.isRequired,
-    onClose: PropTypes.func.isRequired,
+    closeLightbox: PropTypes.func.isRequired,
     onSwipe: PropTypes.func.isRequired
   }
   componentDidMount() {
@@ -20,7 +20,7 @@ export default class Lightbox extends Component {
   }
   onLightboxClick = e => {
     if (e.target.dataset.closelightbox) {
-      this.props.onClose(); // detect click off lightbox img to close
+      this.props.closeLightbox(); // detect click off lightbox img to close
     }
   }
   listenToKeyPress = e => {
@@ -30,6 +30,9 @@ export default class Lightbox extends Component {
     } // pass fake hammer event 4 = left, 2 = right
     else if (keyCode === 39) {
       this.onSwipe({direction: 2});
+    }
+    else if (keyCode === 27) {
+      this.props.closeLightbox();
     }
   }
   registerHammer = () => {

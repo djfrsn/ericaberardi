@@ -23,7 +23,7 @@ export function onSwipe(direction) {
 }
 
 
-export function onClose() {
+export function closeLightbox() {
   document.querySelector('body').className = '';
   return dispatch => {
     dispatch({

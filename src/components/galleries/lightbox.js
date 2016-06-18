@@ -6,8 +6,8 @@ import Hammer from 'hammerjs';
 
 export default class Lightbox extends Component {
   static propTypes = {
-    lightbox: PropTypes.object.isRequired,
     closeLightbox: PropTypes.func.isRequired,
+    lightbox: PropTypes.object.isRequired,
     onSwipe: PropTypes.func.isRequired
   }
   componentDidMount() {
@@ -73,7 +73,7 @@ export default class Lightbox extends Component {
         <div className="lbx-content" data-closelightbox="true">
           <div className="lbx-controls">
             <span className="lbx-slide__counter" data-closelightbox="true">{activeSlideIndex}/{slidesLength}</span>
-            <span onClick={this.props.onClose} className="lbx-controls-close fa fa-times"></span>
+            <span onClick={this.props.closeLightbox} className="lbx-controls-close fa fa-times"></span>
             <span onClick={this.onSwipe} data-direction="left" className="lbx-controls-left fa fa-arrow-left"></span>
             <span onClick={this.onSwipe} data-direction="right" className="lbx-controls-right fa fa-arrow-right"></span>
           </div>

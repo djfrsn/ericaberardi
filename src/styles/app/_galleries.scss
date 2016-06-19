@@ -81,7 +81,10 @@
     font-size: 1.4rem;
     display: inline-block;
   }
-  button, input {
+  form {
+    @include flex-perfect-center();
+  }
+  input, button {
     @include interaction-base();
   }
   p {

@@ -97,6 +97,24 @@ $control-margin: 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  max-width: 80%;
+  max-width: 50%;
   margin: 0 auto;
+}
+
+@media (max-width: 1280px) {
+.lbx-img {
+    max-width: 60%;
+  }
+}
+
+@media (max-width: 960px) {
+.lbx-img {
+    max-width: 80%;
+  }
+}
+
+@media (max-width: 640px) {
+.lbx-img {
+    max-width: 100%;
+  }
 }

@@ -1,18 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router';
 import forIn from 'lodash.forin';
+import orderBy from 'lodash.orderBy';
 
 export default opts => {
   const galleries = opts.images;
   const categories = opts.categories;
-  const categoriesLength = Object.keys(opts.categories).length;
+  const categoriesLength = Object.keys(categories).length;
   let columns = null;
   // columns are list of images
   if (categoriesLength > 0) {
     let columnsMeta = { '0': [], '1': [] };
     // push every other category into each column
     let key = 0;
-    forIn(categories, category => {
+
+    let orderedCategories = orderBy({ ...categories }, ['orderBy'], ['asc']);
+
+    forIn(orderedCategories, category => {
       const protectedCategory = category.pending && !opts.scope.props.auth.authenticated;
       if (key % 2 === 0) {
         if (!protectedCategory) {

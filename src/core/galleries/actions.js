@@ -7,6 +7,7 @@ import {
   DELETE_GALLERY_IMAGES,
   TAG_IMAGE_FOR_DELETION,
   RESET_IMAGES_TAGGED_FOR_DELETION,
+  CHANGE_CATEGORY_IMAGE_ORDER,
   CHANGE_GALLERY_IMAGE_ORDER,
   CHANGE_CATEGORY_PREVIEW_IMAGE,
   HIGHLIGHT_GALLERIES_LINK,
@@ -212,6 +213,52 @@ export function tagImgForDeletion(data) {
     });
   };
 }
+
+export function changeGalleryCategoryOrder(opts) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    const database = firebase.database();
+
+    const orderedCategories = orderBy({ ...opts.categories }, ['orderBy'], ['asc']);
+    let newOrderedCategories = [];
+    let insertedCategory;
+
+    forIn(orderedCategories, category => {
+      if (category.id !== opts.categoryId) {
+        newOrderedCategories.push(category); // create categorys array without category we are changing position for
+      }
+      else {
+        insertedCategory = category;
+      }
+    });
+
+    newOrderedCategories.splice(--opts.desiredOrderBy, 0, insertedCategory); // place the insertedImage into the desiredOrderBy position
+
+    let categories = {};
+
+    forEach(newOrderedCategories, (category, key) => {
+      categories[category.id] = { ...category, orderBy: ++key }; // create new category object
+    });
+
+    // set that data in firebase & reducer should merge the updated gallery with galleries props
+    database.ref(`${ENV}/galleries/categories`).set(categories).then(() => {
+      dispatch({
+        type: CHANGE_CATEGORY_IMAGE_ORDER,
+        payload: { categories }
+      });
+    }).catch(() => {
+      dispatch({
+        type: SEND_GALLERIES_TOAST,
+        payload: {
+          firstLine: 'Error!',
+          secondLine: 'Failed to update categories order!',
+          type: 'error'
+        }
+      });
+    });
+  };
+}
+
 
 export function changeGalleryImageOrder(opts) {
   return (dispatch, getState) => {

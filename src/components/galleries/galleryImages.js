@@ -15,7 +15,7 @@ function getImages(opts) {
     );
   });
 
-  let sortedOrderByOptions = [];
+  let sortedOrderByOptions = []; // create new array with value as top lvl prop for easy sorting
   forEach(orderByOptions, option => {
     sortedOrderByOptions.push({...option, value: option.props.value});
   });

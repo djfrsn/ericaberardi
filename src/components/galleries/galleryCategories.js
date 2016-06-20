@@ -12,7 +12,7 @@ function getCategories(opts) {
 
   forIn(categoriesProps, category => {
     categoryOptions.push(
-      <option key={`orderby-${category.id}`} data-id={category.id} value={category.orderby}>{category.orderby}</option>
+      <option key={`orderby-${category.id}`} data-id={category.id} value={category.orderBy}>{category.orderBy}</option>
     );
   });
 
@@ -31,8 +31,8 @@ function getCategories(opts) {
     const protectedCategory = category.pending && !authenticated;
     if (category && !protectedCategory) {
       categories.push(
-        <li key={key} orderby={category.orderby}>
-          {authenticated ? <div className="select-style"><select name="categoryOrderby" className="gallery_category_orderby" value={category.orderby} onChange={opts.scope.onChangeGalleryCategoryOrder}>
+        <li key={key} id={category.id} orderby={category.orderBy}>
+          {authenticated ? <div className="select-style"><select name="categoryOrderby" className="gallery_category_orderby" value={category.orderBy} onChange={opts.scope.onChangeGalleryCategoryOrder}>
             {sortedOrderByCategories}
           </select></div> : null}
           <Link to={`/galleries/${category.category}`} className={className}>{category.category}</Link>

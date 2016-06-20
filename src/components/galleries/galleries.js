@@ -30,6 +30,7 @@ export class Galleries extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     changeCategoryPreviewImage: PropTypes.func.isRequired,
+    changeGalleryCategoryOrder: PropTypes.func.isRequired,
     changeGalleryImageOrder: PropTypes.func.isRequired,
     clearGalleriesToast: PropTypes.func.isRequired,
     createCategory: PropTypes.func.isRequired,
@@ -140,11 +141,11 @@ export class Galleries extends Component {
   }
   onChangeGalleryCategoryOrder = e => {
     e.preventDefault();
-    // this.props.changeGalleryImageOrder({
-    //   imageId: e.currentTarget.parentElement.parentElement.id,
-    //   gallery: this.state.gallery,
-    //   desiredOrderBy: e.currentTarget.selectedOptions[0].value
-    // });
+    this.props.changeGalleryCategoryOrder({
+      categoryId: e.currentTarget.parentElement.parentElement.id,
+      categories: this.props.galleries.categories,
+      desiredOrderBy: e.currentTarget.selectedOptions[0].value
+    });
   }
   onChangeGalleryImageOrder = e => {
     e.preventDefault();

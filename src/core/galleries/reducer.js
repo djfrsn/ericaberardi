@@ -12,6 +12,7 @@ import {
   DELETE_GALLERY_IMAGES,
   RESET_IMAGES_TAGGED_FOR_DELETION,
   TAG_IMAGE_FOR_DELETION,
+  CHANGE_CATEGORY_IMAGE_ORDER,
   CHANGE_GALLERY_IMAGE_ORDER,
   CHANGE_CATEGORY_PREVIEW_IMAGE,
   HIGHLIGHT_GALLERIES_LINK
@@ -201,6 +202,12 @@ export function galleriesReducer(state = initialState, action) {
       return {
         ...state,
         ...mergeImages(state, action.payload)
+      };
+
+    case CHANGE_CATEGORY_IMAGE_ORDER:
+      return {
+        ...state,
+        categories: action.payload.categories
       };
 
     case HIGHLIGHT_GALLERIES_LINK:

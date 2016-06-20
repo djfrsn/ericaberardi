@@ -1,0 +1,28 @@
+.pricing_container {
+
+}
+
+.pricing__link_wrapper, .pricing__list {
+  list-style: none;
+}
+
+.pricing__link_wrapper {
+  margin: 60px 0 40px;
+  .pricing_link_li {
+    margin: 0 20px;
+    font-size: 1.4em;
+  }
+}
+
+.pricing__link_wrapper, .pricing__package {
+  @include flex-perfect-center();
+}
+
+.pricing__list {
+  text-align: center;
+  li:first-of-type {
+    font-size: 1.2em;
+    text-decoration: underline;
+    margin-bottom: 10px;
+  }
+}

@@ -9,8 +9,17 @@
 .pricing__link_wrapper {
   margin: 60px 0 40px;
   .pricing_link_li {
+    @extend .link;
     margin: 0 20px;
     font-size: 1.4em;
+    text-align: center;
+    a {
+      @extend .link-border-hidden;
+      text-decoration: none;
+      &.active, &:hover {
+        @extend .link-border;
+      }
+    }
   }
 }
 
@@ -21,8 +30,10 @@
 .pricing__list {
   text-align: center;
   li:first-of-type {
-    font-size: 1.2em;
+    font-size: 1.1em;
+    font-weight: bold;
     text-decoration: underline;
     margin-bottom: 10px;
+    text-transform: uppercase;
   }
 }

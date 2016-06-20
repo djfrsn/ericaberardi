@@ -104,12 +104,15 @@ export function createCategory(category) {
     });
   };
   return (dispatch, getState) => {
-    const { firebase } = getState();
+    const { firebase, galleries } = getState();
+    let categoriesLength = Object.keys(galleries.categories).length;
+
     if (isValidCategory(category)) {
       const id = firebase.database(`${ENV}/galleries`).ref().child('categories').push().key;
       firebase.database().ref(`${ENV}/galleries/categories/${id}`).set({
         id,
         category: category.toLowerCase(),
+        orderBy: ++categoriesLength,
         pending: true
       }).then(() => {
         dispatch({

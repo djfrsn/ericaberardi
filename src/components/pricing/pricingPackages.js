@@ -1,19 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router';
 import forIn from 'lodash.forin';
-import forEach from 'lodash.foreach';
-import orderBy from 'lodash.orderBy';
 
 function getPackages(opts) {
   let packageDetails = [];
   const packagesProps = opts.props.pricing.packages;
 
-  forIn(packagesProps, (packages) => {
-    const details = packages.details;
-    if (details) {
+  forIn(packagesProps, (pkg, key, pkgs) => {
+    const details = pkg.details;
+    const defaultPkg = pkgs[Object.keys(pkgs)[0]];
+    const activePkg = (opts.category === 'pricing' ? defaultPkg.categoryId : opts.category) === pkg.categoryId;
+    if (activePkg) {
       forIn(details, (detail, key) => {
         packageDetails.push(
-            <li key={key}>{detail}</li>
+          <li key={key}>{detail}</li>
         );
       });
     }

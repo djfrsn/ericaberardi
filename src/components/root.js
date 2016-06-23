@@ -3,7 +3,18 @@ import { Provider } from 'react-redux';
 import { Route, Router, IndexRoute } from 'react-router';
 
 // Config
-import { LOGIN_PATH, DASHBOARD_PATH, HOME_PATH, GALLERIES_PATH, GALLERY_PATH, NEWS_REPORTING_PATH, PRICING_PATH, ABOUT_PATH, CONTACT_PATH } from 'config';
+import {
+  LOGIN_PATH,
+  DASHBOARD_PATH,
+  HOME_PATH,
+  GALLERIES_PATH,
+  GALLERY_PATH,
+  NEWS_REPORTING_PATH,
+  PRICING_PATH,
+  PRICING_PACKAGE_PATH,
+  ABOUT_PATH,
+  CONTACT_PATH
+} from 'config';
 
 // Components
 import App from './app/app';
@@ -38,6 +49,7 @@ export class Root extends Component {
             <Route component={Galleries} path={GALLERY_PATH}/>
             <Route component={NewsReporting} path={NEWS_REPORTING_PATH}/>
             <Route component={Pricing} path={PRICING_PATH}/>
+            <Route component={Pricing} path={PRICING_PACKAGE_PATH}/>
             <Route component={About} path={ABOUT_PATH}/>
             <Route component={Contact} path={CONTACT_PATH}/>
             <Route component={Login} path={LOGIN_PATH}/>

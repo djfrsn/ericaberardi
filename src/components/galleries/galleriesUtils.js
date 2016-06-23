@@ -2,20 +2,7 @@ import imagesLoaded from 'imagesloaded';
 import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
 import mapValues from 'lodash.mapvalues';
-
-export function parsePath(val) { // takes paths like galleries/sports and returns sports
-  let path = '/';
-  const pathSplit = val.split('s/');
-  const length = pathSplit.length;
-
-  if (length === 2 || length === 3) {
-    path = pathSplit[length - 1];
-  }
-
-  return {
-    path
-  };
-}
+import { parsePath } from 'lava';
 
 export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;

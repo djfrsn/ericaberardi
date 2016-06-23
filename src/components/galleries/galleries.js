@@ -14,6 +14,7 @@ import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
 import { deleteImagesAlert, unapprovedUploadAlert } from './galleriesAlerts';
 import * as gUtils from './galleriesUtils';
+import { parsePath } from 'lava';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
 import Lightbox from './lightbox';
@@ -62,13 +63,13 @@ export class Galleries extends Component {
     }, 500);
     this.loadImagesSeq();
     const { pathname } = this.props.location;
-    this.path = gUtils.parsePath(pathname).path; // stores currentCategory
+    this.path = parsePath(pathname).path; // stores currentCategory
   }
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     const galleriesPathname = this.galleriesPathname;
     const toast = nextProps.galleries.toast;
-    this.path = gUtils.parsePath(pathname).path;
+    this.path = parsePath(pathname).path;
 
     const routeChange = pathname !== galleriesPathname || pathname === '/galleries';
     const galleryChange = !deepEqual(nextProps.galleries.images, this.props.galleries.images);

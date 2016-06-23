@@ -12,6 +12,7 @@ export const GALLERIES_PATH = '/galleries';
 export const GALLERY_PATH = '/galleries/:gallery';
 export const NEWS_REPORTING_PATH = '/news-reporting';
 export const PRICING_PATH = '/pricing';
+export const PRICING_PACKAGE_PATH = '/pricing/:package';
 export const ABOUT_PATH = '/about';
 export const CONTACT_PATH = '/contact';
 export const POST_LOGIN_PATH = DASHBOARD_PATH;

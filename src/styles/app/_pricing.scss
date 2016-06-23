@@ -6,7 +6,7 @@
   list-style: none;
 }
 
-.pricing__link_wrapper {
+.pricing__categories {
   margin: 60px 0 40px;
   .pricing_link_li {
     @extend .link;
@@ -23,7 +23,7 @@
   }
 }
 
-.pricing__link_wrapper, .pricing__package {
+.pricing__categories, .pricing__package {
   @include flex-perfect-center();
 }
 
@@ -36,4 +36,11 @@
     margin-bottom: 10px;
     text-transform: uppercase;
   }
+}
+
+$misc-controls-position: 15px;
+.pricing_category_orderby {
+  @include quick-cubic-transition(all);
+  position: absolute;
+  top: $misc-controls-position;
 }

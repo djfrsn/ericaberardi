@@ -13,7 +13,7 @@ function getPackages(opts) {
     if (details) {
       forIn(details, (detail, key) => {
         packageDetails.push(
-            <li>{detail}</li>
+            <li key={key}>{detail}</li>
         );
       });
     }

@@ -108,8 +108,8 @@ export function createCategory(category) {
     let categoriesLength = Object.keys(galleries.categories).length;
 
     if (isValidCategory(category)) {
-      const id = firebase.database(`${ENV}/galleries`).ref().child('categories').push().key;
-      firebase.database().ref(`${ENV}/galleries/categories/${id}`).set({
+      const id = firebase.database(`galleries`).ref().child('categories').push().key;
+      firebase.database().ref(`galleries/categories/${id}`).set({
         id,
         category: category.toLowerCase(),
         orderBy: ++categoriesLength,
@@ -151,7 +151,7 @@ export function onGalleryDeleteImages(successCallback) {
       forIn(gallery, image => {
         if (image.shouldDelete) {
           // TODO: for each file that is deleted the meta data must also be removed from firebase
-          database.ref(`${ENV}/galleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
+          database.ref(`galleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
             const storageRef = storage.ref();
             // Create a reference to the file to delete
             const imageRef = storageRef.child(image.fullPath);
@@ -168,7 +168,7 @@ export function onGalleryDeleteImages(successCallback) {
               }
             }).catch(() => {
               // we failed to delete an img.....log error
-              database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${image.id}`).set(image);
+              database.ref(`logs/errors/galleries/shouldDelete/${image.id}`).set(image);
             });
           }).catch(() => {
             dispatch({
@@ -244,7 +244,7 @@ export function changeGalleryCategoryOrder(opts) {
     });
 
     // set that data in firebase & reducer should merge the updated gallery with galleries props
-    database.ref(`${ENV}/galleries/categories`).set(categories).then(() => {
+    database.ref(`galleries/categories`).set(categories).then(() => {
       dispatch({
         type: CHANGE_CATEGORY_IMAGE_ORDER,
         payload: { categories }
@@ -291,7 +291,7 @@ export function changeGalleryImageOrder(opts) {
 
     const categoryId = gallery[opts.imageId].categoryId;
     // set that data in firebase & reducer should merge the updated gallery with galleries props
-    database.ref(`${ENV}/galleries/images/${categoryId}`).set(gallery).then(() => {
+    database.ref(`galleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
         type: CHANGE_GALLERY_IMAGE_ORDER,
         payload: { gallery, categoryId }
@@ -321,7 +321,7 @@ export function changeCategoryPreviewImage(opts) {
       gallery[image.id] = { ...image, categoryPreviewImage: opts.imageId !== image.id ? false : true };
     });
 
-    database.ref(`${ENV}/galleries/images/${categoryId}`).set(gallery).then(() => {
+    database.ref(`galleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
         type: CHANGE_CATEGORY_PREVIEW_IMAGE,
         payload: { gallery, categoryId }
@@ -350,7 +350,7 @@ export function highlightGalleriesLink(toggle) {
 
 export function pushImageData(dispatch, firebase, imageData, shouldDispatch) {
   const database = firebase.database();
-  database.ref(`${ENV}/galleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData).then(() => {
+  database.ref(`galleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData).then(() => {
     if (shouldDispatch) {
       dispatch({
         type: UPLOAD_GALLERY_IMAGE_SUCCESS
@@ -399,7 +399,7 @@ export function uploadGalleryImage(data) {
         });
       }, () => {
         // Handle successful uploads on complete
-        const id = firebase.database(`${ENV}/galleries/images`).ref().child(`${categoryId}`).push().key;
+        const id = firebase.database(`galleries/images`).ref().child(`${categoryId}`).push().key;
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;

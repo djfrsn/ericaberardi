@@ -26,8 +26,8 @@ firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes
   }
 });
 
-let galleries = firebase.database().ref(`${ENV}/galleries`);
-let newsReporting = firebase.database().ref(`${ENV}/newsReporting`);
+let galleries = firebase.database().ref(`galleries`);
+let newsReporting = firebase.database().ref(`newsReporting`);
 
 galleries.on('value', snapshot => {
   const data = snapshot.val();

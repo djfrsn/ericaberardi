@@ -17,7 +17,7 @@
     "build": "npm run lint && npm run clean && webpack --config webpack.dist.js --progress && cp -r ./src/images ./target/images",
     "clean": "del-cli ./target",
     "lint": "eslint -c .eslintrc ./src",
-    "start": "webpack-dev-server --config webpack.dev.js --progress",
+    "start": "NODE_ENV=development webpack-dev-server --config webpack.dev.js --progress",
     "test": "karma start --single-run",
     "deploy": "git push && npm run build && firebase deploy -P dev-erica-berardi",
     "prod-deploy": "git checkout master; git merge dev; git push; npm run build; firebase deploy -P erica-berardi"

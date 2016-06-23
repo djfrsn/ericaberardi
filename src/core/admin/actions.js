@@ -33,18 +33,18 @@ export function deleteGalleriesCategory(opts) {
     if (categoryId) {
       const changesValidated = validatePendingChanges('galleries', galleries); // ensure galleries minimums are met before allowing a cateogry to be deleted
       if (changesValidated) {
-        database.ref(`${ENV}/galleries/categories/${categoryId}`).set(null).then(() => {
+        database.ref(`galleries/categories/${categoryId}`).set(null).then(() => {
           callbackCount++;
           successCallback();
         }).catch(() => {
           opts.deleteErrorAlert();
         });
-        database.ref(`${ENV}/galleries/images/${categoryId}`).set(null).then(() => {
+        database.ref(`galleries/images/${categoryId}`).set(null).then(() => {
           callbackCount++;
           successCallback();
         }).catch(error => {
           // we failed to delete a categories images.....log error
-          database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/images/${categoryId}`, error});
+          database.ref(`logs/errors/galleries/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: galleries/images/${categoryId}`, error});
         });
       }
       else {
@@ -263,7 +263,7 @@ function publishContent(opts) {
         successCallback = opts.callbacks.successCallback;
       }
 
-      database.ref(`${ENV}/${opts.category}/${child}`).set(newState[child]).then(() => {
+      database.ref(`${opts.category}/${child}`).set(newState[child]).then(() => {
         opts.dispatch({
           type: CLEAR_PENDING_UPDATES
         });
@@ -332,7 +332,7 @@ function removePendingGalleriesData(opts) {
     if (subCategory === 'categories') {
       // delete categories data
       forIn(data, category => {
-        database.ref(`${ENV}/galleries/categories/${category.id}`).set(null).then(() => {
+        database.ref(`galleries/categories/${category.id}`).set(null).then(() => {
           if (opts.pendingUpdatesCount === callbackCount) {
             clearPendingUpdates(opts.dispatch);
             if (utils.isFunction(opts.successCallback)) {
@@ -341,7 +341,7 @@ function removePendingGalleriesData(opts) {
           }
           callbackCount++;
         }).catch(error => {
-          database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${category.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/categories/${category.id}`, error});
+          database.ref(`logs/errors/galleries/shouldDelete/${category.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: galleries/categories/${category.id}`, error});
         });
       });
     }
@@ -350,7 +350,7 @@ function removePendingGalleriesData(opts) {
       forIn(data, images => {
         if (Object.keys(images).length > 0) {
           forIn(images, image => {
-            database.ref(`${ENV}/galleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
+            database.ref(`galleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
               if (opts.pendingUpdatesCount === callbackCount) {
                 clearPendingUpdates(opts.dispatch);
                 if (utils.isFunction(opts.successCallback)) {
@@ -359,10 +359,10 @@ function removePendingGalleriesData(opts) {
               }
               callbackCount++;
             }).catch(error => {
-              database.ref(`${ENV}/logs/errors/galleries/shouldDelete/${image.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${ENV}/galleries/images/${image.categoryId}/${image.id}`, error});
+              database.ref(`logs/errors/galleries/shouldDelete/${image.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: galleries/images/${image.categoryId}/${image.id}`, error});
             });
             storage.ref().child(image.fullPath).delete().catch(error => {
-              database.ref(`${ENV}/logs/errors/galleries/shouldDelete/images/${image.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${image.fullPath}`, error});
+              database.ref(`logs/errors/galleries/shouldDelete/images/${image.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${image.fullPath}`, error});
             });
           });
         }

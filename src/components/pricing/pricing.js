@@ -1,9 +1,16 @@
-import React, { Component } from 'react';
+import React, { PropTypes, Component } from 'react';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
+import { pricingActions } from 'core/pricing';
 
-export class About extends Component {
+export class Pricing extends Component {
+  static propTypes = {
+    auth: PropTypes.object.isRequired,
+    pricing: PropTypes.object.isRequired
+  }
   render() {
+    const { categories, packages } = this.props.pricing;
+
     return (
       <div className="g-row">
         <div className="g-col" >
@@ -33,5 +40,8 @@ export class About extends Component {
   }
 }
 
-export default connect(null, authActions)(About);
+export default connect(state => ({
+  pricing: state.pricing,
+  auth: state.auth
+}), Object.assign({}, authActions, pricingActions))(Pricing);
 // [ Under Construction ]

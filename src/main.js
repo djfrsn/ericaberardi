@@ -9,7 +9,8 @@ import { authActions /* , authRouteResolver */ } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
 import { newsReportingActions } from 'core/newsReporting';
-import { ENV, FIREBASE_CONFIG } from './config';
+import { pricingActions } from 'core/pricing';
+import { FIREBASE_CONFIG } from './config';
 import configureStore from './store';
 
 const store = configureStore({
@@ -20,14 +21,14 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes to update protected data
   store.dispatch(galleriesActions.hydrateGalleries()); // hydrate to hide/show protected content
-  // TODO: setPendingUpdates without args to set the state to false
   if (user) {
     store.dispatch(authActions.hydrateAuth());
   }
 });
 
-let galleries = firebase.database().ref(`galleries`);
-let newsReporting = firebase.database().ref(`newsReporting`);
+let galleries = firebase.database().ref('galleries');
+let newsReporting = firebase.database().ref('newsReporting');
+let pricing = firebase.database().ref('pricing');
 
 galleries.on('value', snapshot => {
   const data = snapshot.val();
@@ -37,6 +38,11 @@ galleries.on('value', snapshot => {
 
 newsReporting.on('value', snapshot => {
   store.dispatch(newsReportingActions.hydrateNewsReporting(snapshot.val()));
+});
+
+
+pricing.on('value', snapshot => {
+  store.dispatch(pricingActions.hydratePricing(snapshot.val()));
 });
 
 ReactDOM.render((

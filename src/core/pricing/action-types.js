@@ -1,0 +1,1 @@
+export const HYDRATE_PRICING = 'HYDRATE_PRICING';

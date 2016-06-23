@@ -17,6 +17,7 @@ ecmaFeatures:
 
 globals:
   firebase: true
+  firebaseconfig: true
   MockFirebase: true
   sinon: true
 

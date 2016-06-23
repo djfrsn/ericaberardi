@@ -27,7 +27,8 @@ module.exports = {
 
   resolve: {
     alias: {
-      test: path.resolve('./test')
+      test: path.resolve('./test'),
+      firebaseconfig: process.env.NODE_ENV === 'development' ? '../dev-firebaseconfig.js' : '../prod-firebaseconfig.js'
     },
     extensions: ['', '.js'],
     modulesDirectories: ['node_modules', 'src'],

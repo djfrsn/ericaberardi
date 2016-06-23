@@ -1,13 +1,8 @@
-export const ENV = 'qa';
+import firebaseconfig from 'firebaseconfig';
 
-export const FIREBASE_URL = 'https://ericaberardi.firebaseio.com/dev';
+export const FIREBASE_URL = firebaseconfig.url;
 
-export const FIREBASE_CONFIG = {
-  apiKey: 'AIzaSyBnlzFUCPFfecUPbNhu0OgqeVXDy1aog2Y',
-  authDomain: 'erica-berardi.firebaseapp.com',
-  databaseURL: 'https://erica-berardi.firebaseio.com',
-  storageBucket: 'erica-berardi.appspot.com'
-};
+export const FIREBASE_CONFIG = firebaseconfig.config;
 
 // Route paths
 export const LOGIN_PATH = '/login';

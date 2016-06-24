@@ -12,7 +12,7 @@ export class Pricing extends Component {
     location: PropTypes.object.isRequired,
     pricing: PropTypes.object.isRequired
   }
-  componentDidMount() {
+  componentWillMount() {
     const { pathname } = this.props.location;
     this.path = parsePath(pathname).path; // stores currentCategory
   }

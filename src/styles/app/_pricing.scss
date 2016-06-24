@@ -1,4 +1,4 @@
-.pricing_container {
+.pricing__container {
 
 }
 
@@ -44,8 +44,21 @@
 }
 
 $misc-controls-position: 15px;
+
 .pricing_category_orderby {
   @include quick-cubic-transition(all);
   position: absolute;
   top: $misc-controls-position;
+}
+
+@media (max-width: 740px) {
+  .pricing__categories {
+    margin-top: 40px;
+  }
+}
+
+@media (max-width: 480px) {
+  .pricing__container {
+    font-size: 0.7rem;
+  }
 }

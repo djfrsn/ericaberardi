@@ -32,3 +32,9 @@
     max-width: 70%;
   }
 }
+
+@media (max-width: 768px) {
+  .g-row {
+    max-width: 95%;
+  }
+}

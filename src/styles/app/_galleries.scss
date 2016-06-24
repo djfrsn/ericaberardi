@@ -272,3 +272,9 @@ $delete-margin-right: 20px;
     width: 90%;
   }
 }
+
+@media (max-width: 740px) {
+  .galleries__links {
+    margin-top: 40px;
+  }
+}

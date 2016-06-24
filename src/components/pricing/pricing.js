@@ -7,6 +7,9 @@ import pricingCategories from './pricingCategories';
 import pricingPackages from './pricingPackages';
 
 export class Pricing extends Component {
+  static contextTypes = {
+    router: React.PropTypes.object.isRequired
+  }
   static propTypes = {
     auth: PropTypes.object.isRequired,
     location: PropTypes.object.isRequired,

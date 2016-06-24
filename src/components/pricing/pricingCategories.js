@@ -32,7 +32,7 @@ function getCategories(opts) {
     if (category && !protectedCategory) {
       categories.push(
         <li key={key} id={category.id} className="pricing_link_li">
-          {authenticated ? <div className="select-style"><select name="categoryOrderby" className="pricing_category_orderby" value={category.orderBy} onChange={opts.scope.onChangeGalleryCategoryOrder}>
+          {authenticated ? <div className="select-style"><select name="categoryOrderby" className="pricing_category_orderby" value={category.orderBy} onChange={opts.scope.onChangePricingCategoryOrder}>
               {sortedOrderByCategories}
           </select></div> : null}
           <Link to={`/pricing/${category.id}`} className={className}>{category.category}</Link>

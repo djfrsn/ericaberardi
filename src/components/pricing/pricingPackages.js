@@ -2,23 +2,28 @@ import React from 'react';
 import forIn from 'lodash.forin';
 
 function getPackages(opts) {
-  let packageDetails = [];
+  let packagesList = [];
   const packagesProps = opts.props.pricing.packages;
 
-  forIn(packagesProps, (pkg, key, pkgs) => {
-    const details = pkg.details;
-    const defaultPkg = pkgs[Object.keys(pkgs)[0]];
-    const activePkg = (opts.category === 'pricing' ? defaultPkg.categoryId : opts.category) === pkg.categoryId;
-    if (activePkg) {
-      forIn(details, (detail, key) => {
-        packageDetails.push(
-          <li key={key}>{detail}</li>
-        );
+  forIn(packagesProps, (category, k, pkgs) => {
+    const packages = category.packages;
+    const defaultPkgs = pkgs[Object.keys(pkgs)[0]];
+    const activePkgs = (opts.category === 'pricing' ? defaultPkgs.categoryId : opts.category) === category.categoryId;
+    if (activePkgs) { // check for active category based on browser path & create packagesList
+      forIn(packages, (pkg, i) => {
+        let packageDetails = [];
+        packageDetails.push(<li key={i}>{pkg.title}</li>); // pkg title
+        forIn(pkg.details, (detail, key) => {
+          packageDetails.push(
+            <li key={key}>{detail}</li> // list of pkg details
+          );
+        });
+        packagesList.push(<ul key={i}>{packageDetails}</ul>); // create array of ul's for each pkg i.ePackage A, Package B, ...
       });
     }
   });
 
-  return packageDetails;
+  return packagesList;
 }
 
 export default opts => {

@@ -25,9 +25,9 @@ export class Pricing extends Component {
       <div className="g-row">
         <div className="g-col" >
           <div className="pricing__container">
-            <ul className="pricing__categories">
+            <div className="pricing__categories">
               {pricingCategories({ props: this.props, category: this.path, scope: this })}
-            </ul>
+            </div>
             <div className="pricing__packages_wrapper">
               <div className="pricing__package">
                 <ul className="pricing__list">

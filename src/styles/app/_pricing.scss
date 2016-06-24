@@ -29,12 +29,17 @@
 
 .pricing__list {
   text-align: center;
-  li:first-of-type {
-    font-size: 1.1em;
-    font-weight: bold;
-    text-decoration: underline;
-    margin-bottom: 10px;
-    text-transform: uppercase;
+  @include flex-perfect-center();
+  ul {
+    list-style: none;
+    margin: 0 20px;
+    li:first-of-type {
+      font-size: 1.1em;
+      font-weight: bold;
+      text-decoration: underline;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
   }
 }
 

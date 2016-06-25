@@ -62,6 +62,9 @@ export function deleteGalleriesCategory(opts) {
   };
 }
 
+function isCategories(key) {
+  return key === 'categories';
+}
 // helper for obtaining pendingImages
 function isImages(category, key) {
   return category === 'galleries' && key === 'images';
@@ -83,14 +86,14 @@ function getPendingUpdatesCount(pendingUpdates) {
   forIn(pendingUpdates, (updates, category) => {
     forIn(updates, (update, key) => {
       if (isImages(category, key)) {
-        pendingUpdatesCount += getPendingImagesCount(update, key);
+        pendingUpdatesCount += getPendingImagesCount(update);
       }
       else {
         pendingUpdatesCount += Object.keys(update).length;
       }
     });
   });
-  // `console.log('pendingUpdatesCount', pendingUpdatesCount);
+
   return pendingUpdatesCount;
 }
 
@@ -111,54 +114,82 @@ function getPendingImages(categories) {
   return pendingImages;
 }
 
-// Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
-// each key/value pair contains all pending updates for each route
-function dispatchPendingUpdates(dispatch, category, admin, snapshot) {
-  let pendingUpdates = { ...admin.pendingUpdates }; // apply current pending updates
+function getPendingGalleries(pendingUpdates, opts) {
 
-  pendingUpdates[category] = {}; // reset pending updates for a category
-
-  if (Object.keys(snapshot).length > 0) { // register pending updates if any exist
-    if (category === 'galleries') {
-      forIn(snapshot, (prop, key) => {
-
-        let pendingProp = {};
-        forIn(prop, (child, key) => {
-          if (child.pending) {
-            pendingProp[key] = child;
-          }
-        });
-
-        const parentPending = Object.keys(pendingProp).length > 0;
-        if (parentPending) {
-          pendingUpdates[category][key] = pendingProp; // update new pendingProp
-        }
-        else if (isImages(category, key)) { // images are nested differently than categories....
-          const pendingImages = getPendingImages(prop);
-          let hasPendingImages = false;
-          forIn(pendingImages, images => {
-            if (Object.keys(images).length > 0) {
-              hasPendingImages = true;
-            }
-          });
-          if (hasPendingImages) {
-            pendingUpdates[category][key] = getPendingImages(prop); // a special function is needed to extract pending images
-          }
+  forIn(opts.snapshot, (prop, key) => {
+    let pendingProp = {};
+    if (isCategories(key)) {
+      forIn(prop, (child, key) => {
+        if (child.pending) { // check for pending categories
+          pendingProp[key] = child;
         }
       });
+      const parentsPending = Object.keys(pendingProp).length > 0;
+      if (parentsPending) {
+        pendingUpdates[opts.category][key] = pendingProp; // update new pendingProp
+      }
+    }
+    else if (isImages(opts.category, key)) { // images are nested differently than categories....
+      const pendingImages = getPendingImages(prop);
+      let hasPendingImages = false;
+      forIn(pendingImages, images => {
+        if (Object.keys(images).length > 0) {
+          hasPendingImages = true;
+        }
+      });
+      if (hasPendingImages) { // all pending data is stored flat by categories/key for easy counting of pending data
+        pendingUpdates[opts.category][key] = getPendingImages(prop); // a special function is needed to extract pending images
+      }
+    }
+  });
+
+  return pendingUpdates;
+}
+
+function getPendingPricing(pendingUpdates, opts) {
+  forIn(opts.snapshot, (prop, key) => {
+    let pendingProp = {};
+    forIn(prop, (child, key) => {
+      if (child.pending) {
+        pendingProp[key] = child;
+      }
+    });
+    const propsPending = Object.keys(pendingProp).length > 0;
+    if (propsPending) {
+      pendingUpdates[opts.category][key] = pendingProp; // update new pendingProp
+    }
+  });
+
+  return pendingUpdates;
+}
+
+// Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
+// each key/value pair contains all pending updates for each route
+function dispatchPendingUpdates(opts) {
+  let pendingUpdates = { ...opts.admin.pendingUpdates }; // apply current pending updates
+
+  pendingUpdates[opts.category] = {}; // reset pending updates for a category
+
+  if (Object.keys(opts.snapshot).length > 0) { // register pending updates if any exist
+    // set any pending data onto pendingUpdates object by category
+    if (opts.category === 'galleries') {
+      pendingUpdates = getPendingGalleries(pendingUpdates, opts);
+    }
+    if (opts.category === 'pricing') {
+      pendingUpdates = getPendingPricing(pendingUpdates, opts);
     }
   }
 
   const pendingUpdatesCount = getPendingUpdatesCount(pendingUpdates);
   // show available pending updates
   if (pendingUpdatesCount > 0) {
-    dispatch({
+    opts.dispatch({
       type: SET_PENDING_UPDATES,
       payload: { pendingUpdates, pendingUpdatesCount }
     });
   }
   else {
-    dispatch({
+    opts.dispatch({
       type: CLEAR_PENDING_UPDATES
     });
   }
@@ -172,7 +203,10 @@ export function setPendingUpdates(category, snapshot) {
     if (snapshot) {
       switch (category) {
         case 'galleries':
-          dispatchPendingUpdates(dispatch, category, admin, snapshot);
+          dispatchPendingUpdates({dispatch, category, admin, snapshot});
+          break;
+        case 'pricing':
+          dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
 
         default:

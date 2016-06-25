@@ -42,7 +42,9 @@ newsReporting.on('value', snapshot => {
 
 
 pricing.on('value', snapshot => {
-  store.dispatch(pricingActions.hydratePricing(snapshot.val()));
+  const data = snapshot.val();
+  store.dispatch(adminActions.setPendingUpdates('pricing', data));
+  store.dispatch(pricingActions.hydratePricing(data));
 });
 
 ReactDOM.render((

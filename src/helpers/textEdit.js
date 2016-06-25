@@ -1,6 +1,6 @@
 import forEach from 'lodash.foreach';
 
-// Looks for the closest element with data-textedittarget, hides this el & appends an html input it
+// Looks for the closest element with data-textedittarget, hides this el & appends an html input after it
 export default function textEdit(opts) {
   let textInputType = 'input';
   if (opts.textInputType) {
@@ -11,7 +11,7 @@ export default function textEdit(opts) {
   const parentElement = currentTarget.parentElement;
   let textEditInput;
   let textEditTarget;
-  // find closest textEditTarget in parentElement.children
+  // find closest textEditTarget in parentElement.children, if the target isn't found in the first parentElement we could recursively search crawl up the dom and search children if there is a use case for it
   forEach(parentElement.children, el => {
     if (el.dataset.textedittarget) {
       textEditTarget = el;

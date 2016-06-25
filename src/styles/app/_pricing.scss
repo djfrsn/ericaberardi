@@ -8,11 +8,15 @@
 
 .pricing__categories {
   margin: 60px 0 40px;
+  ul {
+    text-align: center;
+  }
   .pricing_link_li {
     @extend .link;
-    margin: 0 20px;
-    font-size: 1.4em;
     text-align: center;
+    margin: 10px 20px;
+    display: inline-block;
+    font-size: 1.4em;
     a {
       @extend .link-border-hidden;
       text-decoration: none;
@@ -23,7 +27,7 @@
   }
 }
 
-.pricing__categories, .pricing__package {
+.pricing__package {
   @include flex-perfect-center();
 }
 

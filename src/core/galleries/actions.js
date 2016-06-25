@@ -106,7 +106,7 @@ export function createCategory(category) {
     let categoriesLength = Object.keys(galleries.categories).length;
 
     if (isValidCategory(category)) {
-      const id = firebase.database(`galleries`).ref().child('categories').push().key;
+      const id = firebase.database('galleries').ref().child('categories').push().key;
       firebase.database().ref(`galleries/categories/${id}`).set({
         id,
         category: category.toLowerCase(),
@@ -242,7 +242,7 @@ export function changeGalleryCategoryOrder(opts) {
     });
 
     // set that data in firebase & reducer should merge the updated gallery with galleries props
-    database.ref(`galleries/categories`).set(categories).then(() => {
+    database.ref('galleries/categories').set(categories).then(() => {
       dispatch({
         type: CHANGE_CATEGORY_IMAGE_ORDER,
         payload: { categories }
@@ -397,7 +397,7 @@ export function uploadGalleryImage(data) {
         });
       }, () => {
         // Handle successful uploads on complete
-        const id = firebase.database(`galleries/images`).ref().child(`${categoryId}`).push().key;
+        const id = firebase.database('galleries/images').ref().child(`${categoryId}`).push().key;
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;

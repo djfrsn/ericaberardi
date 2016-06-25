@@ -66,13 +66,11 @@ export function hydrateGalleries(data) {
   return (dispatch, getState) => {
     const { auth, galleries } = getState();
     const snapshotRaw = data ? data : { categories: galleries.categories, images: galleries.images };
-    const images = snapshotRaw.images;
+    const images = snapshotRaw.images || {};
     let parsedImages = {};
 
-    if (images) {
-      if (Object.keys(images).length > 0) {
-        parsedImages = parseImages(images);
-      }
+    if (Object.keys(images).length > 0) {
+      parsedImages = parseImages(images); // refresh orderby numbering
     }
 
     const snapshot = { ...snapshotRaw, images: parsedImages };

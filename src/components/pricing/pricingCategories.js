@@ -28,12 +28,11 @@ function getCategories(opts) {
     const firstCategory = category.orderBy === '1' ? category : null;
     const categoryAccepted = (opts.category === 'pricing' && firstCategory ? firstCategory.id : opts.category) === category.id; // if path is root, default to first category
     const className = categoryAccepted ? `${pricingLink} active` : pricingLink;
-    const protectedCategory = category.pending && !authenticated;
-    if (category && !protectedCategory) {
+    if (category) {
       categories.push(
         <li key={key} id={category.id} className="pricing_link_li" orderBy={category.orderBy}>
           {authenticated ? <i onClick={opts.scope.editPricingCategory} className="fa fa-pencil-square-o pricing__categories_edit" aria-hidden="true"></i> : null}
-          <Link to={`/pricing/${category.id}`} data-textedittarget className={className}>{category.category}</Link>
+          <Link to={`/pricing/${category.id}`} data-textedittarget className={className}>{category.pendingCategory && authenticated ? category.pendingCategory : category.category}</Link>
         </li>
       );
     }

@@ -10,15 +10,15 @@ function getPackages(opts) {
     const defaultPkgs = pkgs[Object.keys(pkgs)[0]];
     const activePkgs = (opts.category === 'pricing' ? defaultPkgs.categoryId : opts.category) === category.categoryId;
     if (activePkgs) { // check for active category based on browser path & create packagesList
-      forIn(packages, (pkg, i) => {
+      forIn(packages, (pkg, pkgId) => {
         let packageDetails = [];
-        packageDetails.push(<li key={`pkg-title-${i}`}>{pkg.title}</li>); // pkg title
+        packageDetails.push(<li key={`pkg-title-${pkgId}`}>{pkg.title}</li>); // pkg title
         forIn(pkg.details, (detail, key) => {
           packageDetails.push(
             <li key={key}>{detail}</li> // list of pkg details
           );
         });
-        packagesList.push(<ul key={i} className="pricing__package_list">{packageDetails}</ul>); // create array of ul's for each pkg i.ePackage A, Package B, ...
+        packagesList.push(<ul key={pkgId} id={pkg.categoryId} className="pricing__package_list">{packageDetails}</ul>); // create array of ul's for each pkg i.ePackage A, Package B, ...
       });
     }
   });

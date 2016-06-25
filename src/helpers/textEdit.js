@@ -28,13 +28,11 @@ export default function textEdit(opts) {
     }
     textEditTarget.classList.remove('hidden');
     currentTarget.classList.remove('textEditActive');
-    option.currentTarget.remove();
+    option.currentTarget.remove(); // remove textEditInput
     if (typeof opts.callback === 'function') {
-      opts.callback({
-        e: opts.e,
-        updatedText: currentTargetValue,
-        textInputType: textInputType
-      });
+      let callbackParams = { el: currentTarget, updatedText: currentTargetValue, textInputType: textInputType };
+      if (opts.meta) { callbackParams = { ...callbackParams, meta: opts.meta }; }
+      opts.callback(callbackParams);
     }
   };
 

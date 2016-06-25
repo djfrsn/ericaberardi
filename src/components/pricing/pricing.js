@@ -13,6 +13,7 @@ export class Pricing extends Component {
   }
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    editPricingCategory: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     pricing: PropTypes.object.isRequired
   }
@@ -25,10 +26,18 @@ export class Pricing extends Component {
     this.path = parsePath(pathname).path;
   }
   textEditTargetReverting = opts => {
+    let dispatchType;
     // callback textEdit calls to pass relevant data about dom changes to update state
+    if (opts.meta.type === 'category') {
+      dispatchType = 'editPricingCategory';
+    }
+    this.props[dispatchType]({
+      id: opts.el.parentElement.id,
+      text: opts.updatedText
+    });
   }
   editPricingCategory = e => {
-    textEdit({e, callback: this.textEditTargetReverting});
+    textEdit({e, callback: this.textEditTargetReverting, meta: { type: 'category' }});
   }
   render() {
     return (

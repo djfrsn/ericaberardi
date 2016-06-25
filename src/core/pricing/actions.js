@@ -10,3 +10,10 @@ export function hydratePricing(data) {
     });
   };
 }
+
+export function editPricingCategory(opts) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    firebase.database().ref(`pricing/categories/${opts.id}`).update({pendingCategory: opts.text, pending: true});
+  };
+}

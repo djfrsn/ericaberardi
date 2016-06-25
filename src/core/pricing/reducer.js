@@ -13,7 +13,6 @@ export function pricingReducer(state = initialState, action) {
   switch (action.type) {
     case HYDRATE_PRICING:
       return hydratePricing(state, action);
-
     default:
       return state;
   }

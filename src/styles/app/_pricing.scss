@@ -13,10 +13,11 @@
   }
   .pricing_link_li {
     @extend .link;
-    text-align: center;
+    position: relative;
     margin: 10px 20px;
     display: inline-block;
     font-size: 1.4em;
+    text-align: center;
     a {
       @extend .link-border-hidden;
       text-decoration: none;
@@ -25,6 +26,12 @@
       }
     }
   }
+}
+
+.pricing__categories_edit {
+  position: absolute;
+  top: -20px;
+  right: -20px;
 }
 
 .pricing__package {

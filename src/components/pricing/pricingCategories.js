@@ -32,6 +32,7 @@ function getCategories(opts) {
     if (category && !protectedCategory) {
       categories.push(
         <li key={key} id={category.id} className="pricing_link_li" orderBy={category.orderBy}>
+          {authenticated ? <i className="fa fa-pencil-square-o pricing__categories_edit" aria-hidden="true"></i> : null}
           <Link to={`/pricing/${category.id}`} className={className}>{category.category}</Link>
         </li>
       );

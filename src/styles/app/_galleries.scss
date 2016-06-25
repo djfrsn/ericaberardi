@@ -16,9 +16,12 @@
       text-decoration: none;
       color: $colors-gray;
       transition: color 0.5s linear;
+      @extend .link-border-hidden;
+      @include quick-cubic-transition(border);
 
       &.active, &:hover {
         color: $colors-black;
+        @extend .link-border;
       }
     }
   }

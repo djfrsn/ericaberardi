@@ -31,7 +31,7 @@ function getCategories(opts) {
     const protectedCategory = category.pending && !authenticated;
     if (category && !protectedCategory) {
       categories.push(
-        <li key={key} id={category.id} orderby={category.orderBy}>
+        <li key={key} id={category.id} orderBy={category.orderBy}>
           {authenticated ? <div className="select-style"><select name="categoryOrderby" className="gallery_category_orderby" value={category.orderBy} onChange={opts.scope.onChangeGalleryCategoryOrder}>
             {sortedOrderByCategories}
           </select></div> : null}
@@ -43,7 +43,7 @@ function getCategories(opts) {
 
   let orderedCategories = [];
   forEach(categories, category => {
-    orderedCategories.push({...category, orderBy: category.props.orderby});
+    orderedCategories.push({...category, orderBy: category.props.orderBy});
   });
 
   return orderBy(orderedCategories, 'orderBy', 'asc');

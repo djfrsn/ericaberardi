@@ -23,15 +23,15 @@ function getCategories(opts) {
   // Keep option values sorted
   sortedOrderByCategories = orderBy(sortedOrderByCategories, 'value', 'asc');
 
-  forIn(categoriesProps, (category, key, list) => {
+  forIn(categoriesProps, (category, key) => {
     const pricingLink = 'pricing__link';
-    const defaultGallery = list[Object.keys(list)[0]];
-    const categoryAccepted = (opts.category === 'pricing' ? defaultGallery.id : opts.category) === category.id; // if path is root, default to first category
+    const firstCategory = category.orderBy === '1' ? category : null;
+    const categoryAccepted = (opts.category === 'pricing' && firstCategory ? firstCategory.id : opts.category) === category.id; // if path is root, default to first category
     const className = categoryAccepted ? `${pricingLink} active` : pricingLink;
     const protectedCategory = category.pending && !authenticated;
     if (category && !protectedCategory) {
       categories.push(
-        <li key={key} id={category.id} className="pricing_link_li">
+        <li key={key} id={category.id} className="pricing_link_li" orderBy={category.orderBy}>
           {authenticated ? <div className="select-style"><select name="categoryOrderby" className="pricing_category_orderby" value={category.orderBy} onChange={opts.scope.onChangePricingCategoryOrder}>
               {sortedOrderByCategories}
           </select></div> : null}
@@ -43,7 +43,7 @@ function getCategories(opts) {
 
   let orderedCategories = [];
   forEach(categories, category => {
-    orderedCategories.push({...category, orderBy: category.props.orderby});
+    orderedCategories.push({...category, orderBy: category.props.orderBy});
   });
 
   return orderBy(orderedCategories, 'orderBy', 'asc');

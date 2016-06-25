@@ -1,6 +1,5 @@
 import forIn from 'lodash.forin';
 import findIndex from 'lodash.findindex';
-
 /*
 * Lava: utils for building apps with firebase services
 */

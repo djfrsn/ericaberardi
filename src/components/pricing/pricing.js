@@ -5,6 +5,7 @@ import { pricingActions } from 'core/pricing';
 import { parsePath } from 'lava';
 import pricingCategories from './pricingCategories';
 import pricingPackages from './pricingPackages';
+import textEdit from 'helpers/textEdit';
 
 export class Pricing extends Component {
   static contextTypes = {
@@ -22,6 +23,12 @@ export class Pricing extends Component {
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     this.path = parsePath(pathname).path;
+  }
+  textEditTargetReverting = opts => {
+    // callback textEdit calls to pass relevant data about dom changes to update state
+  }
+  editPricingCategory = e => {
+    textEdit({e, callback: this.textEditTargetReverting});
   }
   render() {
     return (

@@ -63,6 +63,9 @@ module.exports = {
       hash: true,
       inject: 'body',
       template: './src/index.html'
+    }),
+    new webpack.ProvidePlugin({
+      $: 'travesty'
     })
   ],
 

@@ -53,6 +53,9 @@ module.exports = {
         unused: true,
         warnings: false
       }
+    }),
+    new webpack.ProvidePlugin({
+      $: 'travesty'
     })
   ],
 

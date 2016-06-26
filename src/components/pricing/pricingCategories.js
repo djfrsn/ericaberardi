@@ -28,6 +28,9 @@ function getCategories(opts) {
     const firstCategory = category.orderBy === '1' ? category : null;
     const categoryAccepted = (opts.category === 'pricing' && firstCategory ? firstCategory.id : opts.category) === category.id; // if path is root, default to first category
     const className = categoryAccepted ? `${pricingLink} active` : pricingLink;
+    if (categoryAccepted) {
+      opts.scope.activeCategoryId = category.id;
+    }
     if (category) {
       categories.push(
         <li key={key} id={category.id} className="pricing_link_li" orderBy={category.orderBy}>

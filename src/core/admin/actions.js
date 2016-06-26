@@ -3,7 +3,6 @@ import {
   SET_PENDING_UPDATES,
   CLEAR_PENDING_UPDATES
 } from './action-types';
-import { ENV } from 'config';
 import forIn from 'lodash.forin';
 import findKey from 'lodash.findkey';
 import utils from 'utils';

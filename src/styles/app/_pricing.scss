@@ -40,6 +40,10 @@
 }
 
 .pricing__list {
+  position: relative;
+}
+
+.pricing__list {
   text-align: center;
   @include flex-perfect-center();
   ul {

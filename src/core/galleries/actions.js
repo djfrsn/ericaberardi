@@ -16,7 +16,6 @@ import {
   UPLOAD_GALLERY_IMAGE_SUCCESS,
   UPLOAD_GALLERY_IMAGE_ERROR
 } from './action-types';
-import { ENV } from 'config';
 import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
 import forEach from 'lodash.foreach';

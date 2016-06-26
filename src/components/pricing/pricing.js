@@ -9,6 +9,7 @@ import { textEdit, textEditCanvas } from 'helpers/textEdit';
 
 function packagesEqual(opts) {
   debugger
+  // determine if any packages have had their text changed
 }
 
 export class Pricing extends Component {
@@ -43,6 +44,7 @@ export class Pricing extends Component {
     }
     if (opts.meta.type === 'packages') {
       dispatchType = 'editPricingPackages';
+      console.log(this.activeCategoryId);
       valueChanged = packagesEqual({ newPkgs: opts.data, prevPkgs: this.props.pricing.packages[this.activeCategoryId]});
     }
 

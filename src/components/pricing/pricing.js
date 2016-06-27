@@ -6,10 +6,47 @@ import { parsePath } from 'lava';
 import pricingCategories from './pricingCategories';
 import pricingPackages from './pricingPackages';
 import { textEdit, textEditCanvas } from 'helpers/textEdit';
+import forIn from 'lodash.forin';
 
-function packagesEqual(opts) {
-  debugger
-  // determine if any packages have had their text changed
+// determine if any packages have had their text changed
+// & returned new package object with any pending data
+function parsePackages(opts) {
+  let equal = true;
+  const prevPkgsCategory = opts.prevPkgsCategory;
+  let newPkgsCategory = { ...prevPkgsCategory };
+  let newPkgs = {};
+  // TODO: update details & pkgs with orderBy
+  // loop  through packages & compare with data returned by textEdit to determine if any packages are pending
+  forIn(prevPkgsCategory.packages, pkg => {
+    let newPkg = { ...pkg };
+    let newDetails = {};
+    let newTitleText = opts.newPkgs[pkg.id].text;
+    if (newTitleText !== pkg.title) {
+      newPkg.titlePending = true;
+      newPkg.pendingTitle = newTitleText;
+      equal = false; // signify data has changed
+    }
+    forIn(pkg.details, detail => {
+      const detailId = detail.id;
+      const newDetailText = opts.newPkgs[detailId].text;
+      if (detail.text !== newDetailText) {
+        newPkg.detailsPending = true; // update details with new text if unequal
+        newDetails[detailId] = { ...detail, text: newDetailText };
+      }
+      else {
+        newDetails[detailId] = detail;
+      }
+    });
+    if (newPkg.detailsPending) {
+      newPkg.pendingDetails = newDetails;
+      equal = false; // signify data has changed
+    }
+    newPkgs[pkg.id] = newPkg;
+  });
+  // add newPkgs with pendingDetails/Title if they exist
+  newPkgsCategory.packages = newPkgs;
+
+  return { equal, newPkgsCategory };
 }
 
 export class Pricing extends Component {
@@ -30,11 +67,10 @@ export class Pricing extends Component {
     const { pathname } = nextProps.location;
     this.path = parsePath(pathname).path;
   }
-  textEditTargetReverting = opts => {
+  textEditTargetReverted = opts => {
     let dispatchType;
     let valueChanged = false;
     let data = {};
-    // callback textEdit calls to pass relevant data about dom changes to update state
     if (opts.meta.type === 'category') {
       dispatchType = 'editPricingCategory';
       const categoryProp = this.props.pricing.categories[opts.el.parentElement.id];
@@ -44,8 +80,9 @@ export class Pricing extends Component {
     }
     if (opts.meta.type === 'packages') {
       dispatchType = 'editPricingPackages';
-      console.log(this.activeCategoryId);
-      valueChanged = packagesEqual({ newPkgs: opts.data, prevPkgs: this.props.pricing.packages[this.activeCategoryId]});
+      const parsedPackages = parsePackages({ newPkgs: opts.data, prevPkgsCategory: this.props.pricing.packages[this.activeCategoryId] });
+      valueChanged = !parsedPackages.equal;
+      data = { newPkgsCategory: parsedPackages.newPkgsCategory };
     }
 
     if (valueChanged) {
@@ -53,11 +90,11 @@ export class Pricing extends Component {
     }
   }
   editPricingCategory = e => {
-    textEdit({e, callback: this.textEditTargetReverting, meta: { type: 'category' }});
+    textEdit({e, callback: this.textEditTargetReverted, meta: { type: 'category' }});
   }
   editPricingPackages = e => {
-    // canvas options find all data-textedittarget's in a given parent & makes them text editable
-    textEditCanvas({e, inputParent: 'li', callback: this.textEditTargetReverting, meta: { type: 'packages' }});
+    // canvas find all data-textedittarget's in a given parent & makes them text editable
+    textEditCanvas({e, inputParent: 'li', callback: this.textEditTargetReverted, meta: { type: 'packages' }});
   }
   render() {
     const authenticated = this.props.auth.authenticated;

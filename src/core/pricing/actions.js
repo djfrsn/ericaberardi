@@ -17,3 +17,10 @@ export function editPricingCategory(opts) {
     firebase.database().ref(`pricing/categories/${opts.id}`).update({pendingCategory: opts.text, pending: true});
   };
 }
+
+export function editPricingPackages(opts) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    firebase.database().ref(`pricing/packages/${opts.newPkgsCategory.categoryId}`).set(opts.newPkgsCategory);
+  };
+}

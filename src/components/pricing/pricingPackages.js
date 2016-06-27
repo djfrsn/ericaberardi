@@ -3,6 +3,7 @@ import forIn from 'lodash.forin';
 import findKey from 'lodash.findkey';
 
 function getPackages(opts) {
+  const authenticated = opts.scope.props.auth.authenticated;
   const packagesProps = opts.props.pricing.packages;
   let packagesList = [];
   let defaultPkgId = findKey(opts.props.pricing.categories, { orderBy: '1'});
@@ -12,8 +13,9 @@ function getPackages(opts) {
     if (activePkgs) { // check for active category based on browser path & create packagesList
       forIn(packages, (pkg, pkgId) => {
         let packageDetails = [];
-        packageDetails.push(<li key={`pkg-title-${pkgId}`} data-texteditid={pkgId} data-textedittarget>{pkg.title}</li>); // pkg title
-        forIn(pkg.details, detail => {
+        let pendingTitle = pkg.pendingTitle;
+        packageDetails.push(<li key={`pkg-title-${pkgId}`} data-texteditid={pkgId} data-textedittarget>{pendingTitle && authenticated ? pendingTitle : pkg.title}</li>); // pkg title
+        forIn((pkg.pendingDetails && authenticated) || pkg.details, detail => {
           packageDetails.push(
             <li key={detail.id} data-texteditid={detail.id} data-textedittarget>{detail.text}</li> // list of pkg details
           );

@@ -182,6 +182,15 @@ function dispatchPendingUpdates(opts) {
   const pendingUpdatesCount = getPendingUpdatesCount(pendingUpdates);
   // show available pending updates
   if (pendingUpdatesCount > 0) {
+    pendingUpdates = (() => {
+      let parsedPendingUpdates = {};
+      forIn(pendingUpdates, (update, key) => {
+        if (Object.keys(update).length > 0) {
+          parsedPendingUpdates[key] = update;
+        }
+      });
+      return parsedPendingUpdates;
+    })(); // return only categories with updates
     opts.dispatch({
       type: SET_PENDING_UPDATES,
       payload: { pendingUpdates, pendingUpdatesCount }

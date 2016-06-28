@@ -1,10 +1,9 @@
 {
-  "rules": {
-    "prod": {
-        ".write":"auth !== null",
+    "rules": {
+        ".write": "auth !== null",
         "galleries": {
             ".read": true,
-            ".write":"auth !== null"
+            ".write": "auth !== null"
         },
         "pendingUpdates": {
             ".read": "auth !== null",
@@ -13,37 +12,10 @@
         "newsReporting": {
             ".read": true,
             ".write": "auth !== null"
-        }
-    },
-    "qa": {
-        ".write":"auth !== null",
-        "galleries": {
-            ".read": true,
-            ".write":"auth !== null"
         },
-        "pendingUpdates": {
-            ".read": "auth !== null",
-            ".write": "auth !== null"
-        },
-        "newsReporting": {
-            ".read": true,
-            ".write": "auth !== null"
-        }
-    },
-    "dev": {
-        ".write":"auth !== null",
-        "galleries": {
-            ".read": true,
-            ".write":"auth !== null"
-        },
-        "pendingUpdates": {
-            ".read": "auth !== null",
-            ".write": "auth !== null"
-        },
-        "newsReporting": {
+        "pricing": {
             ".read": true,
             ".write": "auth !== null"
         }
     }
-  }
 }

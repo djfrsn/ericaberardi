@@ -15,11 +15,12 @@
   },
   "scripts": {
     "build": "npm run lint && npm run clean && webpack --config webpack.dist.js --progress && cp -r ./src/images ./target/images",
+    "build-dev": "npm run lint && npm run clean && NODE_ENV=development webpack --config webpack.dist.js --progress && cp -r ./src/images ./target/images",
     "clean": "del-cli ./target",
     "lint": "eslint -c .eslintrc ./src",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.dev.js --progress",
     "test": "karma start --single-run",
-    "deploy": "git push && NODE_ENV=development npm run build; firebase use dev-erica-berardi; firebase deploy;",
+    "deploy": "git push && npm run build-dev; firebase use dev-erica-berardi; firebase deploy;",
     "prod-deploy": "git checkout master; git merge dev; git push; npm run build; firebase use erica-berardi; firebase deploy -P erica-berardi; git checkout dev; s;"
   },
   "babel": {

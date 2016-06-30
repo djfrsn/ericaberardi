@@ -21,12 +21,6 @@ export class About extends Component {
               <img className="about__image" src="https://firebasestorage.googleapis.com/v0/b/erica-berardi.appspot.com/o/resume%2Ferica.jpg?alt=media&token=cf200d77-4d0f-4489-8169-f34522e091ac" alt=""/>
             </div>
           </div>
-          <div className="contact__social_icons about">
-            <a href="#" className="contact__social_link"><i className="fa fa-facebook-official" aria-hidden="true"></i></a>
-            <a href="#" className="contact__social_link"><i className="fa fa-twitter" aria-hidden="true"></i></a>
-            <a href="#" className="contact__social_link"><i className="fa fa-instagram" aria-hidden="true"></i></a>
-            <a href="#" className="contact__social_link"><i className="fa fa-google-plus" aria-hidden="true"></i></a>
-          </div>
         </div>
       </div>
     );

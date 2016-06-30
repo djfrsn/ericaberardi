@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import socialIcons from './socialIcons';
 
 export class NotFound extends Component {
   render() {
@@ -6,8 +7,10 @@ export class NotFound extends Component {
     return (
       <div className="g-row">
         <div className="g-col notfound">
-          <h1>OOPS...Page Not Found!</h1>
-          <p>You may have mis-spelled something. Please check your spelling.</p>
+
+          {socialIcons()}
+
+        <footer>© 2016 by Erica Berardi Photography LLC & <a href="https://digitalarch.com">Digital Architecture</a></footer>
         </div>
       </div>
     );

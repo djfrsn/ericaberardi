@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { toastActions } from 'core/toast';
 import { contactActions } from 'core/contact';
+import socialIcons from '../partials/socialIcons';
 import classNames from 'classnames';
 
 const intialErrorsState = {
@@ -84,12 +85,7 @@ export class Contact extends Component {
             </div>
             <div className="contact__social">
               <a href="mailto:ericaberardiphotography@gmail.com" className="contact__email-link">ericaberardiphotography@gmail.com</a>
-              <div className="contact__social_icons">
-                <a href="https://www.facebook.com/ericaberardiphotography/" target="_blank" className="contact__social_link"><i className="fa fa-facebook-official" aria-hidden="true"></i></a>
-                <a href="#" target="_blank" className="contact__social_link"><i className="fa fa-twitter" aria-hidden="true"></i></a>
-                <a href="https://www.instagram.com/ericaberardiphotography/?hl=en" target="_blank" className="contact__social_link"><i className="fa fa-instagram" aria-hidden="true"></i></a>
-                <a href="#" target="_blank" className="contact__social_link"><i className="fa fa-google-plus" aria-hidden="true"></i></a>
-              </div>
+              {socialIcons()}
             </div>
           </div>
         </div>

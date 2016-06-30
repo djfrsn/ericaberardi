@@ -60,7 +60,11 @@
   flex-flow: row wrap;
 
   a {
-    margin: 15px
+    @include quick-cubic-transition(color);
+    margin: 15px;
+    &:hover {
+      color: $colors-gray;
+    }
   }
 }
 

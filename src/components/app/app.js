@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
-import Header from '../header/header';
+import Header from '../partials/header';
+import Footer from '../partials/footer';
 import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
@@ -24,7 +25,7 @@ export class App extends Component {
 
         <main className="main">{children}</main>
 
-        <footer>© 2016 by Erica Berardi Photography LLC & <a href="https://digitalarch.com">Digital Architecture</a></footer>
+        <Footer />
       </div>
     );
   }

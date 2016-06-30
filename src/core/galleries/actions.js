@@ -188,7 +188,7 @@ export function onGalleryDeleteImages(successCallback) {
         });
         successCallback('error', 'An attempt to delete images was made, although some files may not have been deleted!');
       } // timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
-    }, 30000);
+    }, 7500);
 
     dispatch({
       type: DELETE_GALLERY_IMAGES

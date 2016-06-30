@@ -301,18 +301,18 @@ function publishContent(opts) {
 
     opts.children.forEach(child => {
       // iterate through category children & set data in firebase
-      if (opts.children.length === callbackCount) {
-        successCallback = opts.callbacks.successCallback;
-      }
 
       database.ref(`${opts.category}/${child}`).set(newState[child]).then(() => {
         opts.dispatch({
           type: CLEAR_PENDING_UPDATES
         });
-        if (utils.isFunction(successCallback)) {
-          setTimeout(() => {
-            successCallback(); // call final publish/success callback
-          }, 0);
+        if (opts.children.length === callbackCount) {
+          successCallback = opts.callbacks.successCallback;
+          if (utils.isFunction(successCallback)) {
+            setTimeout(() => {
+              successCallback(); // call final publish/success callback
+            }, 0);
+          }
         }
         callbackCount++;
       });

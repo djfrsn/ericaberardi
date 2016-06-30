@@ -33,6 +33,20 @@ footer {
   }
 }
 
+.notfound {
+  margin-top: 60px;
+  @include flex-perfect-center();
+  flex-direction: column;
+  text-align: center;
+  h1 {
+    margin-bottom: 40px;
+    color: $colors-gray;
+  }
+  p {
+
+  }
+}
+
 ::-webkit-scrollbar {
   width: 5px;
   height: 5px;

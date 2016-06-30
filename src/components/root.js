@@ -26,8 +26,7 @@ import About from './about/about';
 import Contact from './contact/contact';
 import Login from './admin/login';
 import Dashboard from './admin/dashboard';
-
-// TODO: <Route component={NotFound} path='*'/>
+import NotFound from './app/notFound';
 
 export class Root extends Component {
   static propTypes = {
@@ -54,6 +53,7 @@ export class Root extends Component {
             <Route component={Contact} path={CONTACT_PATH}/>
             <Route component={Login} path={LOGIN_PATH}/>
             <Route component={Dashboard} path={DASHBOARD_PATH}/>
+            <Route component={NotFound} path='*'/>
           </Route>
         </Router>
       </Provider>

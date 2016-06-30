@@ -53,7 +53,7 @@ export class Root extends Component {
             <Route component={Contact} path={CONTACT_PATH}/>
             <Route component={Login} path={LOGIN_PATH}/>
             <Route component={Dashboard} path={DASHBOARD_PATH}/>
-            <Route component={NotFound} path='*'/>
+            <Route component={NotFound} path="*"/>
           </Route>
         </Router>
       </Provider>

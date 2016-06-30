@@ -20,7 +20,7 @@
     "lint": "eslint -c .eslintrc ./src",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.dev.js --progress",
     "test": "karma start --single-run",
-    "deploy": "git push && npm run build-dev; firebase use dev-erica-berardi; firebase deploy;",
+    "deploy": "git push && npm run build-dev; firebase use dev-erica-berardi; firebase deploy -P dev-erica-berardi;",
     "prod-deploy": "git checkout master; git merge dev; git push; npm run build; firebase use erica-berardi; firebase deploy -P erica-berardi; git checkout dev; s;"
   },
   "babel": {

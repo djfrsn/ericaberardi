@@ -22,6 +22,7 @@ function parsePackages(opts) {
     let newDetails = {};
     let newTitleText = opts.newPkgs[pkg.id].text;
     if (newTitleText !== pkg.title) {
+      newPkgsCategory.pending = true;
       newPkg.titlePending = true;
       newPkg.pendingTitle = newTitleText;
       equal = false; // signify data has changed
@@ -39,6 +40,7 @@ function parsePackages(opts) {
     });
     if (newPkg.detailsPending) {
       newPkg.pendingDetails = newDetails;
+      newPkgsCategory.pending = true;
       equal = false; // signify data has changed
     }
     newPkgs[pkg.id] = newPkg;

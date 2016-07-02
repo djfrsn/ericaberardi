@@ -223,60 +223,78 @@ export function setPendingUpdates(category, snapshot) {
   };
 }
 
-// Set 'pending: false' for each child of a given pendingUpdate category
-function setPendingStatus(category, status, state) {
-  let newPendingState = { ...state };
+// Set 'pending: false' for each child of a given pendingUpdate category & do any other state updates before publshing to db
+function getNewState(opts) {
+  let newPendingState = { ...opts.state };
 
-  if (category === 'galleries') {
-    newPendingState.images = { ...state.images }; // extend to avoid losing data other than objects
-    forIn(state.categories, category => {
-      const categoryId = category.id;
-      newPendingState.categories[categoryId] = { ...category, pending: false };
-      const images = state.images[categoryId];
-      if (images) {
-        forIn(images, image => {
-          newPendingState.images[categoryId][image.id] = {...image, pending: false};
+  if (opts.category === 'galleries') {
+    newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing data other than objects
+    forIn(opts.state[opts.parent], parent => {
+      const parentId = parent.id;
+      newPendingState[opts.parent][parentId] = { ...parent, pending: false };
+      const children = opts.state[opts.child][parentId];
+      if (children) {
+        forIn(children, child => {
+          newPendingState[opts.child][parentId][child.id] = {...child, pending: false};
         });
       }
     });
   }
-
+  else if (opts.category === 'pricing') {
+    newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing data other than objects
+    forIn(opts.state[opts.parent], parent => {
+      const parentId = parent.id;
+      const category = parent.pendingCategory ? parent.pendingCategory : parent.category;
+      newPendingState[opts.parent][parentId] = { ...parent, category, pending: false };
+      const child = opts.state[opts.child][parentId];
+      if (child.pending) {
+        debugger
+      }
+      newPendingState[opts.child][parentId] = {...child, pending: false};
+    });
+  }
+debugger
   return newPendingState;
 }
 
 // Minimums for how many categorys/children should exist in the db
 function getPendingChangeMinimums(category) {
-  let minCategoryCount = 1;
+  let minParentCount = 1;
   let minChildCount = 1;
 
   switch (category) {
     case 'galleries':
-      minCategoryCount = 5;
+      minParentCount = 5;
       minChildCount = 4;
+      break;
+
+    case 'pricing':
+      minParentCount = 3;
+      minChildCount = 1;
       break;
 
     default:
   }
 
-  return { minCategoryCount, minChildCount };
+  return { minParentCount, minChildCount };
 }
 
 // Return true if pendingUpdate children meet minimum content count i.e there should always be atleast 5 gallery categories w/ atleast 8 photos each
 // This will prevent a user from deleting all of the content from the site :)
-function validatePendingChanges(category, state) {
-  const { minCategoryCount, minChildCount } = getPendingChangeMinimums(category);
+function validatePendingChanges(opts) {
+  const { minParentCount, minChildCount } = getPendingChangeMinimums(opts.category);
   let validChanges = false;
 
-  if (category === 'galleries') {
-    const categories = state.categories;
-    const categoryCount = Object.keys(categories).length;
-    if (categoryCount >= minCategoryCount) {
+  if (opts.category === 'galleries' || opts.category === 'pricing') {
+    const parent = opts.state[opts.parent];
+    const parentCount = Object.keys(parent).length;
+    if (parentCount >= minParentCount) {
       let stateValid = true;
       let index = 1;
 
-      forIn(categories, category => {
-        const images = state.images[category.id] || {};
-        if (Object.keys(images).length < minChildCount && index <= minCategoryCount) {
+      forIn(parent, child => {
+        const children = opts.state[opts.child][child.id] || {};
+        if (Object.keys(children).length < minChildCount && index <= minParentCount) {
           stateValid = false;
         }
         index++;
@@ -288,34 +306,34 @@ function validatePendingChanges(category, state) {
   return validChanges;
 }
 
-// This method should work for any category, data for each category must be structured similar for this to work
+// NOTE: This method should work for any category/page, data for each category/page must be structured similar for this to work
 function publishContent(opts) {
   const { firebase } = opts.getState();
-  const changesValidated = validatePendingChanges(opts.category, opts.state);
+  const changesValidated = validatePendingChanges(opts);
 
   if (changesValidated) {
-    const newState = setPendingStatus(opts.category, false, opts.state); // set pending status of all children to false
+    const newState = getNewState({ category: opts.category, setStatus: false, state: opts.state, parent: opts.parent, child: opts.child }); // set pending status of all children to false
     const database = firebase.database();
     let callbackCount = 1;
     let successCallback;
 
-    opts.children.forEach(child => {
+    opts.databaseKeys.forEach(key => {
       // iterate through category children & set data in firebase
-
-      database.ref(`${opts.category}/${child}`).set(newState[child]).then(() => {
-        opts.dispatch({
-          type: CLEAR_PENDING_UPDATES
-        });
-        if (opts.children.length === callbackCount) {
-          successCallback = opts.callbacks.successCallback;
-          if (utils.isFunction(successCallback)) {
-            setTimeout(() => {
-              successCallback(); // call final publish/success callback
-            }, 0);
-          }
-        }
-        callbackCount++;
-      });
+  console.log(`${opts.category}/${key}`, newState[key])
+      // database.ref(`${opts.category}/${key}`).set(newState[key]).then(() => {
+      //   opts.dispatch({
+      //     type: CLEAR_PENDING_UPDATES
+      //   });
+      //   if (opts.databaseKeys.length === callbackCount) {
+      //     successCallback = opts.callbacks.successCallback;
+      //     if (utils.isFunction(successCallback)) {
+      //       setTimeout(() => {
+      //         successCallback(); // call final publish/success callback
+      //       }, 0);
+      //     }
+      //   }
+      //   callbackCount++;
+      // });
     });
   }
   else {
@@ -346,7 +364,10 @@ export function publishPendingUpdates(successCallback, errorCallback) {
 
       switch (category) {
         case 'galleries':
-          publishContent({dispatch, getState, category, children: ['categories', 'images'], state, callbacks});
+          publishContent({dispatch, getState, category, parent: 'categories', child: 'images', databaseKeys: ['categories', 'images'], state, callbacks});
+          break;
+        case 'pricing':
+          publishContent({dispatch, getState, category, parent: 'categories', child: 'packages', databaseKeys: ['categories', 'packages'], state, callbacks});
           break;
 
         default:

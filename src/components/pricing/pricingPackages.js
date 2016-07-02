@@ -15,7 +15,8 @@ function getPackages(opts) {
         let packageDetails = [];
         let pendingTitle = pkg.pendingTitle;
         packageDetails.push(<li key={`pkg-title-${pkgId}`} data-texteditid={pkgId} data-textedittarget>{pendingTitle && authenticated ? pendingTitle : pkg.title}</li>); // pkg title
-        forIn((pkg.pendingDetails && authenticated) || pkg.details, detail => {
+        const pkgDetails = pkg.pendingDetails ? pkg.pendingDetails : pkg.details;
+        forIn(pkgDetails, detail => {
           packageDetails.push(
             <li key={detail.id} data-texteditid={detail.id} data-textedittarget>{detail.text}</li> // list of pkg details
           );

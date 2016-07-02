@@ -97,7 +97,7 @@ export class Pricing extends Component {
   }
   editPricingPackages = e => {
     // canvas find all data-textedittarget's in a given parent & makes them text editable
-    textEditCanvas({e, inputParent: 'li', callback: this.textEditTargetReverted, meta: { type: 'packages' }});
+    textEditCanvas({e, className: 'textEdit-package', inputParent: 'li', callback: this.textEditTargetReverted, meta: { type: 'packages' }});
   }
   render() {
     const authenticated = this.props.auth.authenticated;

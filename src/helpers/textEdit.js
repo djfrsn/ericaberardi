@@ -9,7 +9,7 @@ export function textEditCanvas(opts) {
   if (opts.textInputType) {
     textInputType = opts.textInputType; // pass textarea as an option for larger text editing
   }
-  const textEditInputClassName = `textEdit-${textInputType}`;
+  const textEditInputClassName = opts.className ? `textEdit-${textInputType} ${opts.className}` : `textEdit-${textInputType}`;
   const currentTarget = opts.e.currentTarget;
   const parentElement = currentTarget.parentElement;
   let textEditTargets = [];
@@ -85,7 +85,7 @@ export function textEditCanvas(opts) {
     textEditInput.value = target.innerText;
     if (inputParent) {
       textTextInputWrapped = document.createElement(inputParent);
-      textTextInputWrapped.className = `${textEditInputClassName}-${inputParent}`;
+      textTextInputWrapped.className = `${textEditInputClassName.split(' ')[0]}-${inputParent}`;
       textTextInputWrapped.setAttribute('data-texteditinputparent', true);
       textTextInputWrapped.appendChild(textEditInput);
     }

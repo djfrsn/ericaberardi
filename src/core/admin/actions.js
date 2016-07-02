@@ -6,6 +6,7 @@ import {
 import forIn from 'lodash.forin';
 import findKey from 'lodash.findkey';
 import utils from 'utils';
+// TODO: Any functions not exported should be organized into js files by page(galleries, pricing)
 
 function successCB(cb) {
   if (utils.isFunction(cb)) {

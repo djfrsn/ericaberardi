@@ -25,7 +25,7 @@ function getImages(opts) {
   forIn(opts.gallery, image => {
     const containerWidth = gUtils.getContainerWidth({type: 'gallery-preview'}).containerWidth;
     const containerClassName = cn({ ['masonry__image__container']: true, ['hide']: !image.show });
-    const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: image.shouldDelete, ['pending']: image.pending });
+    const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: image.shouldDelete && authenticated, ['pending']: image.pending && authenticated });
     const starType = image.categoryPreviewImage ? 'fa-star' : 'fa-star-o';
     const imageStarClassName = cn({ ['gallery__image_star']: true, ['fa']: true, [starType]: true });
     const imageLinkClass = opts.scope.props.galleries.galleryDeleteEnabled ? 'lbx-disabled' : '';

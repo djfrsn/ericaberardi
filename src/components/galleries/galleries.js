@@ -93,6 +93,8 @@ export class Galleries extends Component {
     this.loadImagesSeq();
   }
   componentWillUnmount() {
+    this.resetTaggedForGalleryDelete();
+    this.props.toggleGalleryDelete(false);
     this.props.highlightGalleriesLink(false);
     this.unbindImagesLoaded = true;
     this.galleriesPathname = '';
@@ -127,11 +129,14 @@ export class Galleries extends Component {
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
-  onGalleryDeleteReset = e => {
-    e.preventDefault();
+  resetTaggedForGalleryDelete = () => {
     if (this.props.galleries.taggedForDeleteCount > 0) {
       this.props.resetTaggedForGalleryDelete();
     }
+  }
+  onGalleryDeleteReset = e => {
+    e.preventDefault();
+    this.resetTaggedForGalleryDelete();
   }
   onToggleGalleryDelete = e => {
     e.preventDefault();

@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { pricingActions } from 'core/pricing';
 import { parsePath } from 'lava';
-// import pricingCategories from './pricingCategories';
-// import pricingPackages from './pricingPackages';
+import pricingCategories from './pricingCategories';
+import pricingPackages from './pricingPackages';
 import { textEdit, textEditCanvas } from 'helpers/textEdit';
 import forIn from 'lodash.forin';
 
@@ -49,7 +49,7 @@ function parsePackages(opts) {
   return { equal, newPkgsCategory };
 }
 
-const defaultPackageEditClass = 'fa fa-pencil-square-o pricing__categories_edit';
+// const defaultPackageEditClass = 'fa fa-pencil-square-o pricing__categories_edit';
 
 export class Pricing extends Component {
   static contextTypes = {
@@ -68,9 +68,6 @@ export class Pricing extends Component {
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;
     const newPathname = parsePath(pathname).path;
-    if (this.path !== newPathname) {
-      this.pricing__list_edit.className = defaultPackageEditClass;
-    }
     this.path = newPathname;
   }
   textEditTargetReverted = opts => {
@@ -96,18 +93,32 @@ export class Pricing extends Component {
     }
   }
   editPricingCategory = e => {
-    textEdit({e, callback: this.textEditTargetReverted, meta: { type: 'category' }});
+    textEdit({e, className: 'textEdit-category', callback: this.textEditTargetReverted, meta: { type: 'category' }});
   }
   editPricingPackages = e => {
     // canvas find all data-textedittarget's in a given parent & makes them text editable
     textEditCanvas({e, inputParent: 'li', callback: this.textEditTargetReverted, meta: { type: 'packages' }});
   }
   render() {
-    // const authenticated = this.props.auth.authenticated;
+    const authenticated = this.props.auth.authenticated;
     return (
       <div className="g-row">
-        <div className="g-col" style={{textAlign: 'center', marginTop: '60px' }}>
-          [ Under Construction ]
+        <div className="g-col" >
+          <div className="pricing__container">
+            <div className="pricing__categories">
+              <ul>
+                {pricingCategories({ props: this.props, category: this.path, scope: this })}
+              </ul>
+            </div>
+            <div className="pricing__packages_wrapper">
+              <div className="pricing__package">
+                <ul className="pricing__list">
+                  {authenticated && Object.keys(this.props.pricing.categories).length > 0 ? <i onClick={this.editPricingPackages} className="fa fa-pencil-square-o pricing__categories_edit" aria-hidden="true"></i> : null}
+                  {pricingPackages({ props: this.props, category: this.path, scope: this })}
+                </ul>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );

@@ -1,7 +1,8 @@
 import forEach from 'lodash.foreach';
 import delay from 'lodash.delay';
 import utils from 'utils';
-// Looks for the closest element with data-textedittarget, hides this el & appends an html input after it
+// Looks for all the closest elements with data-textedittarget, hides this el & appends an html input after it
+// call the function again on the same el to revert the data-textedittarget's
 export function textEditCanvas(opts) {
   let textInputType = 'input';
   const inputParent = opts.inputParent;
@@ -125,13 +126,15 @@ export function textEditCanvas(opts) {
     }
   } );
 }
-
+// Looks for the closest data-textedittarget from e.currentTarget, hides this el & appends an input
+// calling this function again on the same element would revert it
+// textEdit({e, className: 'textEdit-category', callback: this.textEditTargetReverted, meta: { type: 'category' }});
 export function textEdit(opts) {
   let textInputType = 'input';
   if (opts.textInputType) {
     textInputType = opts.textInputType; // pass textarea as an option for larger text editing
   }
-  const textEditInputClassName = `textEdit-${textInputType}`;
+  const textEditInputClassName = opts.className ? `textEdit-${textInputType} ${opts.className}` : `textEdit-${textInputType}`;
   const currentTarget = opts.e.currentTarget;
   const parentElement = currentTarget.parentElement;
   let textEditInput;
@@ -142,7 +145,7 @@ export function textEdit(opts) {
     if (el.dataset.textedittarget) {
       textEditTarget = el;
     }
-    else if (el.classList.contains(textEditInputClassName)) {
+    else if (el.classList.contains(textEditInputClassName.split(' ')[0])) {
       textEditInput = el;
     }
   });

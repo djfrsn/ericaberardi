@@ -20,10 +20,10 @@ function parsePackages(opts) {
   forIn(prevPkgsCategory.packages, pkg => {
     let newPkg = { ...pkg };
     let newDetails = {};
+    let detailsPending;
     let newTitleText = opts.newPkgs[pkg.id].text;
     if (newTitleText !== pkg.title) {
       newPkgsCategory.pending = true;
-      newPkg.titlePending = true;
       newPkg.pendingTitle = newTitleText;
       equal = false; // signify data has changed
     }
@@ -31,14 +31,14 @@ function parsePackages(opts) {
       const detailId = detail.id;
       const newDetailText = opts.newPkgs[detailId].text;
       if (detail.text !== newDetailText) {
-        newPkg.detailsPending = true; // update details with new text if unequal
+        detailsPending = true; // update details with new text if unequal
         newDetails[detailId] = { ...detail, text: newDetailText };
       }
       else {
         newDetails[detailId] = detail;
       }
     });
-    if (newPkg.detailsPending) {
+    if (detailsPending) {
       newPkg.pendingDetails = newDetails;
       newPkgsCategory.pending = true;
       equal = false; // signify data has changed

@@ -441,6 +441,62 @@ function removePendingGalleriesData(opts) {
   });
 }
 
+// We're going to set any pending data to null/false and then update the db
+// this will clear any  pending updates for pricing page
+function removePendingPricingData(opts) {
+
+  const successCallback = cb => {
+    if (utils.isFunction(cb)) {
+      return cb(); // call final publish/success callback
+    }
+  };
+  const database = opts.firebase.database();
+  let callbackCount = 1;
+  let pendingPricingCount = 0;
+  forIn(opts.data, dt => {
+    pendingPricingCount += Object.keys(dt).length;
+  });
+
+  // set new pendingData for each packages/categories
+  forIn(opts.data, (data, type) => {
+    if (type === 'categories') { // is it a category or package?
+      let newCat = {};
+      forIn(data, cat => {
+        if (cat.pending) {
+          newCat = { ...cat, pending: false, pendingCategory: null };
+          database.ref(`pricing/categories/${cat.id}`).set(newCat).then(() => {
+            if (callbackCount === pendingPricingCount) {
+              successCallback(opts.successCallback);
+            }
+            callbackCount++;
+          });
+        }
+      });
+    }
+    else if (type === 'packages') {
+      forIn(data, pkgCat => {
+        if (pkgCat.pending) {
+          let newPkgCat = { ...pkgCat, pending: false };
+          forIn(pkgCat.packages, pkg => {
+            newPkgCat.packages[pkg.id] = {
+              ...pkg,
+              detailsPending: null,
+              pendingDetails: null,
+              pendingTitle: null
+            };
+          });
+          database.ref(`pricing/packages/${pkgCat.categoryId}`).set(newPkgCat).then(() => {
+            if (callbackCount === pendingPricingCount) {
+              successCallback(opts.successCallback);
+            }
+            callbackCount++;
+          });
+        }
+      });
+    }
+  });
+}
+
 // strategy
 // check pending content by category & create new state without this data
 export function removePendingUpdates(successCallback) {
@@ -448,11 +504,23 @@ export function removePendingUpdates(successCallback) {
     const { firebase, admin } = getState();
     const pendingUpdates = admin.pendingUpdates;
     const pendingUpdatesCount = admin.pendingUpdatesCount;
+    let callbackCount = 1;
     if (Object.keys(pendingUpdates).length >= 1) {
+      // TODO: pass successCallback for last pendingUpdates
+      if (pendingUpdatesCount === callbackCount) { // pass publishCallback for final pass on pendingUpdates
+        callbacks.successCallback = successCallback;
+      }
+      debugger
       forIn(pendingUpdates, (data, category) => {
-        if (category === 'galleries') {
-          // delete pending categories, images & meta
-          removePendingGalleriesData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+        switch (category) {
+          case 'galleries':
+            // removePendingGalleriesData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+            break;
+          case 'pricing':
+            // removePendingPricingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+            break;
+
+          default:
         }
       });
     }

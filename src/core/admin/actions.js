@@ -247,13 +247,19 @@ function getNewState(opts) {
       const category = parent.pendingCategory ? parent.pendingCategory : parent.category;
       newPendingState[opts.parent][parentId] = { ...parent, category, pending: false };
       const child = opts.state[opts.child][parentId];
-      if (child.pending) {
-        debugger
+      let newChild = newPendingState[opts.child][parentId] = {...child, pending: false};
+      if (child.pending) { // crawl packages data for anything pending and create a new package
+        forIn(child.packages, pkg => {
+          const details = pkg.pendingDetails ? pkg.pendingDetails : pkg.details;
+          const title = pkg.pendingTitle ? pkg.pendingTitle : pkg.title;
+          pkg.pendingDetails = null; // clear key's from firebase data
+          pkg.pendingTitle = null;
+          newChild.packages[pkg.id] = { ...pkg, details, title };
+        });
       }
-      newPendingState[opts.child][parentId] = {...child, pending: false};
     });
   }
-debugger
+
   return newPendingState;
 }
 
@@ -319,21 +325,21 @@ function publishContent(opts) {
 
     opts.databaseKeys.forEach(key => {
       // iterate through category children & set data in firebase
-  console.log(`${opts.category}/${key}`, newState[key])
-      // database.ref(`${opts.category}/${key}`).set(newState[key]).then(() => {
-      //   opts.dispatch({
-      //     type: CLEAR_PENDING_UPDATES
-      //   });
-      //   if (opts.databaseKeys.length === callbackCount) {
-      //     successCallback = opts.callbacks.successCallback;
-      //     if (utils.isFunction(successCallback)) {
-      //       setTimeout(() => {
-      //         successCallback(); // call final publish/success callback
-      //       }, 0);
-      //     }
-      //   }
-      //   callbackCount++;
-      // });
+
+      database.ref(`${opts.category}/${key}`).set(newState[key]).then(() => {
+        opts.dispatch({
+          type: CLEAR_PENDING_UPDATES
+        });
+        if (opts.databaseKeys.length === callbackCount) {
+          successCallback = opts.callbacks.successCallback;
+          if (utils.isFunction(successCallback)) {
+            setTimeout(() => {
+              successCallback(); // call final publish/success callback
+            }, 0);
+          }
+        }
+        callbackCount++;
+      });
     });
   }
   else {

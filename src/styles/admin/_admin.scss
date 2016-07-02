@@ -103,7 +103,8 @@
 //===================================================================
 
 .pending-changes__list_wrapper {
-  @include flex-perfect-center();
+  @include flex-perfect-center(flex-start);
+  justify-content: center;
   flex-wrap: wrap;
   margin-bottom: 40px;
   text-transform: capitalize;

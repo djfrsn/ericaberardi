@@ -230,6 +230,7 @@ export function setPendingUpdates(category, snapshot) {
   };
 }
 
+// Function used to create new state on publish, this is a good place to reset/update data before publish
 // Set 'pending: false' for each child of a given pendingUpdate category & do any other state updates before publshing to db
 function getNewState(opts) {
   let newPendingState = { ...opts.state };
@@ -238,11 +239,11 @@ function getNewState(opts) {
     newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing data other than objects
     forIn(opts.state[opts.parent], parent => {
       const parentId = parent.id;
-      newPendingState[opts.parent][parentId] = { ...parent, pending: false };
-      const children = opts.state[opts.child][parentId];
+      newPendingState[opts.parent][parentId] = { ...parent, pending: false }; // create new parent
+      const children = opts.state[opts.child][parentId]; // looks for galleries/images/:id
       if (children) {
-        forIn(children, child => {
-          newPendingState[opts.child][parentId][child.id] = {...child, pending: false};
+        forIn(children, child => { // add each new image to new state
+          newPendingState[opts.child][parentId][child.id] = {...child, pending: false, shouldDelete: null };
         });
       }
     });

@@ -1,21 +1,21 @@
 
 import {
-  HYDRATE_GALLERIES,
-  UPLOAD_GALLERY_IMAGE_SUCCESS,
-  UPLOAD_GALLERY_IMAGE_ERROR,
-  IMAGES_LOADED_ENABLED,
-  SEND_GALLERIES_TOAST,
-  CREATE_CATEGORY_SUCCESS,
-  CREATE_CATEGORY_ERROR,
-  CLEAR_GALLERIES_TOAST,
-  TOGGLE_GALLERY_DELETE,
-  DELETE_GALLERY_IMAGES,
-  RESET_IMAGES_TAGGED_FOR_DELETION,
-  TAG_IMAGE_FOR_DELETION,
-  CHANGE_CATEGORY_IMAGE_ORDER,
-  CHANGE_GALLERY_IMAGE_ORDER,
-  CHANGE_CATEGORY_PREVIEW_IMAGE,
-  HIGHLIGHT_GALLERIES_LINK
+  CG_HYDRATE_GALLERIES,
+  CG_UPLOAD_GALLERY_IMAGE_SUCCESS,
+  CG_UPLOAD_GALLERY_IMAGE_ERROR,
+  CG_IMAGES_LOADED_ENABLED,
+  CG_SEND_GALLERIES_TOAST,
+  CG_CREATE_CATEGORY_SUCCESS,
+  CG_CREATE_CATEGORY_ERROR,
+  CG_CLEAR_GALLERIES_TOAST,
+  CG_TOGGLE_GALLERY_DELETE,
+  CG_DELETE_GALLERY_IMAGES,
+  CG_RESET_IMAGES_TAGGED_FOR_DELETION,
+  CG_TAG_IMAGE_FOR_DELETION,
+  CG_CHANGE_CATEGORY_IMAGE_ORDER,
+  CG_CHANGE_GALLERY_IMAGE_ORDER,
+  CG_CHANGE_CATEGORY_PREVIEW_IMAGE,
+  CG_HIGHLIGHT_GALLERIES_LINK
 } from './action-types';
 import forIn from 'lodash.forin';
 
@@ -125,55 +125,55 @@ function getGalleryData(payload) {
 
 export function customerGalleriesReducer(state = initialState, action) {
   switch (action.type) {
-    case IMAGES_LOADED_ENABLED:
+    case CG_IMAGES_LOADED_ENABLED:
       return {
         ...state,
         seqImagesLoadedEnabled: action.payload
       };
 
-    case SEND_GALLERIES_TOAST:
+    case CG_SEND_GALLERIES_TOAST:
       return {
         ...state,
         toast: action.payload
       };
 
-    case CLEAR_GALLERIES_TOAST:
+    case CG_CLEAR_GALLERIES_TOAST:
       return {
         ...state,
         toast: {}
       };
 
-    case HYDRATE_GALLERIES:
+    case CG_HYDRATE_GALLERIES:
       return {
         ...state,
         ...getGalleryData(action.payload)
       };
 
-    case CREATE_CATEGORY_SUCCESS:
+    case CG_CREATE_CATEGORY_SUCCESS:
       return {
         ...state,
         toast: successToast
       };
 
-    case CREATE_CATEGORY_ERROR:
+    case CG_CREATE_CATEGORY_ERROR:
       return {
         ...state,
         toast: errorToast
       };
 
-    case UPLOAD_GALLERY_IMAGE_SUCCESS:
+    case CG_UPLOAD_GALLERY_IMAGE_SUCCESS:
       return {
         ...state,
         toast: successToast
       };
 
-    case UPLOAD_GALLERY_IMAGE_ERROR:
+    case CG_UPLOAD_GALLERY_IMAGE_ERROR:
       return {
         ...state,
         toast: errorToast
       };
 
-    case TOGGLE_GALLERY_DELETE:
+    case CG_TOGGLE_GALLERY_DELETE:
       return {
         ...state,
         forceImagesLoadedOff: action.payload, // force images loaded off while deleting imgs otherwise perf is horrible since
@@ -181,36 +181,36 @@ export function customerGalleriesReducer(state = initialState, action) {
         galleryDeleteEnabled: action.payload
       };
 
-    case DELETE_GALLERY_IMAGES:
+    case CG_DELETE_GALLERY_IMAGES:
       return {
         ...state
       };
 
-    case TAG_IMAGE_FOR_DELETION:
+    case CG_TAG_IMAGE_FOR_DELETION:
       return taggedForDeleteGalleries(state, action);
 
-    case RESET_IMAGES_TAGGED_FOR_DELETION:
+    case CG_RESET_IMAGES_TAGGED_FOR_DELETION:
       return resetTaggedForDeleteGalleries(state, action);
 
-    case CHANGE_CATEGORY_PREVIEW_IMAGE:
+    case CG_CHANGE_CATEGORY_PREVIEW_IMAGE:
       return {
         ...state,
         ...mergeImages(state, action.payload)
       };
 
-    case CHANGE_GALLERY_IMAGE_ORDER:
+    case CG_CHANGE_GALLERY_IMAGE_ORDER:
       return {
         ...state,
         ...mergeImages(state, action.payload)
       };
 
-    case CHANGE_CATEGORY_IMAGE_ORDER:
+    case CG_CHANGE_CATEGORY_IMAGE_ORDER:
       return {
         ...state,
         categories: action.payload.categories
       };
 
-    case HIGHLIGHT_GALLERIES_LINK:
+    case CG_HIGHLIGHT_GALLERIES_LINK:
       return {
         ...state,
         highlightGalleriesLink: action.payload

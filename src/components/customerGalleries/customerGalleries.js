@@ -1,5 +1,6 @@
 // Vendor
 import React, { Component, PropTypes } from 'react';
+import * as firebase from 'firebase';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import cn from 'classnames';
@@ -38,6 +39,7 @@ export class CustomerGalleries extends Component {
     createCategory: PropTypes.func.isRequired,
     customerGalleries: PropTypes.object.isRequired,
     highlightGalleriesLink: PropTypes.func.isRequired,
+    hydrateCustomerGalleries: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     onGalleryDeleteImages: PropTypes.func.isRequired,
     resetTaggedForGalleryDelete: PropTypes.func.isRequired,
@@ -47,6 +49,14 @@ export class CustomerGalleries extends Component {
     tagImgForDeletion: PropTypes.func.isRequired,
     toggleGalleryDelete: PropTypes.func.isRequired,
     uploadGalleryImage: PropTypes.func.isRequired
+  }
+  constructor(props) {
+    super(props);
+    let customerGalleries = firebase.database().ref('customerGalleries');
+
+    customerGalleries.on('value', snapshot => {
+      this.props.hydrateCustomerGalleries(snapshot.val());
+    });
   }
   state = {
     gallery: {},
@@ -199,9 +209,9 @@ export class CustomerGalleries extends Component {
     const galleriesLength = Object.keys(this.props.customerGalleries.categories).length;
     const taggedForDeleteCount = this.props.customerGalleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
-    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
-    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
-    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
+    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true });
+    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true });
+    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true });
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
     const galleryDeleteToggle = !this.props.customerGalleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });

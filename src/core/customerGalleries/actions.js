@@ -1,20 +1,20 @@
 import {
-  IMAGES_LOADED_ENABLED,
-  SEND_GALLERIES_TOAST,
-  CLEAR_GALLERIES_TOAST,
-  HYDRATE_GALLERIES,
-  TOGGLE_GALLERY_DELETE,
-  DELETE_GALLERY_IMAGES,
-  TAG_IMAGE_FOR_DELETION,
-  RESET_IMAGES_TAGGED_FOR_DELETION,
-  CHANGE_CATEGORY_IMAGE_ORDER,
-  CHANGE_GALLERY_IMAGE_ORDER,
-  CHANGE_CATEGORY_PREVIEW_IMAGE,
-  HIGHLIGHT_GALLERIES_LINK,
-  CREATE_CATEGORY_SUCCESS,
-  CREATE_CATEGORY_ERROR,
-  UPLOAD_GALLERY_IMAGE_SUCCESS,
-  UPLOAD_GALLERY_IMAGE_ERROR
+  CG_IMAGES_LOADED_ENABLED,
+  CG_SEND_GALLERIES_TOAST,
+  CG_CLEAR_GALLERIES_TOAST,
+  CG_HYDRATE_GALLERIES,
+  CG_TOGGLE_GALLERY_DELETE,
+  CG_DELETE_GALLERY_IMAGES,
+  CG_TAG_IMAGE_FOR_DELETION,
+  CG_RESET_IMAGES_TAGGED_FOR_DELETION,
+  CG_CHANGE_CATEGORY_IMAGE_ORDER,
+  CG_CHANGE_GALLERY_IMAGE_ORDER,
+  CG_CHANGE_CATEGORY_PREVIEW_IMAGE,
+  CG_HIGHLIGHT_GALLERIES_LINK,
+  CG_CREATE_CATEGORY_SUCCESS,
+  CG_CREATE_CATEGORY_ERROR,
+  CG_UPLOAD_GALLERY_IMAGE_SUCCESS,
+  CG_UPLOAD_GALLERY_IMAGE_ERROR
 } from './action-types';
 import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
@@ -24,7 +24,7 @@ import orderBy from 'lodash.orderBy';
 export function clearGalleriesToast() {
   return dispatch => {
     dispatch({
-      type: CLEAR_GALLERIES_TOAST
+      type: CG_CLEAR_GALLERIES_TOAST
     });
   };
 }
@@ -32,7 +32,7 @@ export function clearGalleriesToast() {
 export function sendGalleriesToast(toast) {
   return dispatch => {
     dispatch({
-      type: SEND_GALLERIES_TOAST,
+      type: CG_SEND_GALLERIES_TOAST,
       payload: toast
     });
   };
@@ -61,10 +61,10 @@ function parseImages(images) {
   return parsedImages;
 }
 
-export function hydrateGalleries(data) {
+export function hydrateCustomerGalleries(data) {
   return (dispatch, getState) => {
-    const { auth, galleries } = getState();
-    const snapshotRaw = data ? data : { categories: galleries.categories, images: galleries.images };
+    const { auth, customerGalleries } = getState();
+    const snapshotRaw = data ? data : { categories: customerGalleries.categories, images: customerGalleries.images };
     const images = snapshotRaw.images || {};
     let parsedImages = {};
 
@@ -75,7 +75,7 @@ export function hydrateGalleries(data) {
     const snapshot = { ...snapshotRaw, images: parsedImages };
 
     dispatch({
-      type: HYDRATE_GALLERIES,
+      type: CG_HYDRATE_GALLERIES,
       payload: { snapshot, auth }
     });
   };
@@ -84,7 +84,7 @@ export function hydrateGalleries(data) {
 export function seqImagesLoadedEnabled(toggle) {
   return dispatch => {
     dispatch({
-      type: IMAGES_LOADED_ENABLED,
+      type: CG_IMAGES_LOADED_ENABLED,
       payload: toggle
     });
   };
@@ -97,7 +97,7 @@ function isValidCategory(category) {
 export function createCategory(category) {
   const failure = dispatch => {
     dispatch({
-      type: CREATE_CATEGORY_ERROR
+      type: CG_CREATE_CATEGORY_ERROR
     });
   };
   return (dispatch, getState) => {
@@ -113,7 +113,7 @@ export function createCategory(category) {
         pending: true
       }).then(() => {
         dispatch({
-          type: CREATE_CATEGORY_SUCCESS
+          type: CG_CREATE_CATEGORY_SUCCESS
         });
       }).catch(() => {
         failure(dispatch);
@@ -129,7 +129,7 @@ export function toggleGalleryDelete() {
   return (dispatch, getState) => {
     const { galleries } = getState();
     dispatch({
-      type: TOGGLE_GALLERY_DELETE,
+      type: CG_TOGGLE_GALLERY_DELETE,
       payload: !galleries.galleryDeleteEnabled
     });
   };
@@ -160,7 +160,7 @@ export function onGalleryDeleteImages(successCallback) {
                 success = true;
                 successCallback();
                 dispatch({
-                  type: RESET_IMAGES_TAGGED_FOR_DELETION
+                  type: CG_RESET_IMAGES_TAGGED_FOR_DELETION
                 });
               }
             }).catch(() => {
@@ -169,7 +169,7 @@ export function onGalleryDeleteImages(successCallback) {
             });
           }).catch(() => {
             dispatch({
-              type: SEND_GALLERIES_TOAST,
+              type: CG_SEND_GALLERIES_TOAST,
               payload: {
                 firstLine: 'Error!',
                 secondLine: `Failed to delete ${image.name}!`,
@@ -184,14 +184,14 @@ export function onGalleryDeleteImages(successCallback) {
     setTimeout(() => {
       if (!success) {
         dispatch({
-          type: RESET_IMAGES_TAGGED_FOR_DELETION
+          type: CG_RESET_IMAGES_TAGGED_FOR_DELETION
         });
         successCallback('error', 'An attempt to delete images was made, although some files may not have been deleted!');
       } // timeout to run and see if success callback failed, then warn that some imgs may not have been deleted
     }, 7500);
 
     dispatch({
-      type: DELETE_GALLERY_IMAGES
+      type: CG_DELETE_GALLERY_IMAGES
     });
   };
 }
@@ -200,7 +200,7 @@ export function onGalleryDeleteImages(successCallback) {
 export function resetTaggedForGalleryDelete() {
   return dispatch => {
     dispatch({
-      type: RESET_IMAGES_TAGGED_FOR_DELETION
+      type: CG_RESET_IMAGES_TAGGED_FOR_DELETION
     });
   };
 }
@@ -208,7 +208,7 @@ export function resetTaggedForGalleryDelete() {
 export function tagImgForDeletion(data) {
   return dispatch => {
     dispatch({
-      type: TAG_IMAGE_FOR_DELETION,
+      type: CG_TAG_IMAGE_FOR_DELETION,
       payload: { imageId: data.imageId, categoryId: data.categoryId }
     });
   };
@@ -243,12 +243,12 @@ export function changeGalleryCategoryOrder(opts) {
     // set that data in firebase & reducer should merge the updated gallery with galleries props
     database.ref('galleries/categories').set(categories).then(() => {
       dispatch({
-        type: CHANGE_CATEGORY_IMAGE_ORDER,
+        type: CG_CHANGE_CATEGORY_IMAGE_ORDER,
         payload: { categories }
       });
     }).catch(() => {
       dispatch({
-        type: SEND_GALLERIES_TOAST,
+        type: CG_SEND_GALLERIES_TOAST,
         payload: {
           firstLine: 'Error!',
           secondLine: 'Failed to update categories order!',
@@ -290,12 +290,12 @@ export function changeGalleryImageOrder(opts) {
     // set that data in firebase & reducer should merge the updated gallery with galleries props
     database.ref(`galleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
-        type: CHANGE_GALLERY_IMAGE_ORDER,
+        type: CG_CHANGE_GALLERY_IMAGE_ORDER,
         payload: { gallery, categoryId }
       });
     }).catch(() => {
       dispatch({
-        type: SEND_GALLERIES_TOAST,
+        type: CG_SEND_GALLERIES_TOAST,
         payload: {
           firstLine: 'Error!',
           secondLine: 'Failed to update image order!',
@@ -320,12 +320,12 @@ export function changeCategoryPreviewImage(opts) {
 
     database.ref(`galleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
-        type: CHANGE_CATEGORY_PREVIEW_IMAGE,
+        type: CG_CHANGE_CATEGORY_PREVIEW_IMAGE,
         payload: { gallery, categoryId }
       });
     }).catch(() => {
       dispatch({
-        type: SEND_GALLERIES_TOAST,
+        type: CG_SEND_GALLERIES_TOAST,
         payload: {
           firstLine: 'Error!',
           secondLine: 'Failed to update category preview image!',
@@ -339,7 +339,7 @@ export function changeCategoryPreviewImage(opts) {
 export function highlightGalleriesLink(toggle) {
   return dispatch => {
     dispatch({
-      type: HIGHLIGHT_GALLERIES_LINK,
+      type: CG_HIGHLIGHT_GALLERIES_LINK,
       payload: toggle
     });
   };
@@ -350,7 +350,7 @@ export function pushImageData(dispatch, firebase, imageData, shouldDispatch) {
   database.ref(`galleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData).then(() => {
     if (shouldDispatch) {
       dispatch({
-        type: UPLOAD_GALLERY_IMAGE_SUCCESS
+        type: CG_UPLOAD_GALLERY_IMAGE_SUCCESS
       });
     }
   });
@@ -391,7 +391,7 @@ export function uploadGalleryImage(data) {
         // Observe state change events such as progress, pause, and resume
       }, error => {
         dispatch({
-          type: UPLOAD_GALLERY_IMAGE_ERROR,
+          type: CG_UPLOAD_GALLERY_IMAGE_ERROR,
           payload: error
         });
       }, () => {

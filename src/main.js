@@ -8,6 +8,7 @@ import { Root } from 'components/root';
 import { authActions /* , authRouteResolver */ } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
+import { customerGalleriesActions } from 'core/customerGalleries';
 import { newsReportingActions } from 'core/newsReporting';
 import { pricingActions } from 'core/pricing';
 import { FIREBASE_CONFIG } from './config';
@@ -21,6 +22,7 @@ const history = syncHistoryWithStore(browserHistory, store);
 
 firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes to update protected data
   store.dispatch(galleriesActions.hydrateGalleries()); // hydrate to hide/show protected content
+  store.dispatch(customerGalleriesActions.hydrateGalleries());
   if (user) {
     store.dispatch(authActions.hydrateAuth());
   }

@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router';
 import cn from 'classnames';
 import { authActions } from 'core/auth';
 import { adminActions } from 'core/admin';
@@ -55,6 +56,8 @@ export class DashBoard extends Component {
           <a onClick={this.changeEmail} className="dashboard__link" >Change Email</a>
           <span className="dashboard__link_divider">&#8226;</span>
           <a onClick={this.changePassword} className="dashboard__link" >Change Password</a>
+          <span className="dashboard__link_divider">&#8226;</span>
+          <Link to="/customer-galleries" className="dashboard__link" >Customer Galleries</Link>
           <span className="dashboard__link_divider">&#8226;</span>
           <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory}>Delete Galleries Category</a>
           <div className={pendingChangesClass}>

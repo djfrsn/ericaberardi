@@ -6,6 +6,8 @@ export const FIREBASE_CONFIG = firebaseconfig.config;
 
 // Route paths
 export const LOGIN_PATH = '/login';
+export const CUSTOMER_GALLERIES_PATH = '/customer-galleries';
+export const CUSTOMER_GALLERIES__CUSTOMER_PATH = '/customer-galleries/:customer';
 export const DASHBOARD_PATH = '/dashboard';
 export const HOME_PATH = '/home';
 export const GALLERIES_PATH = '/galleries';

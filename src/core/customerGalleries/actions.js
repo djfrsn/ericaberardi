@@ -20,6 +20,7 @@ import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
+import utils from 'utils';
 
 export function clearGalleriesToast() {
   return dispatch => {
@@ -101,14 +102,16 @@ export function createCategory(category) {
     });
   };
   return (dispatch, getState) => {
-    const { firebase, galleries } = getState();
-    let categoriesLength = Object.keys(galleries.categories).length;
+    const { firebase, customerGalleries } = getState();
+    let categoriesLength = Object.keys(customerGalleries.categories).length;
 
     if (isValidCategory(category)) {
-      const id = firebase.database('galleries').ref().child('categories').push().key;
-      firebase.database().ref(`galleries/categories/${id}`).set({
+      const id = firebase.database('customerGalleries').ref().child('categories').push().key;
+      firebase.database().ref(`customerGalleries/categories/${id}`).set({
         id,
         category: category.toLowerCase(),
+        publicId: utils.uuid(),
+        secretId: utils.uuid(),
         orderBy: ++categoriesLength,
         pending: true
       }).then(() => {
@@ -127,28 +130,28 @@ export function createCategory(category) {
 
 export function toggleGalleryDelete() {
   return (dispatch, getState) => {
-    const { galleries } = getState();
+    const { customerGalleries } = getState();
     dispatch({
       type: CG_TOGGLE_GALLERY_DELETE,
-      payload: !galleries.galleryDeleteEnabled
+      payload: !customerGalleries.galleryDeleteEnabled
     });
   };
 }
 
 export function onGalleryDeleteImages(successCallback) {
   return (dispatch, getState) => {
-    const { firebase, galleries } = getState();
+    const { firebase, customerGalleries } = getState();
     const storage = firebase.storage();
     const database = firebase.database();
     let imagesDeletedCount = 0;
-    const taggedForDeleteCount = galleries.taggedForDeleteCount;
+    const taggedForDeleteCount = customerGalleries.taggedForDeleteCount;
     let success = false;
 
-    forIn(galleries.images, gallery => {
+    forIn(customerGalleries.images, gallery => {
       forIn(gallery, image => {
         if (image.shouldDelete) {
           // TODO: for each file that is deleted the meta data must also be removed from firebase
-          database.ref(`galleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
+          database.ref(`customerGalleries/images/${image.categoryId}/${image.id}`).set(null).then(() => {
             const storageRef = storage.ref();
             // Create a reference to the file to delete
             const imageRef = storageRef.child(image.fullPath);
@@ -165,7 +168,7 @@ export function onGalleryDeleteImages(successCallback) {
               }
             }).catch(() => {
               // we failed to delete an img.....log error
-              database.ref(`logs/errors/galleries/shouldDelete/${image.id}`).set(image);
+              database.ref(`logs/errors/customerGalleries/shouldDelete/${image.id}`).set(image);
             });
           }).catch(() => {
             dispatch({
@@ -241,7 +244,7 @@ export function changeGalleryCategoryOrder(opts) {
     });
 
     // set that data in firebase & reducer should merge the updated gallery with galleries props
-    database.ref('galleries/categories').set(categories).then(() => {
+    database.ref('customerGalleries/categories').set(categories).then(() => {
       dispatch({
         type: CG_CHANGE_CATEGORY_IMAGE_ORDER,
         payload: { categories }
@@ -288,7 +291,7 @@ export function changeGalleryImageOrder(opts) {
 
     const categoryId = gallery[opts.imageId].categoryId;
     // set that data in firebase & reducer should merge the updated gallery with galleries props
-    database.ref(`galleries/images/${categoryId}`).set(gallery).then(() => {
+    database.ref(`customerGalleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
         type: CG_CHANGE_GALLERY_IMAGE_ORDER,
         payload: { gallery, categoryId }
@@ -318,7 +321,7 @@ export function changeCategoryPreviewImage(opts) {
       gallery[image.id] = { ...image, categoryPreviewImage: opts.imageId !== image.id ? false : true };
     });
 
-    database.ref(`galleries/images/${categoryId}`).set(gallery).then(() => {
+    database.ref(`customerGalleries/images/${categoryId}`).set(gallery).then(() => {
       dispatch({
         type: CG_CHANGE_CATEGORY_PREVIEW_IMAGE,
         payload: { gallery, categoryId }
@@ -347,7 +350,7 @@ export function highlightGalleriesLink(toggle) {
 
 export function pushImageData(dispatch, firebase, imageData, shouldDispatch) {
   const database = firebase.database();
-  database.ref(`galleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData).then(() => {
+  database.ref(`customerGalleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData).then(() => {
     if (shouldDispatch) {
       dispatch({
         type: CG_UPLOAD_GALLERY_IMAGE_SUCCESS

@@ -1,5 +1,6 @@
 // Vendor
 import React, { Component, PropTypes } from 'react';
+import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import cn from 'classnames';
 import debounce from 'lodash.debounce';
@@ -192,8 +193,8 @@ export class CustomerGalleries extends Component {
     });
   }
   render() {
-    console.log(this.props.customerGalleries)
     const { gallery } = this.state;
+    let customerGalleries = <p style={{textAlign: 'center', marginTop: '60px'}}><Link to="/login">Login</Link> to use customer galleries.</p>;
     const authenticated = this.props.auth.authenticated;
     const galleriesLength = Object.keys(this.props.customerGalleries.categories).length;
     const taggedForDeleteCount = this.props.customerGalleries.taggedForDeleteCount;
@@ -218,45 +219,47 @@ export class CustomerGalleries extends Component {
       </Dropzone>
       <p className="gallery__dropzone_help">*Pending images have a yellow border.</p>
     </div>) : null;
-
-    return (
-      <div className="g-row cg__container" ref={ref => { this.galleryContainer = ref; }}>
-        <div className="g-col" >
-          <h1 className="cg__title">Customer Galleries</h1>
-          <div className="gallery__navigation">
-            <ul className="galleries__links">
-              {galleryCategories( { props: this.props, category: this.path, scope: this })}
-            </ul>
-          </div>
-          {addCategory}
-          {authenticated ? (<h2 className={dropZoneTitleClass}>Upload Files</h2>) : null}
-          {galleryDropZone}
-          <div className="gallery">
-            <Masonry
-              ref={ref => { this.masonry = ref; }}
-              className={'gallery__masonry'} // default ''
-              options={masonryOptions} // default {}
-              disableImagesLoaded={false} // default false
-              >
-                {galleryImages({gallery, scope: this})}
-            </Masonry>
-          </div>
-          {authenticated ? (<div>
-            <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
-            <div className={galleryDeleteControlsClass}>
-              <a href="#!" onClick={this.onGalleryDeleteReset} className={cn({ ['gallery__delete_reset']: true, ['invisible']: galleryDeleteToggle })}>Reset</a>
-              <a href="#!" onClick={this.onToggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp}>
-                <i className="fa fa-trash-o gallery_delete_icon"></i>
-              </a>
-              <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
+    if (authenticated) {
+      customerGalleries = (
+        <div className="g-row cg__container" ref={ref => { this.galleryContainer = ref; }}>
+          <div className="g-col" >
+            <h1 className="cg__title">Customer Galleries</h1>
+            <div className="gallery__navigation">
+              <ul className="galleries__links">
+                {galleryCategories( { props: this.props, category: this.path, scope: this })}
+              </ul>
             </div>
-            <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
-            <p className={cn({ ['taggedForDeleteCount']: true, ['invisible']: taggedForDeleteCount < 1 })}>{this.props.customerGalleries.taggedForDeleteCount} {`Image${char}`} selected for deletion.</p>
-          </div>) : null}
-          <Lightbox/>
+            {addCategory}
+            {authenticated ? (<h2 className={dropZoneTitleClass}>Upload Files</h2>) : null}
+            {galleryDropZone}
+            <div className="gallery">
+              <Masonry
+                ref={ref => { this.masonry = ref; }}
+                className={'gallery__masonry'} // default ''
+                options={masonryOptions} // default {}
+                disableImagesLoaded={false} // default false
+                >
+                  {galleryImages({gallery, scope: this})}
+              </Masonry>
+            </div>
+            {authenticated ? (<div>
+              <p className={galleryHelpMsgClass}>Select any images you'd like to delete. When your done, click the delete button to remove all selected images.</p>
+              <div className={galleryDeleteControlsClass}>
+                <a href="#!" onClick={this.onGalleryDeleteReset} className={cn({ ['gallery__delete_reset']: true, ['invisible']: galleryDeleteToggle })}>Reset</a>
+                <a href="#!" onClick={this.onToggleGalleryDelete} onMouseEnter={this.toggleDeleteHelp} onMouseLeave={this.toggleDeleteHelp}>
+                  <i className="fa fa-trash-o gallery_delete_icon"></i>
+                </a>
+                <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
+              </div>
+              <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
+              <p className={cn({ ['taggedForDeleteCount']: true, ['invisible']: taggedForDeleteCount < 1 })}>{this.props.customerGalleries.taggedForDeleteCount} {`Image${char}`} selected for deletion.</p>
+            </div>) : null}
+            <Lightbox/>
+          </div>
         </div>
-      </div>
-    );
+      );
+    }
+    return customerGalleries;
   }
 }
 

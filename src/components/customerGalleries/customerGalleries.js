@@ -209,9 +209,9 @@ export class CustomerGalleries extends Component {
     const galleriesLength = Object.keys(this.props.customerGalleries.categories).length;
     const taggedForDeleteCount = this.props.customerGalleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
-    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true });
-    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true });
-    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true });
+    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
+    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true }); // hide dropzone until images loaded
+    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
     const galleryDeleteToggle = !this.props.customerGalleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });

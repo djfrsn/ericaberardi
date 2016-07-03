@@ -5,6 +5,10 @@
             ".read": true,
             ".write": "auth !== null"
         },
+        "customerGalleries": {
+            ".read": true,
+            ".write": "auth !== null"
+        },
         "pendingUpdates": {
             ".read": "auth !== null",
             ".write": "auth !== null"

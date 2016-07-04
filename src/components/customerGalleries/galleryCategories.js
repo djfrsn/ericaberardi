@@ -32,9 +32,6 @@ function getCategories(opts) {
     if (category && !protectedCategory) {
       categories.push(
         <li key={key} id={category.id} orderBy={category.orderBy}>
-          {authenticated ? <div className="select-style"><select name="categoryOrderby" className="gallery_category_orderby" value={category.orderBy} onChange={opts.scope.onChangeGalleryCategoryOrder}>
-            {sortedOrderByCategories}
-          </select></div> : null}
           <Link to={`/customer-galleries/${category.category}`} className={className}>{category.category}</Link>
         </li>
       );
@@ -53,3 +50,7 @@ export default opts => {
   const categories = getCategories(opts);
   return categories;
 };
+
+// {authenticated ? <div className="select-style"><select name="categoryOrderby" className="gallery_category_orderby" value={category.orderBy} onChange={opts.scope.onChangeGalleryCategoryOrder}>
+//   {sortedOrderByCategories}
+// </select></div> : null}

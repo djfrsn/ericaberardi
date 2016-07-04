@@ -95,7 +95,7 @@ export class CustomerGalleryViewer extends Component {
       this.context.router.replace('/gallery'); // send to not found page
     }
     // Is custom authenticated & accessing their gallery?
-    if (nextProps.auth.isApprovedCustomer && categories[category].secretId === this.props.auth.secretId ) {
+    if (nextProps.auth.isApprovedCustomer && categories[category].secretId === nextProps.auth.secretId ) {
       const routeChange = pathname !== galleriesPathname || pathname === '/customer-galleries';
       const galleryChange = !deepEqual(nextProps.customerGalleries.images, this.props.customerGalleries.images);
       const categoriesChange = !deepEqual(nextProps.customerGalleries.categories, this.props.customerGalleries.categories);

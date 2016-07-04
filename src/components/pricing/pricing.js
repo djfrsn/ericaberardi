@@ -102,24 +102,12 @@ export class Pricing extends Component {
     textEditCanvas({e, className: 'textEdit-package', inputParent: 'li', callback: this.textEditTargetReverted, meta: { type: 'packages' }});
   }
   render() {
-    const authenticated = this.props.auth.authenticated;
+    // const authenticated = this.props.auth.authenticated;
     return (
       <div className="g-row">
         <div className="g-col" >
-          <div className="pricing__container">
-            <div className="pricing__categories">
-              <ul>
-                {pricingCategories({ props: this.props, category: this.path, scope: this })}
-              </ul>
-            </div>
-            <div className="pricing__packages_wrapper">
-              <div className="pricing__package">
-                <ul className="pricing__list">
-                  {authenticated && Object.keys(this.props.pricing.categories).length > 0 ? <i onClick={this.editPricingPackages} className="fa fa-pencil-square-o pricing__categories_edit" aria-hidden="true"></i> : null}
-                  {pricingPackages({ props: this.props, category: this.path, scope: this })}
-                </ul>
-              </div>
-            </div>
+          <div style={{textAlign: 'center', marginTop: '60px'}}>
+            [ Under Construction ]
           </div>
         </div>
       </div>

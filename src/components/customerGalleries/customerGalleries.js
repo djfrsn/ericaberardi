@@ -14,10 +14,10 @@ import { authActions } from 'core/auth';
 import { customerGalleriesActions } from 'core/customerGalleries';
 import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
-import { deleteImagesAlert, unapprovedUploadAlert } from './galleriesAlerts';
+import { deleteImagesAlert, unapprovedUploadAlert } from '../galleries/galleriesAlerts';
 import * as gUtils from '../galleries/galleriesUtils';
 import { parsePath } from 'lava';
-import galleryCategories from './galleryCategories';
+import galleryCategories from '../galleries/galleryCategories';
 import galleryImages from '../galleries/galleryImages';
 import Lightbox from '../galleries/lightbox';
 
@@ -246,7 +246,7 @@ export class CustomerGalleries extends Component {
             <h1 className="cg__title">Customer Galleries</h1>
             <div className="gallery__navigation">
               <ul className="galleries__links">
-                {galleryCategories( { props: this.props, category: this.path, scope: this })}
+                {galleryCategories( { props: this.props, category: this.path, scope: this, orderByControls: false })}
               </ul>
             </div>
             {addCategory}

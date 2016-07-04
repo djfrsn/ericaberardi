@@ -19,7 +19,7 @@ function publishSweetAlert(type = 'success', text = 'Image deletion successful!'
   });
 }
 
-export function unapprovedUploadAlert(unapprovedFiles) {
+export function unapprovedUploadAlert(unapprovedFiles, type) {
   let unapprovedFilesNames = '';
   const unapprovedFilesLength = unapprovedFiles.length - 1;
   const filesWord = unapprovedFilesLength > 0 ? 'files\'s' : 'file';
@@ -38,7 +38,7 @@ export function unapprovedUploadAlert(unapprovedFiles) {
     + '<span style="font-size: 1.2em; color:rgb(31, 31, 31);">3.Try uploading your ' + imagesWord + ' again.</span></br>';
 
   sweetalert({
-    title: 'File size limit is 600 KB!',
+    title: type === 'zip' ? 'File size limit is 150 MB!' : 'File size limit is 600 KB!',
     text: text,
     type: 'error',
     html: true

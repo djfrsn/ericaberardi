@@ -201,7 +201,7 @@ export class CustomerGalleries extends Component {
   }
   onCreateCategory = e => {
     e.preventDefault();
-    this.props.createCategory(this.newCategory.value);
+    this.props.createCategory(this.newCategory.value, this.props);
     this.newCategory.value = '';
   }
   toggleDeleteHelp = () => {

@@ -96,7 +96,7 @@ function isValidCategory(category) {
   return typeof category === 'string' && category.length > 0;
 }
 
-export function createCategory(category) {
+export function createCategory(category, props) {
   const failure = dispatch => {
     dispatch({
       type: CG_CREATE_CATEGORY_ERROR
@@ -105,6 +105,15 @@ export function createCategory(category) {
   return (dispatch, getState) => {
     const { firebase, customerGalleries } = getState();
     let categoriesLength = Object.keys(customerGalleries.categories).length;
+
+    if (categoriesLength >= 7) {
+      props.sendGalleriesToast({
+        firstLine: 'Error!',
+        secondLine: '7 galleries max! Delete a gallery before creating another.',
+        type: 'error'
+      });
+      return;
+    }
 
     if (isValidCategory(category)) {
       const id = firebase.database('customerGalleries').ref().child('categories').push().key;

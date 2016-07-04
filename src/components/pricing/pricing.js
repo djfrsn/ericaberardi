@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { pricingActions } from 'core/pricing';
 import { parsePath } from 'lava';
-import pricingCategories from './pricingCategories';
-import pricingPackages from './pricingPackages';
+// import pricingCategories from './pricingCategories';
+// import pricingPackages from './pricingPackages';
 import { textEdit, textEditCanvas } from 'helpers/textEdit';
 import forIn from 'lodash.forin';
 

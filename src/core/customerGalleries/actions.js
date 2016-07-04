@@ -399,7 +399,7 @@ export function uploadGalleryImage(data) {
         });
       }, () => {
         // Handle successful uploads on complete
-        const id = firebase.database('galleries/images').ref().child(`${categoryId}`).push().key;
+        const id = firebase.database('customerGalleries/images').ref().child(`${categoryId}`).push().key;
         const src = uploadImage.snapshot.downloadURL;
         const imageMeta = uploadImage.snapshot.metadata;
         const { contentType, downloadURLs, fullPath, name, size, timeCreated } = imageMeta;

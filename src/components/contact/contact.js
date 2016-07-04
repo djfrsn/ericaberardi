@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { toastActions } from 'core/toast';
 import { contactActions } from 'core/contact';
+import forEach from 'lodash.foreach';
 import delay from 'lodash.delay';
 import socialIcons from '../partials/socialIcons';
 import classNames from 'classnames';
@@ -10,12 +11,14 @@ import classNames from 'classnames';
 const intialErrorsState = {
   nameError: false,
   emailError: false,
+  subjectError: false,
   textareaError: false
 };
 
 const initialState = {
   contactName: '',
   contactEmail: '',
+  contactSubject: '',
   contactMessage: '',
   ...intialErrorsState
 };
@@ -39,7 +42,14 @@ export class Contact extends Component {
     }
   }
   handleChange = e => {
-    this.setState({...this.state, [`contact${e.target.dataset.contactType}`]: e.target.value});
+    let allFieldsHaveValues = true;
+    const formInputs = ['Name', 'Email', 'Subject', 'Message'];
+    forEach(formInputs, inputName => {
+      if (this[`contact${inputName}`].value === '') {
+        allFieldsHaveValues = false; // show recaptcha if we have all of our values
+      }
+    });
+    this.setState({...this.state, [`contact${e.target.dataset.contactType}`]: e.target.value, allFieldsHaveValues });
   }
   onEmailError = err => {
     this.props.clearContactToast(); // toast must be cleared before showToast is called...
@@ -66,15 +76,16 @@ export class Contact extends Component {
   }
   sendEmail = e => {
     e.preventDefault();
-    const { contactName, contactEmail, contactMessage } = this.state;
-    this.props.sendEmail({ contactName, contactEmail, contactMessage});
+    const { contactName, contactEmail, contactSubject, contactMessage } = this.state;
+    this.props.sendEmail({ contactName, contactEmail, contactSubject, contactMessage});
   }
   render() {
-    const { nameError, emailError, textareaError } = this.state;
+    const { nameError, emailError, subjectError, textareaError, allFieldsHaveValues } = this.state;
     const contactNameClass = classNames({ ['contact__name']: true, ['eb__input_error']: nameError });
     const contactEmailClass = classNames({ ['contact__email']: true, ['eb__input_error']: emailError });
-    const contactSubjectClass = classNames({ ['contact__subject']: true, ['eb__input_error']: emailError });
+    const contactSubjectClass = classNames({ ['contact__subject']: true, ['eb__input_error']: subjectError });
     const contactTextAreaClass = classNames({ ['contact__textarea']: true, ['eb__input_error']: textareaError });
+    const recaptchaClass = classNames({ ['g-recaptcha']: true, ['hidden']: !allFieldsHaveValues });
     return (
       <div className="g-row">
         <div className="g-col" >
@@ -85,6 +96,7 @@ export class Contact extends Component {
               <input data-contact-type="Email" type="text" placeholder="Email" className={contactEmailClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
               <input data-contact-type="Subject" type="text" placeholder="Subject" className={contactSubjectClass} value={this.state.contactSubject} onChange={this.handleChange} ref={ref => { this.contactSubject = ref; }}/>
               <textarea data-contact-type="Message" name="message" placeholder="Message" className={contactTextAreaClass} value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
+              <div className={recaptchaClass} data-sitekey="6LeaQyQTAAAAADVFB5FGzAv-0d6Qsf_ZJoznUq1c"></div>
               <button onClick={this.sendEmail} className="contact__send">Send</button>
             </form>
             <div className="contact__social">

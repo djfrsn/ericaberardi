@@ -139,6 +139,14 @@
     }
   }
 
+  .g-recaptcha {
+    margin-bottom: 30px;
+    width: 90%;
+    > div > div {
+      margin: 0 auto;
+    }
+  }
+
   // Placeholder Styles
   ::-webkit-input-placeholder {
     @include contact__placeholder-style();

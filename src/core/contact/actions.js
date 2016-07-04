@@ -110,7 +110,7 @@ export function sendEmail(data) {
       const emailData = {
         fromEmail: data.contactEmail,
         fromName: data.contactName,
-        'subject': data.contactSubject,
+        subject: data.contactSubject,
         message: data.contactMessage
       };
       emailjs.send('postmark', 'template_m5wrGxSz', emailData).then(() => {
@@ -119,12 +119,13 @@ export function sendEmail(data) {
           type: SEND_EMAIL_SUCCESS,
           payload: { data: data, validation }
         });
-      }, () => {
+      }, err => {
+        const isCaptchaError = err.text ? JSON.parse(err.text).error.indexOf('CAPTCHA') >= 0 : null;
         dispatch({
           type: SEND_EMAIL_ERROR,
           payload: { validation: { success: false, err: {
             firstLine: 'Error!',
-            secondLine: 'Failed to send email! Please try again.',
+            secondLine: isCaptchaError ? 'Verify Captcha!' : 'Failed to send email! Please try again.',
             type: 'error',
             errName: 'sendEMail'
           } } }

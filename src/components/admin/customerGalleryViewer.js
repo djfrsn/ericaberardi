@@ -9,6 +9,7 @@ import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
 import findKey from 'lodash.findkey';
 import deepEqual from 'deep-equal';
+import classNames from 'classnames';
 // App Specific
 import { adminActions } from 'core/admin';
 import { authActions } from 'core/auth';
@@ -134,11 +135,24 @@ export class CustomerGalleryViewer extends Component {
     }
   }
   handleChange = e => {
-    this.setState({...this.state, password: e.target.value});
+      this.setState({...this.state, password: e.target.value});
   }
-  submitPassword = () => {
+  submitPassword = e => {
+    e.preventDefault();
+    const password = this.state.password || '';
+    const passwordError = () => {
+      this.setState({ ...this.state, passwordError: true });
+      setTimeout(() => { // clear errors
+        this.setState({ ...this.state, passwordError: false });
+      }, 7000);
+    }
     // TODO: add form validation from contact
-    this.props.submitCustomerGalleriesPassword({path:this.path, password:this.state.password});
+    if (password !== '') {
+      this.props.submitCustomerGalleriesPassword({path:this.path, password, errorCallback: passwordError });
+    }
+    else {
+      passwordError();
+    }
   }
   render() {
     const { gallery } = this.state;
@@ -148,12 +162,12 @@ export class CustomerGalleryViewer extends Component {
     const zip = customerGalleries.zip[activeGalleryId];
     const hasCategories = Object.keys(customerGalleries.categories).length > 0;
     const hasImages = Object.keys(gallery).length > 0;
-    console.log(this.path);
+    const passwordClass = classNames({ ['eb__input']: true, ['eb__input_error']: this.state.passwordError });
     let customerGalleriesComponent = (
       <div>
         <h1 className="cg__title"><span className="capitalize">{this.path}</span> Gallery</h1>
         <form onSubmit={this.submitPassword} className="customer__gallery__form eb__form">
-          <input data-contact-type="Password" type="password" placeholder="Enter Password" className="eb__input" value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
+          <input data-contact-type="Password" type="password" placeholder="Enter Password" className={passwordClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
           <button onClick={this.submitPassword} className="eb__send_btn">Submit</button>
         </form>
       </div>);

@@ -38,6 +38,7 @@ export class CustomerGalleries extends Component {
     clearGalleriesToast: PropTypes.func.isRequired,
     createCategory: PropTypes.func.isRequired,
     customerGalleries: PropTypes.object.isRequired,
+    hydrateCustomerAuth: PropTypes.func.isRequired,
     hydrateCustomerGalleries: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     onGalleryDeleteImages: PropTypes.func.isRequired,
@@ -49,16 +50,6 @@ export class CustomerGalleries extends Component {
     toggleGalleryDelete: PropTypes.func.isRequired,
     uploadGalleryImage: PropTypes.func.isRequired,
     uploadGalleryZipFile: PropTypes.func.isRequired
-  }
-  constructor(props) {
-    super(props); // fetch data for logged out/anon users coming directly to customer galleries
-    if (Object.keys(props.customerGalleries.categories).length < 1) {
-      let customerGalleries = firebase.database().ref('customerGalleries');
-
-      customerGalleries.on('value', snapshot => {
-        this.props.hydrateCustomerGalleries(snapshot.val());
-      });
-    }
   }
   state = {
     gallery: {},

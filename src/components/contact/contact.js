@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { authActions } from 'core/auth';
 import { toastActions } from 'core/toast';
 import { contactActions } from 'core/contact';
+import delay from 'lodash.delay';
 import socialIcons from '../partials/socialIcons';
 import classNames from 'classnames';
 
@@ -45,12 +46,12 @@ export class Contact extends Component {
     let errors = {};
     err.forEach(toast => {
       errors[`${toast.errName}Error`] = true;
-      setTimeout(() => { // avoid overloading the toast plugin w/ setTimeout
+      delay(() => { // avoid overloading the toast plugin w/ delay
         this.props.showToast(toast);
       }, 150);
     });
     this.setState({ ...this.state, ...errors});
-    setTimeout(() => { // clear errors
+    delay(() => { // clear errors
       this.setState({ ...this.state, ...intialErrorsState});
     }, 7000);
   }

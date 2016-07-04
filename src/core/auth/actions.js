@@ -1,4 +1,5 @@
 import {
+  CUSTOMER_SIGN_IN_SUCCESS,
   HYDRATE_AUTH,
   SIGN_IN_SUCCESS,
   SIGN_IN_ERROR,
@@ -6,6 +7,7 @@ import {
   RESET_AUTH_MESSAGES
 } from './action-types';
 import findKey from 'lodash.findkey';
+import delay from 'lodash.delay';
 import { POST_LOGIN_PATH, POST_LOGOUT_PATH } from 'config';
 
 export function hydrateAuth() {
@@ -21,9 +23,24 @@ export function hydrateAuth() {
   };
 }
 
+export function hydrateCustomerAuth(customerSecretId) {
+  return (dispatch, getState) => {
+    const { customerGalleries } = getState();
+    const categories = customerGalleries.categories;
+    const category = findKey(categories, { secretId: customerSecretId });
+    const secretId = categories[category].secretId;
+    if (secretId === customerSecretId) {
+      dispatch({
+        type: CUSTOMER_SIGN_IN_SUCCESS,
+        payload: { secretId }
+      });
+    }
+  };
+}
+
 export function resetAuthMessages(timeout = 3250) {
   return dispatch => {
-    setTimeout(() => {
+    delay(() => {
       dispatch({
         type: RESET_AUTH_MESSAGES
       });
@@ -33,11 +50,19 @@ export function resetAuthMessages(timeout = 3250) {
 
 export function submitCustomerGalleriesPassword(opts) {
   return (dispatch, getState) => {
-    const { firebase, customerGalleries } = getState();
+    const { customerGalleries } = getState();
     const categories = customerGalleries.categories;
-    const category = findKey(customerGalleries.categories, {category: opts.path });
-    if (category) {
-
+    const category = findKey(categories, {category: opts.path });
+    const secretId = categories[category].secretId;
+    if (category && secretId === opts.password) {
+      sessionStorage.setItem('customerSecretId', secretId);
+      dispatch({
+        type: CUSTOMER_SIGN_IN_SUCCESS,
+        payload: { secretId }
+      });
+    }
+    else {
+      opts.errorCallback();
     }
   };
 }

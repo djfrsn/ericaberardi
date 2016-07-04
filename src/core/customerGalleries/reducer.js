@@ -23,6 +23,7 @@ export const initialState = {
   images: {},
   zip: {},
   toast: {},
+  galleriesHydrated: false,
   galleryDeleteEnabled: false,
   seqImagesLoadedEnabled: false,
   taggedForDeleteCount: 0

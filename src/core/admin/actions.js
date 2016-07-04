@@ -4,6 +4,7 @@ import {
   CLEAR_PENDING_UPDATES
 } from './action-types';
 import forIn from 'lodash.forin';
+import delay from 'lodash.delay';
 import findKey from 'lodash.findkey';
 import utils from 'utils';
 // TODO: Any functions not exported should be organized into js files by page(galleries, pricing)
@@ -369,7 +370,7 @@ function publishContent(opts) {
         if (opts.databaseKeys.length === callbackCount) {
           successCallback = opts.callbacks.successCallback;
           if (utils.isFunction(successCallback)) {
-            setTimeout(() => {
+            delay(() => {
               successCallback(); // call final publish/success callback
             }, 0);
           }
@@ -379,7 +380,7 @@ function publishContent(opts) {
     });
   }
   else {
-    setTimeout(() => {
+    delay(() => {
       if (utils.isFunction(opts.callbacks.errorCallback)) {
         opts.callbacks.errorCallback(); // show error alert
       }

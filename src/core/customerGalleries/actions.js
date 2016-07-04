@@ -17,6 +17,7 @@ import {
 } from './action-types';
 import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
+import delay from 'lodash.delay';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
 import utils from 'utils';
@@ -194,7 +195,7 @@ export function onGalleryDeleteImages(successCallback) {
       });
     });
 
-    setTimeout(() => {
+    delay(() => {
       if (!success) {
         dispatch({
           type: CG_RESET_IMAGES_TAGGED_FOR_DELETION

@@ -8,6 +8,7 @@ import debounce from 'lodash.debounce';
 import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
 import findKey from 'lodash.findkey';
+import delay from 'lodash.delay';
 import deepEqual from 'deep-equal';
 import classNames from 'classnames';
 // App Specific
@@ -38,6 +39,7 @@ export class CustomerGalleryViewer extends Component {
     clearGalleriesToast: PropTypes.func.isRequired,
     createCategory: PropTypes.func.isRequired,
     customerGalleries: PropTypes.object.isRequired,
+    hydrateCustomerAuth: PropTypes.func.isRequired,
     hydrateCustomerGalleries: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     onGalleryDeleteImages: PropTypes.func.isRequired,
@@ -50,16 +52,6 @@ export class CustomerGalleryViewer extends Component {
     uploadGalleryImage: PropTypes.func.isRequired,
     uploadGalleryZipFile: PropTypes.func.isRequired
   }
-  constructor(props) {
-    super(props); // fetch data for logged out/anon users coming directly to customer galleries
-    if (Object.keys(props.customerGalleries.categories).length < 1) {
-      let customerGalleries = firebase.database().ref('customerGalleries');
-
-      customerGalleries.on('value', snapshot => {
-        this.props.hydrateCustomerGalleries(snapshot.val());
-      });
-    }
-  }
   state = {
     gallery: {},
     files: [],
@@ -69,6 +61,24 @@ export class CustomerGalleryViewer extends Component {
     this.unbindImagesLoaded = false;
     const { pathname } = this.props.location;
     this.path = parsePath(pathname).path; // stores currentCategory
+    const galleriesHydrated = this.props.customerGalleries.galleriesHydrated;
+    const initCustomerAuth = () => {
+      const customerGalleryId = sessionStorage.getItem('customerSecretId');
+        if (customerGalleryId) {
+          this.props.hydrateCustomerAuth(customerGalleryId);
+        }
+      };
+    // fetch data for non authed users
+    if (Object.keys(this.props.customerGalleries.categories).length < 1 && !galleriesHydrated) {
+      let customerGalleries = firebase.database().ref('customerGalleries');
+      customerGalleries.on('value', snapshot => {
+        this.props.hydrateCustomerGalleries(snapshot.val());
+        initCustomerAuth();
+      });
+    }
+    else if (galleriesHydrated) {
+      initCustomerAuth();
+    }
   }
   componentDidMount() {
     window.onresize = debounce(() => {
@@ -81,11 +91,13 @@ export class CustomerGalleryViewer extends Component {
     const galleriesPathname = this.galleriesPathname;
     const toast = nextProps.customerGalleries.toast;
     this.path = parsePath(pathname).path;
-    const validPath = findKey(this.props.customerGalleries.categories, {category: this.path });
-    if (!validPath && this.props.customerGalleries.galleriesHydrated ) {
+    const categories = this.props.customerGalleries.categories;
+    const category = findKey(categories, {category: this.path });
+    if (!category && this.props.customerGalleries.galleriesHydrated ) {
       this.context.router.replace(`/gallery`); // send to not found page
     }
-    if (nextProps.auth.isApprovedCustomer) {
+    // Is custom authenticated & accessing their gallery?
+    if (nextProps.auth.isApprovedCustomer && categories[category].secretId === this.props.auth.secretId ) {
       const routeChange = pathname !== galleriesPathname || pathname === '/customer-galleries';
       const galleryChange = !deepEqual(nextProps.customerGalleries.images, this.props.customerGalleries.images);
       const categoriesChange = !deepEqual(nextProps.customerGalleries.categories, this.props.customerGalleries.categories);
@@ -142,7 +154,7 @@ export class CustomerGalleryViewer extends Component {
     const password = this.state.password || '';
     const passwordError = () => {
       this.setState({ ...this.state, passwordError: true });
-      setTimeout(() => { // clear errors
+      delay(() => { // clear errors
         this.setState({ ...this.state, passwordError: false });
       }, 7000);
     }
@@ -172,24 +184,22 @@ export class CustomerGalleryViewer extends Component {
         </form>
       </div>);
     const isApprovedCustomer = this.props.auth.isApprovedCustomer;
-    if (isApprovedCustomer) {
+    if (isApprovedCustomer && activeCategory.secretId === this.props.auth.secretId) {
       customerGalleriesComponent = (
-        <div className="g-row cg__container" ref={ref => { this.galleryContainer = ref; }}>
-          <div className="g-col" >
-            <h1 className="cg__title"><span className="capitalize">{activeCategory.category}</span> Gallery</h1>
-            {zip ? (<p className="zip_file_p">Download Gallery: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
-            <div className="gallery">
-              <Masonry
-                ref={ref => { this.masonry = ref; }}
-                className={'gallery__masonry'} // default ''
-                options={masonryOptions} // default {}
-                disableImagesLoaded={false} // default false
-                >
-                  {galleryImages({gallery, scope: this, favPreviewImg: false, orderByControls: false })}
-              </Masonry>
-            </div>
-            <Lightbox/>
+        <div>
+          <h1 className="cg__title"><span className="capitalize">{activeCategory.category}</span> Gallery</h1>
+          {zip ? (<p className="zip_file_p">Download Gallery: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
+          <div className="gallery">
+            <Masonry
+              ref={ref => { this.masonry = ref; }}
+              className={'gallery__masonry'} // default ''
+              options={masonryOptions} // default {}
+              disableImagesLoaded={false} // default false
+              >
+                {galleryImages({gallery, scope: this, favPreviewImg: false, orderByControls: false })}
+            </Masonry>
           </div>
+          <Lightbox/>
         </div>
       );
     }

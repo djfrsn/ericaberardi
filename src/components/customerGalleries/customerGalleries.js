@@ -212,17 +212,20 @@ export class CustomerGalleries extends Component {
   }
   render() {
     const { gallery } = this.state;
+    const { customerGalleries } = this.props;
     let activeGalleryId = this.state.activeGalleryId;
-    let customerGalleries = <p style={{textAlign: 'center', marginTop: '60px'}}><Link to="/login">Login</Link> to use customer galleries.</p>;
+    const activeCategory = customerGalleries.categories[activeGalleryId] || {};
+    const zip = customerGalleries.zip[activeGalleryId];
+    let customerGalleriesComponent = <p style={{textAlign: 'center', marginTop: '60px'}}><Link to="/login">Login</Link> to use customer galleries.</p>;
     const authenticated = this.props.auth.authenticated;
-    const galleriesLength = Object.keys(this.props.customerGalleries.categories).length;
-    const taggedForDeleteCount = this.props.customerGalleries.taggedForDeleteCount;
+    const galleriesLength = Object.keys(customerGalleries.categories).length;
+    const taggedForDeleteCount = customerGalleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
     const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleriesLength < 1 });
     const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true });
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleriesLength > 0 }); // hide dropzone until images loaded
-    const galleryDeleteToggle = !this.props.customerGalleries.galleryDeleteEnabled;
+    const galleryDeleteToggle = !customerGalleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
     const addCategory = authenticated ? (<div className={galleryAddCategoryClass}>
@@ -238,9 +241,8 @@ export class CustomerGalleries extends Component {
       </Dropzone>
       <p className="gallery__dropzone_help">*Pending images have a yellow border.</p>
     </div>) : null;
-    const zip = this.props.customerGalleries.zip[activeGalleryId];
     if (authenticated) {
-      customerGalleries = (
+      customerGalleriesComponent = (
         <div className="g-row cg__container" ref={ref => { this.galleryContainer = ref; }}>
           <div className="g-col" >
             <h1 className="cg__title">Customer Galleries</h1>
@@ -258,6 +260,11 @@ export class CustomerGalleries extends Component {
                   <div>Upload Zip File</div>
                 </Dropzone>
                 {zip ? (<p className="zip_file_p">Download: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
+              </div>
+              ) : null}
+            {authenticated ? (
+              <div className="cg_customer__link_wrapper">
+                <span className="bold">Private Link: </span><Link to={`/gallery/${activeCategory.slug}`} className="cg_customer__link">{`https://ericaberardi.com/gallery/${activeCategory.slug}`}</Link><br/><p className="cg_customer__secret"><span className="bold">Secret Password: </span>{activeCategory.secretId}</p>
               </div>
               ) : null}
             <div className="gallery">
@@ -280,14 +287,14 @@ export class CustomerGalleries extends Component {
                 <a href="#!" onClick={this.onDeleteImages} className={cn({ ['gallery_delete_confirm']: true, ['invisible']: galleryDeleteToggle })}>Delete</a>
               </div>
               <p className={galleryDeleteMsgClass}>Toggle delete mode</p>
-              <p className={cn({ ['taggedForDeleteCount']: true, ['invisible']: taggedForDeleteCount < 1 })}>{this.props.customerGalleries.taggedForDeleteCount} {`Image${char}`} selected for deletion.</p>
+              <p className={cn({ ['taggedForDeleteCount']: true, ['invisible']: taggedForDeleteCount < 1 })}>{customerGalleries.taggedForDeleteCount} {`Image${char}`} selected for deletion.</p>
             </div>) : null}
             <Lightbox/>
           </div>
         </div>
       );
     }
-    return customerGalleries;
+    return customerGalleriesComponent;
   }
 }
 

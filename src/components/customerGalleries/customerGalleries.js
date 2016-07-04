@@ -18,7 +18,7 @@ import { deleteImagesAlert, unapprovedUploadAlert } from './galleriesAlerts';
 import * as gUtils from '../galleries/galleriesUtils';
 import { parsePath } from 'lava';
 import galleryCategories from './galleryCategories';
-import galleryImages from './galleryImages';
+import galleryImages from '../galleries/galleryImages';
 import Lightbox from '../galleries/lightbox';
 
 const masonryOptions = {
@@ -215,13 +215,14 @@ export class CustomerGalleries extends Component {
     const zip = customerGalleries.zip[activeGalleryId];
     let customerGalleriesComponent = <p style={{textAlign: 'center', marginTop: '60px'}}><Link to="/login">Login</Link> to use customer galleries.</p>;
     const authenticated = this.props.auth.authenticated;
-    const galleriesLength = Object.keys(customerGalleries.categories).length;
+    const hasCategories = Object.keys(customerGalleries.categories).length > 0;
+    const hasImages = Object.keys(gallery).length > 0;
     const taggedForDeleteCount = customerGalleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
-    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleriesLength < 1 });
+    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: !hasCategories }); // hide until a category exist
     const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true });
-    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
-    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleriesLength > 0 }); // hide dropzone until images loaded
+    const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: !hasCategories });
+    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: !hasImages }); // hide dropzone until images loaded
     const galleryDeleteToggle = !customerGalleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
@@ -251,7 +252,7 @@ export class CustomerGalleries extends Component {
             {addCategory}
             {authenticated ? (<h2 className={dropZoneTitleClass}>Upload Files</h2>) : null}
             {galleryDropZone}
-            {authenticated ? (
+            {authenticated && hasCategories ? (
               <div>
                 <Dropzone className="gallery__dropzone zip_file" activeClassName="active" accept="multipart/x-zip, application/zip, application/x-compressed, application/x-zip-compressed" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
                   <div>Upload Zip File</div>
@@ -259,7 +260,7 @@ export class CustomerGalleries extends Component {
                 {zip ? (<p className="zip_file_p">Download Gallery: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
               </div>
               ) : null}
-            {authenticated ? (
+            {authenticated && hasCategories ? (
               <div className="cg_customer__link_wrapper">
                 <span className="bold">Private Link: </span><Link to={`/gallery/${activeCategory.slug}`} className="cg_customer__link">{`https://ericaberardi.com/gallery/${activeCategory.slug}`}</Link><br/><p className="cg_customer__secret"><span className="bold">Secret Password: </span>{activeCategory.secretId}</p>
               </div>
@@ -271,7 +272,7 @@ export class CustomerGalleries extends Component {
                 options={masonryOptions} // default {}
                 disableImagesLoaded={false} // default false
                 >
-                  {galleryImages({gallery, scope: this})}
+                  {galleryImages({gallery, scope: this, favPreviewImg: false})}
               </Masonry>
             </div>
             {authenticated ? (<div>

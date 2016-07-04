@@ -8,6 +8,8 @@ import * as gUtils from './galleriesUtils';
 function getImages(opts) {
   let images = [];
   let orderByOptions = [];
+  const favPreviewImg = typeof opts.favPreviewImg === 'boolean' ? opts.favPreviewImg : true;
+  const galleriesPropName = opts.scope.constructor.name === 'CustomerGalleries' ? 'customerGalleries' : 'galleries';
   const authenticated = opts.scope.props.auth.authenticated;
   forIn(opts.gallery, image => {
     orderByOptions.push(
@@ -28,7 +30,7 @@ function getImages(opts) {
     const imageClassName = cn({ ['gallery__image']: true, ['gallery__image_delete']: image.shouldDelete && authenticated, ['pending']: image.pending && authenticated });
     const starType = image.categoryPreviewImage ? 'fa-star' : 'fa-star-o';
     const imageStarClassName = cn({ ['gallery__image_star']: true, ['fa']: true, [starType]: true });
-    const imageLinkClass = opts.scope.props.galleries.galleryDeleteEnabled ? 'lbx-disabled' : '';
+    const imageLinkClass = opts.scope.props[galleriesPropName].galleryDeleteEnabled ? 'lbx-disabled' : '';
     const protectedImage = image.pending && !authenticated;
     if (image.src && !protectedImage) {
       images.push(
@@ -36,7 +38,7 @@ function getImages(opts) {
           {authenticated ? <div className="select-style"><select name="imageOrderBy" className="gallery__image_orderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
             {sortedOrderByOptions}
           </select></div> : null}
-          {authenticated ? <a href="#!" onClick={opts.scope.onChangeCategoryPreviewImage} className={imageStarClassName}></a> : null}
+          {authenticated && favPreviewImg ? <a href="#!" onClick={opts.scope.onChangeCategoryPreviewImage} className={imageStarClassName}></a> : null}
           <a href="#!" onClick={opts.scope.onImageClick} className={imageLinkClass}>
             <img src={image.src} className={imageClassName} />
           </a>

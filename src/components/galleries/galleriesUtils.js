@@ -8,8 +8,10 @@ export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
   const isCustomerGalleries = scope.constructor.name === 'CustomerGalleries';
-  const galleriesPropName = isCustomerGalleries ? 'customerGalleries' : 'galleries';
-  const galleriesRoute = isCustomerGalleries ? 'customer-galleries' : 'galleries';
+  const isCustomerGalleryViewer = scope.constructor.name === 'CustomerGalleryViewer';
+  const galleriesPropName = isCustomerGalleries || isCustomerGalleryViewer ? 'customerGalleries' : 'galleries';
+  const baseRoute = scope.constructor.name === 'CustomerGalleryViewer' ? 'gallery' : 'galleries';
+  const galleriesRoute = isCustomerGalleries ? 'customer-galleries' : baseRoute;
   const galleries = props[galleriesPropName].images;
   const categories = props[galleriesPropName].categories;
 
@@ -55,7 +57,7 @@ export function unbindImagesLoaded(element) {
 // http://masonry.desandro.com/extras.html
 // https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element, scope) {
-  const galleriesPropName = scope.constructor.name === 'CustomerGalleries' ? 'customerGalleries' : 'galleries';
+  const galleriesPropName = scope.constructor.name === 'CustomerGalleries' || scope.constructor.name === 'CustomerGalleryViewer' ? 'customerGalleries' : 'galleries';
   const imgLoad = imagesLoaded(element);
   if (scope.props[galleriesPropName].seqImagesLoadedEnabled) {
     scope.props.seqImagesLoadedEnabled(false); // set false to signify imgLoad.progress event handler has been set

@@ -9,7 +9,9 @@ function getImages(opts) {
   let images = [];
   let orderByOptions = [];
   const favPreviewImg = typeof opts.favPreviewImg === 'boolean' ? opts.favPreviewImg : true;
-  const galleriesPropName = opts.scope.constructor.name === 'CustomerGalleries' ? 'customerGalleries' : 'galleries';
+  const orderByControls = typeof opts.orderByControls === 'boolean' ? opts.orderByControls : true;
+  const isCustomerGalleryViewer = opts.scope.constructor.name === 'CustomerGalleryViewer';
+  const galleriesPropName = opts.scope.constructor.name === 'CustomerGalleries' || isCustomerGalleryViewer ? 'customerGalleries' : 'galleries';
   const authenticated = opts.scope.props.auth.authenticated;
   forIn(opts.gallery, image => {
     orderByOptions.push(
@@ -35,7 +37,7 @@ function getImages(opts) {
     if (image.src && !protectedImage) {
       images.push(
         <div key={image.id} id={image.id} orderby={image.orderBy} className={containerClassName} style={{width: `${containerWidth}%` }}>
-          {authenticated ? <div className="select-style"><select name="imageOrderBy" className="gallery__image_orderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
+          {authenticated && orderByControls ? <div className="select-style"><select name="imageOrderBy" className="gallery__image_orderBy" value={image.orderBy} onChange={opts.scope.onChangeGalleryImageOrder}>
             {sortedOrderByOptions}
           </select></div> : null}
           {authenticated && favPreviewImg ? <a href="#!" onClick={opts.scope.onChangeCategoryPreviewImage} className={imageStarClassName}></a> : null}

@@ -7,7 +7,8 @@ import {
   LOGIN_PATH,
   DASHBOARD_PATH,
   CUSTOMER_GALLERIES_PATH,
-  CUSTOMER_GALLERIES__CUSTOMER_PATH,
+  CUSTOMER_GALLERY_PATH,
+  CUSTOMER_GALLERY_SECRET_PATH,
   HOME_PATH,
   GALLERIES_PATH,
   GALLERY_PATH,
@@ -27,7 +28,8 @@ import Pricing from './pricing/pricing';
 import About from './about/about';
 import Contact from './contact/contact';
 import Login from './admin/login';
-import CustomerGalleries from './customerGalleries/customerGalleries';
+import CustomerGalleries from './admin/customerGalleries';
+import CustomerGalleryViewer from './admin/customerGalleryViewer';
 import Dashboard from './admin/dashboard';
 import NotFound from './app/notFound';
 
@@ -56,7 +58,8 @@ export class Root extends Component {
             <Route component={Contact} path={CONTACT_PATH}/>
             <Route component={Login} path={LOGIN_PATH}/>
             <Route component={CustomerGalleries} path={CUSTOMER_GALLERIES_PATH}/>
-            <Route component={CustomerGalleries} path={CUSTOMER_GALLERIES__CUSTOMER_PATH}/>
+            <Route component={CustomerGalleries} path={CUSTOMER_GALLERY_PATH}/>
+            <Route component={CustomerGalleryViewer} path={CUSTOMER_GALLERY_SECRET_PATH}/>
             <Route component={Dashboard} path={DASHBOARD_PATH}/>
             <Route component={NotFound} path="*"/>
           </Route>

@@ -473,7 +473,7 @@ export function uploadGalleryImage(data) {
         const categoryPreviewImage = !hasImgs && key === 0 ? true : false; // set to true if no images exist in the gallery category
         const orderBy = ++lastImgOrderBy;
         // get last image and increment orderby count
-        const imageData = { id, src, category, categoryId, orderBy, categoryPreviewImage, contentType, downloadURLs, fullPath, name, size, timeCreated, pending: true };
+        const imageData = { id, src, category, categoryId, orderBy, categoryPreviewImage, contentType, downloadURLs, fullPath, name, size, timeCreated };
 
         if (filesLength === key) { // dispatch success message after last image is successfully uploaded
           shouldDispatch = true;

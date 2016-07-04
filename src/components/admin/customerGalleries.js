@@ -67,6 +67,9 @@ export class CustomerGalleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    if (Object.keys(this.props.customerGalleries.categories).length > 0) {
+      this.hydrateActiveGallery(this.props, this);
+    } // ensure gallery is active when component mounts & componentsWillRecieveProps isn't fired
     this.unbindImagesLoaded = false;
   }
   componentDidMount() {
@@ -237,7 +240,6 @@ export class CustomerGalleries extends Component {
       <Dropzone className="gallery__dropzone" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
         <div>Try dropping some files here, or click to select files to upload.</div>
       </Dropzone>
-      <p className="gallery__dropzone_help">*Pending images have a yellow border.</p>
     </div>) : null;
     if (authenticated) {
       customerGalleriesComponent = (

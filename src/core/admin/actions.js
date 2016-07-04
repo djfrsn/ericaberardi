@@ -32,12 +32,9 @@ export function deleteGalleriesCategory(opts) {
     const storage = firebase.storage();
     const categoryName = opts.category.toLowerCase();
     const categoryId = findKey(galleriesProp.categories, { category: categoryName });
-    let callbackCount = 0;
 
     const successCallback = () => {
-      if (callbackCount > 1) {
-        opts.deleteSuccessAlert(categoryName);
-      }
+      opts.deleteSuccessAlert(categoryName);
     };
 
     if (categoryId) {
@@ -45,7 +42,6 @@ export function deleteGalleriesCategory(opts) {
       if (changesValidated) {
         // STEP 1: Delete category
         database.ref(`${galleriesType}/categories/${categoryId}`).set(null).then(() => {
-          callbackCount++;
           successCallback();
         }).catch(() => {
           opts.deleteErrorAlert();
@@ -63,13 +59,22 @@ export function deleteGalleriesCategory(opts) {
           }
         });
         // STEP 3: Delete images meta data
-        database.ref(`${galleriesType}/images/${categoryId}`).set(null).then(() => {
-          callbackCount++;
-          successCallback();
-        }).catch(error => {
+        database.ref(`${galleriesType}/images/${categoryId}`).set(null).catch(error => {
           // we failed to delete a categories images.....log error
           database.ref(`logs/errors/${galleriesType}/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: galleries/images/${categoryId}`, error});
         });
+        // STEP 4: Delete zip from storage
+        const zip = galleriesProp.zip[categoryId];
+        if (zip) {
+          storage.ref().child(zip.fullPath).delete().catch(error => {
+            database.ref(`logs/errors/${galleriesType}/shouldDelete/zip/${zip.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${zip.fullPath}`, error});
+          });
+          // Delete zip meta data
+          database.ref(`${galleriesType}/zip/${categoryId}`).set(null).catch(error => {
+            // we failed to delete a categories images.....log error
+            database.ref(`logs/errors/${galleriesType}/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: galleries/zip/${categoryId}`, error});
+          });
+        }
       }
       else {
         opts.sweetalert({

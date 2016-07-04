@@ -259,7 +259,7 @@ export class CustomerGalleries extends Component {
                 <Dropzone className="gallery__dropzone zip_file" activeClassName="active" accept="multipart/x-zip, application/zip, application/x-compressed, application/x-zip-compressed" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
                   <div>Upload Zip File</div>
                 </Dropzone>
-                {zip ? (<p className="zip_file_p">Download: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
+                {zip ? (<p className="zip_file_p">Download Gallery: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
               </div>
               ) : null}
             {authenticated ? (

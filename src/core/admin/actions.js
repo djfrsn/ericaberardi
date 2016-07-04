@@ -29,6 +29,7 @@ export function deleteGalleriesCategory(opts) {
     const galleriesType = isCustomerGalleries ? 'customerGalleries' : 'galleries';
     const galleriesProp = isCustomerGalleries ? customerGalleries : galleries;
     const database = firebase.database();
+    const storage = firebase.storage();
     const categoryName = opts.category.toLowerCase();
     const categoryId = findKey(galleriesProp.categories, { category: categoryName });
     let callbackCount = 0;
@@ -42,12 +43,26 @@ export function deleteGalleriesCategory(opts) {
     if (categoryId) {
       const changesValidated = validatePendingChanges({ state: galleriesProp, category: galleriesType, parent: 'categories', child: 'images'}); // ensure galleries minimums are met before allowing a cateogry to be deleted
       if (changesValidated) {
+        // STEP 1: Delete category
         database.ref(`${galleriesType}/categories/${categoryId}`).set(null).then(() => {
           callbackCount++;
           successCallback();
         }).catch(() => {
           opts.deleteErrorAlert();
         });
+        // STEP 2: Delete images from storage
+        forIn(galleriesProp.images, imageCategory => {
+          if (imageCategory) {
+            forIn(imageCategory, image => {
+              if (image) {
+                storage.ref().child(image.fullPath).delete().catch(error => {
+                  database.ref(`logs/errors/${galleriesType}/shouldDelete/images/${image.id}`).set({functionName: 'removePendingGalleriesData', 'info': `This was a failure for deleting the following data: ${image.fullPath}`, error});
+                });
+              }
+            });
+          }
+        });
+        // STEP 3: Delete images meta data
         database.ref(`${galleriesType}/images/${categoryId}`).set(null).then(() => {
           callbackCount++;
           successCallback();

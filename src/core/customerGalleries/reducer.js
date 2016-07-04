@@ -2,7 +2,7 @@
 import {
   CG_HYDRATE_GALLERIES,
   CG_UPLOAD_GALLERY_IMAGE_SUCCESS,
-  CG_UPLOAD_GALLERY_IMAGE_ERROR,
+  CG_UPLOAD_GALLERY_ERROR,
   CG_IMAGES_LOADED_ENABLED,
   CG_SEND_GALLERIES_TOAST,
   CG_CREATE_CATEGORY_SUCCESS,
@@ -22,6 +22,7 @@ import forIn from 'lodash.forin';
 export const initialState = {
   categories: {},
   images: {},
+  zip: {},
   toast: {},
   galleryDeleteEnabled: false,
   highlightGalleriesLink: false,
@@ -116,10 +117,11 @@ function mergeImages(state, payload) {
 }
 
 function getGalleryData(payload) {
-  const { categories, images } = payload.snapshot;
+  const { categories, images, zip } = payload.snapshot;
   return {
     categories,
-    images
+    images,
+    zip
   };
 }
 
@@ -167,7 +169,7 @@ export function customerGalleriesReducer(state = initialState, action) {
         toast: successToast
       };
 
-    case CG_UPLOAD_GALLERY_IMAGE_ERROR:
+    case CG_UPLOAD_GALLERY_ERROR:
       return {
         ...state,
         toast: errorToast

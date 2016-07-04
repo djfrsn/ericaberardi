@@ -139,7 +139,11 @@
   cursor: pointer;
   @include quick-cubic-transition(background);
 
-
+  &.zip_file {
+    width: 25%;
+    font-family: $alt-font-family;
+    font-size: 1.2em;
+  }
 
   &:hover {
     background: $colors-black;
@@ -152,7 +156,7 @@
   font-size: 0.9em;
 }
 
-.gallery__dropzone_title {
+.gallery__dropzone_title, .gallery__dropzone_zip_title {
   text-align: center;
   margin-bottom: 20px;
   font-family: $alt-font-family;

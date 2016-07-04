@@ -48,7 +48,8 @@ export class CustomerGalleries extends Component {
     showToast: PropTypes.func.isRequired,
     tagImgForDeletion: PropTypes.func.isRequired,
     toggleGalleryDelete: PropTypes.func.isRequired,
-    uploadGalleryImage: PropTypes.func.isRequired
+    uploadGalleryImage: PropTypes.func.isRequired,
+    uploadGalleryZipFile: PropTypes.func.isRequired
   }
   constructor(props) {
     super(props); // fetch data for logged out/anon users coming directly to customer galleries
@@ -116,11 +117,16 @@ export class CustomerGalleries extends Component {
   }
   onDrop(files) {
     if (!this.state.isDragReject) {
-      this.props.onDropAccept(files); // eslint-disable-line react/prop-types
-    }
+      this.props.onDropAccept(files, this.props.className); // eslint-disable-line react/prop-types
+    } // this.props here is actually equal to props for Dropzone component
   }
-  onDropAccept = files => {
-    this.props.uploadGalleryImage({ files, unapprovedUploadAlert, gallery: this.state.gallery, categoryId: this.state.activeGalleryId, category: this.path });
+  onDropAccept = (files, className) => {
+    if (className.indexOf('zip_file') < 0) {
+      this.props.uploadGalleryImage({ files, unapprovedUploadAlert, gallery: this.state.gallery, categoryId: this.state.activeGalleryId, category: this.path });
+    }
+    else { // isZipFile
+      this.props.uploadGalleryZipFile({ files, unapprovedUploadAlert, gallery: this.state.gallery, categoryId: this.state.activeGalleryId, category: this.path });
+    }
   }
   onImageClick = e => {
     e.preventDefault();
@@ -211,10 +217,10 @@ export class CustomerGalleries extends Component {
     const galleriesLength = Object.keys(this.props.customerGalleries.categories).length;
     const taggedForDeleteCount = this.props.customerGalleries.taggedForDeleteCount;
     const char = taggedForDeleteCount > 1 ? '\'s' : '';
-    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
-    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true }); // hide dropzone until images loaded
+    const dropZoneTitleClass = cn({ ['gallery__dropzone_title']: true, ['hidden']: galleriesLength < 1 });
+    const galleryAddCategoryClass = cn({ ['gallery__add_category_container']: true });
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
-    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleriesLength < 1 }); // hide dropzone until images loaded
+    const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: galleriesLength > 0 }); // hide dropzone until images loaded
     const galleryDeleteToggle = !this.props.customerGalleries.galleryDeleteEnabled;
     const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
@@ -244,6 +250,11 @@ export class CustomerGalleries extends Component {
             {addCategory}
             {authenticated ? (<h2 className={dropZoneTitleClass}>Upload Files</h2>) : null}
             {galleryDropZone}
+            {authenticated ? (
+              <Dropzone className="gallery__dropzone zip_file" activeClassName="active" accept="multipart/x-zip, application/zip, application/x-compressed, application/x-zip-compressed" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+                <div>Upload Zip File</div>
+              </Dropzone>
+              ) : null}
             <div className="gallery">
               <Masonry
                 ref={ref => { this.masonry = ref; }}

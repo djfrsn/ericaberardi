@@ -14,7 +14,7 @@ import {
   CG_CREATE_CATEGORY_SUCCESS,
   CG_CREATE_CATEGORY_ERROR,
   CG_UPLOAD_GALLERY_IMAGE_SUCCESS,
-  CG_UPLOAD_GALLERY_IMAGE_ERROR
+  CG_UPLOAD_GALLERY_ERROR
 } from './action-types';
 import filter from 'lodash.filter';
 import forIn from 'lodash.forin';
@@ -348,6 +348,72 @@ export function highlightGalleriesLink(toggle) {
   };
 }
 
+export function uploadGalleryZipFile(data) {
+  return (dispatch, getState) => {
+    const { firebase, customerGalleries } = getState();
+    const { files, category, categoryId, unapprovedUploadAlert } = data;
+    const zip = customerGalleries.zip[categoryId] || {}; // check for preexisting zip file
+    const database = firebase.database();
+    const storage = firebase.storage();
+    let unapproved = files.length > 1;
+    let unapprovedFiles = [];
+    let approvedFiles = filter(files, file => {
+      // 600k file limit
+      if (file.size < 150000000) {
+        return file;
+      }
+      else {
+        unapprovedFiles.push(file);
+      }
+    });
+    // if above limit show sweet alert w/ list of images that couldn't be uploaded
+    if (unapprovedFiles.length > 0 || unapproved) {
+      unapprovedUploadAlert(unapprovedFiles, 'zip');
+      return;
+    }
+    const uploadZipFile = () => {
+      forEach(approvedFiles, file => {
+        const storageRef = storage.ref().child(file.name);
+        const zipRef = storageRef.child(`${categoryId}/zip/${file.name}`);
+        const uploadZip = zipRef.put(file);
+
+        uploadZip.on('state_changed', () => {
+          // Observe state change events such as progress, pause, and resume
+        }, error => {
+          dispatch({
+            type: CG_UPLOAD_GALLERY_ERROR,
+            payload: error
+          });
+        }, () => {
+          // Handle successful uploads on complete
+          const id = firebase.database('customerGalleries/zip').ref().child(`${categoryId}`).push().key;
+          const src = uploadZip.snapshot.downloadURL;
+          const zipMeta = uploadZip.snapshot.metadata;
+          const { contentType, downloadURLs, fullPath, name, size, timeCreated } = zipMeta;
+          // get last image and increment orderby count
+          const zipData = { id, src, category, categoryId, contentType, downloadURLs, fullPath, name, size, timeCreated };
+
+          database.ref(`customerGalleries/zip/${categoryId}`).set(zipData); // set meta data
+        });
+      });
+    };
+    if (!zip.id) {
+      uploadZipFile();
+    }
+    else { // delete existing zip file then upload the new on if its approved
+      database.ref(`customerGalleries/zip/${categoryId}`).set(null).then(() => {
+        const storageRef = storage.ref();
+        // Create a reference to the file to delete
+        const zipRef = storageRef.child(zip.fullPath);
+        zipRef.delete().then(() => {
+          // File deleted successfully
+          uploadZipFile(); // upload new file
+        });
+      });
+    }
+  };
+}
+
 export function pushImageData(dispatch, firebase, imageData, shouldDispatch) {
   const database = firebase.database();
   database.ref(`customerGalleries/images/${imageData.categoryId}/${imageData.id}`).set(imageData).then(() => {
@@ -394,7 +460,7 @@ export function uploadGalleryImage(data) {
         // Observe state change events such as progress, pause, and resume
       }, error => {
         dispatch({
-          type: CG_UPLOAD_GALLERY_IMAGE_ERROR,
+          type: CG_UPLOAD_GALLERY_ERROR,
           payload: error
         });
       }, () => {

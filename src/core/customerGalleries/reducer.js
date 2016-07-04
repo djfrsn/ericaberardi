@@ -146,6 +146,7 @@ export function customerGalleriesReducer(state = initialState, action) {
     case CG_HYDRATE_GALLERIES:
       return {
         ...state,
+        galleriesHydrated: true,
         ...getGalleryData(action.payload)
       };
 

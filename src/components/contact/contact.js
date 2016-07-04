@@ -69,20 +69,20 @@ export class Contact extends Component {
   }
   render() {
     const { nameError, emailError, textareaError } = this.state;
-    const contactNameClass = classNames({ ['contact__name']: true, ['contact__input_error']: nameError });
-    const contactEmailClass = classNames({ ['contact__email']: true, ['contact__input_error']: emailError });
-    const contactTextAreaClass = classNames({ ['contact__textarea']: true, ['contact__input_error']: textareaError });
+    const contactNameClass = classNames({ ['contact__name']: true, ['eb__input_error']: nameError });
+    const contactEmailClass = classNames({ ['contact__email']: true, ['eb__input_error']: emailError });
+    const contactTextAreaClass = classNames({ ['contact__textarea']: true, ['eb__input_error']: textareaError });
     return (
       <div className="g-row">
         <div className="g-col" >
           <div className="contact__container">
-            <div className="contact__form">
+            <form onSubmit={this.sendEmail} className="contact__form">
               <h2 className="contact__form_title">Nice to meet you!</h2>
               <input data-contact-type="Name" type="text" placeholder="Name" className={contactNameClass} value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
               <input data-contact-type="Email" type="text" placeholder="Email" className={contactEmailClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
               <textarea data-contact-type="Message" name="message" placeholder="Message" className={contactTextAreaClass} value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
               <button onClick={this.sendEmail} className="contact__send">Send</button>
-            </div>
+            </form>
             <div className="contact__social">
               <a href="mailto:ericaberardiphotography@gmail.com" className="contact__email-link">ericaberardiphotography@gmail.com</a>
               {socialIcons()}

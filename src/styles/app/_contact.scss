@@ -68,14 +68,16 @@
   }
 }
 
-.contact__form {
+.contact__form, .eb__form {
   .contact__form_title {
     @include font-family($alt-font-family);
-    font-weight: normal;
     margin-bottom: 40px;
+    margin-left: -10%; // offset width: 90%
+    font-weight: normal;
+    text-align: center;
   }
 
-  .contact__name, .contact__email, .contact__textarea {
+  .contact__name, .contact__email, .contact__textarea, .eb__input {
     @include quick-cubic-transition();
     @include font-family($alt-font-family);
     font-size: 0.6em;
@@ -84,13 +86,13 @@
     border: none;
     border-bottom: 1px solid $colors-gray-light;
 
-    &.contact__input_error {
+    &.eb__input_error {
       @include shake-animation();
       border-bottom-color: red;
     }
   }
 
-  .contact__name, .contact__email {
+  .contact__name, .contact__email, .eb__input {
     width: 90%;
     margin: 0 auto 20px;
     height: 30px;
@@ -115,7 +117,7 @@
     }
   }
 
-  .contact__send {
+  .contact__send, .eb__send_btn {
     @include button-base;
     @include font-family($alt-font-family);
     border: none;

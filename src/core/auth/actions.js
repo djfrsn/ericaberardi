@@ -5,6 +5,7 @@ import {
   SIGN_OUT_SUCCESS,
   RESET_AUTH_MESSAGES
 } from './action-types';
+import findKey from 'lodash.findkey';
 import { POST_LOGIN_PATH, POST_LOGOUT_PATH } from 'config';
 
 export function hydrateAuth() {
@@ -27,6 +28,17 @@ export function resetAuthMessages(timeout = 3250) {
         type: RESET_AUTH_MESSAGES
       });
     }, timeout);
+  };
+}
+
+export function submitCustomerGalleriesPassword(opts) {
+  return (dispatch, getState) => {
+    const { firebase, customerGalleries } = getState();
+    const categories = customerGalleries.categories;
+    const category = findKey(customerGalleries.categories, {category: opts.path });
+    if (category) {
+
+    }
   };
 }
 

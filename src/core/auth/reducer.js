@@ -9,6 +9,7 @@ import {
 
 export const initialState = {
   authenticated: false,
+  isApprovedCustomer: false,
   id: null
 };
 

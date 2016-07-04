@@ -56,14 +56,14 @@ export class Galleries extends Component {
   componentWillMount() {
     this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
+    const { pathname } = this.props.location;
+    this.path = parsePath(pathname).path; // stores currentCategory
   }
   componentDidMount() {
     window.onresize = debounce(() => {
       gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     }, 500);
     this.loadImagesSeq();
-    const { pathname } = this.props.location;
-    this.path = parsePath(pathname).path; // stores currentCategory
   }
   componentWillReceiveProps(nextProps) {
     const { pathname } = nextProps.location;

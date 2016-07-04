@@ -54,6 +54,10 @@ $grid-max-width: 70% !default;
   font-weight: bold;
 }
 
+.capitalize {
+  text-transform: capitalize;
+}
+
 //===============================================
 //  MIXINS
 //===============================================

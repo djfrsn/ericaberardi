@@ -264,7 +264,7 @@ export class CustomerGalleries extends Component {
               ) : null}
             {authenticated && hasCategories ? (
               <div className="cg_customer__link_wrapper">
-                <span className="bold">Private Link: </span><Link to={`/gallery/${activeCategory.slug}`} className="cg_customer__link">{`https://ericaberardi.com/gallery/${activeCategory.slug}`}</Link><br/><p className="cg_customer__secret"><span className="bold">Secret Password: </span>{activeCategory.secretId}</p>
+                <span className="bold">Private Link: </span><Link to={`/gallery/${activeCategory.slug}`} className="cg_customer__link">{`https://ericaberardi.com/gallery/${activeCategory.slug}`}</Link><br/><p className="cg_customer__secret"><span className="bold">Password: </span>{activeCategory.secretId}</p>
               </div>
               ) : null}
             <div className="gallery">

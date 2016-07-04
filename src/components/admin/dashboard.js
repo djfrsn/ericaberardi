@@ -35,8 +35,8 @@ export class DashBoard extends Component {
   changePassword = () => {
     changePasswordAlert(this);
   }
-  deleteGalleriesCategory = () => {
-    deleteGalleriesCategoryAlert(this);
+  deleteGalleriesCategory = e => {
+    deleteGalleriesCategoryAlert(this, e.currentTarget.dataset.type );
   }
   confirmUndo = () => {
     undoAlert(this);
@@ -58,6 +58,8 @@ export class DashBoard extends Component {
           <a onClick={this.changePassword} className="dashboard__link" >Change Password</a>
           <span className="dashboard__link_divider">&#8226;</span>
           <Link to="/customer-galleries" className="dashboard__link" >Customer Galleries</Link>
+          <span className="dashboard__link_divider">&#8226;</span>
+          <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory} data-type="customerGalleries">Delete Customer Galleries Category</a>
           <span className="dashboard__link_divider">&#8226;</span>
           <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory}>Delete Galleries Category</a>
           <div className={pendingChangesClass}>

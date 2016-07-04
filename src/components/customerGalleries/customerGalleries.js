@@ -51,12 +51,14 @@ export class CustomerGalleries extends Component {
     uploadGalleryImage: PropTypes.func.isRequired
   }
   constructor(props) {
-    super(props);
-    let customerGalleries = firebase.database().ref('customerGalleries');
+    super(props); // fetch data for logged out/anon users coming directly to customer galleries
+    if (Object.keys(props.customerGalleries.categories).length < 1) {
+      let customerGalleries = firebase.database().ref('customerGalleries');
 
-    customerGalleries.on('value', snapshot => {
-      this.props.hydrateCustomerGalleries(snapshot.val());
-    });
+      customerGalleries.on('value', snapshot => {
+        this.props.hydrateCustomerGalleries(snapshot.val());
+      });
+    }
   }
   state = {
     gallery: {},

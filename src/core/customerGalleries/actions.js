@@ -64,8 +64,8 @@ function parseImages(images) {
 
 export function hydrateCustomerGalleries(data) {
   return (dispatch, getState) => {
-    const { auth, customerGalleries } = getState();
-    const snapshotRaw = data ? data : { categories: customerGalleries.categories, images: customerGalleries.images };
+    const { auth } = getState();
+    const snapshotRaw = data ? data : { categories: {}, images: {} };
     const images = snapshotRaw.images || {};
     let parsedImages = {};
 
@@ -128,12 +128,12 @@ export function createCategory(category) {
   };
 }
 
-export function toggleGalleryDelete() {
+export function toggleGalleryDelete(bool) {
   return (dispatch, getState) => {
     const { customerGalleries } = getState();
     dispatch({
       type: CG_TOGGLE_GALLERY_DELETE,
-      payload: !customerGalleries.galleryDeleteEnabled
+      payload: typeof bool === 'boolean' ? bool : !customerGalleries.galleryDeleteEnabled
     });
   };
 }

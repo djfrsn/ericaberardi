@@ -24,10 +24,13 @@ export function clearAdminToast() {
 
 export function deleteGalleriesCategory(opts) {
   return (dispatch, getState) => {
-    const { firebase, galleries } = getState();
+    const { firebase, galleries, customerGalleries } = getState();
+    const isCustomerGalleries = opts.galleriesType === 'customerGalleries';
+    const galleriesType = isCustomerGalleries ? 'customerGalleries' : 'galleries';
+    const galleriesProp = isCustomerGalleries ? customerGalleries : galleries;
     const database = firebase.database();
     const categoryName = opts.category.toLowerCase();
-    const categoryId = findKey(galleries.categories, { category: categoryName });
+    const categoryId = findKey(galleriesProp.categories, { category: categoryName });
     let callbackCount = 0;
 
     const successCallback = () => {
@@ -37,20 +40,20 @@ export function deleteGalleriesCategory(opts) {
     };
 
     if (categoryId) {
-      const changesValidated = validatePendingChanges('galleries', galleries); // ensure galleries minimums are met before allowing a cateogry to be deleted
+      const changesValidated = validatePendingChanges({ state: galleriesProp, category: galleriesType, parent: 'categories', child: 'images'}); // ensure galleries minimums are met before allowing a cateogry to be deleted
       if (changesValidated) {
-        database.ref(`galleries/categories/${categoryId}`).set(null).then(() => {
+        database.ref(`${galleriesType}/categories/${categoryId}`).set(null).then(() => {
           callbackCount++;
           successCallback();
         }).catch(() => {
           opts.deleteErrorAlert();
         });
-        database.ref(`galleries/images/${categoryId}`).set(null).then(() => {
+        database.ref(`${galleriesType}/images/${categoryId}`).set(null).then(() => {
           callbackCount++;
           successCallback();
         }).catch(error => {
           // we failed to delete a categories images.....log error
-          database.ref(`logs/errors/galleries/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: galleries/images/${categoryId}`, error});
+          database.ref(`logs/errors/${galleriesType}/shouldDelete/${categoryId}`).set({functionName: 'deleteGalleriesCategory', 'info': `This was a failure for deleting the following data: galleries/images/${categoryId}`, error});
         });
       }
       else {
@@ -282,6 +285,11 @@ function getPendingChangeMinimums(category) {
       minChildCount = 4;
       break;
 
+    case 'customerGalleries':
+      minParentCount = 0;
+      minChildCount = 0;
+      break;
+
     case 'pricing':
       minParentCount = 3;
       minChildCount = 1;
@@ -299,7 +307,7 @@ function validatePendingChanges(opts) {
   const { minParentCount, minChildCount } = getPendingChangeMinimums(opts.category);
   let validChanges = false;
 
-  if (opts.category === 'galleries' || opts.category === 'pricing') {
+  if (opts.category === 'galleries' || opts.category === 'customerGalleries' || opts.category === 'pricing') {
     const parent = opts.state[opts.parent];
     const parentCount = Object.keys(parent).length;
     if (parentCount >= minParentCount) {

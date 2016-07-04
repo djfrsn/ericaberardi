@@ -47,9 +47,9 @@ function deleteErrorAlert() {
   });
 }
 
-export function deleteGalleriesCategoryAlert(scope) {
+export function deleteGalleriesCategoryAlert(scope, galleriesType) {
   sweetalert({
-    title: 'Delete Galleries Category',
+    title: galleriesType === 'customerGalleries' ? 'Delete Customer Galleries Category' : 'Delete Galleries Category',
     text: 'Type the name of a galleries category to delete it.',
     type: 'input',
     confirmButtonColor: '#d50d0d',
@@ -64,7 +64,7 @@ export function deleteGalleriesCategoryAlert(scope) {
       sweetalert.showInputError('You need to write something!');
       return false;
     }
-    scope.props.deleteGalleriesCategory({category, deleteSuccessAlert, deleteErrorAlert, sweetalert});
+    scope.props.deleteGalleriesCategory({category, galleriesType, deleteSuccessAlert, deleteErrorAlert, sweetalert});
   });
 }
 

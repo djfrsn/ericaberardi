@@ -1,6 +1,5 @@
 // Vendor
 import React, { Component, PropTypes } from 'react';
-import * as firebase from 'firebase';
 import { Link } from 'react-router';
 import { connect } from 'react-redux';
 import cn from 'classnames';

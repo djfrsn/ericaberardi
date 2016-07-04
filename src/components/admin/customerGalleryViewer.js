@@ -1,11 +1,8 @@
 // Vendor
 import React, { Component, PropTypes } from 'react';
 import * as firebase from 'firebase';
-import { Link } from 'react-router';
 import { connect } from 'react-redux';
-import cn from 'classnames';
 import debounce from 'lodash.debounce';
-import Dropzone from 'react-dropzone';
 import Masonry from 'react-masonry-component';
 import findKey from 'lodash.findkey';
 import delay from 'lodash.delay';
@@ -47,6 +44,7 @@ export class CustomerGalleryViewer extends Component {
     sendGalleriesToast: PropTypes.func.isRequired,
     showLightbox: PropTypes.func.isRequired,
     showToast: PropTypes.func.isRequired,
+    submitCustomerGalleriesPassword: PropTypes.func.isRequired,
     tagImgForDeletion: PropTypes.func.isRequired,
     toggleGalleryDelete: PropTypes.func.isRequired,
     uploadGalleryImage: PropTypes.func.isRequired,
@@ -64,10 +62,10 @@ export class CustomerGalleryViewer extends Component {
     const galleriesHydrated = this.props.customerGalleries.galleriesHydrated;
     const initCustomerAuth = () => {
       const customerGalleryId = sessionStorage.getItem('customerSecretId');
-        if (customerGalleryId) {
-          this.props.hydrateCustomerAuth(customerGalleryId);
-        }
-      };
+      if (customerGalleryId) {
+        this.props.hydrateCustomerAuth(customerGalleryId);
+      }
+    };
     // fetch data for non authed users
     if (Object.keys(this.props.customerGalleries.categories).length < 1 && !galleriesHydrated) {
       let customerGalleries = firebase.database().ref('customerGalleries');
@@ -94,7 +92,7 @@ export class CustomerGalleryViewer extends Component {
     const categories = this.props.customerGalleries.categories;
     const category = findKey(categories, {category: this.path });
     if (!category && this.props.customerGalleries.galleriesHydrated ) {
-      this.context.router.replace(`/gallery`); // send to not found page
+      this.context.router.replace('/gallery'); // send to not found page
     }
     // Is custom authenticated & accessing their gallery?
     if (nextProps.auth.isApprovedCustomer && categories[category].secretId === this.props.auth.secretId ) {
@@ -147,7 +145,7 @@ export class CustomerGalleryViewer extends Component {
     }
   }
   handleChange = e => {
-      this.setState({...this.state, password: e.target.value});
+    this.setState({...this.state, password: e.target.value});
   }
   submitPassword = e => {
     e.preventDefault();
@@ -157,10 +155,9 @@ export class CustomerGalleryViewer extends Component {
       delay(() => { // clear errors
         this.setState({ ...this.state, passwordError: false });
       }, 7000);
-    }
-    // TODO: add form validation from contact
+    };
     if (password !== '') {
-      this.props.submitCustomerGalleriesPassword({path:this.path, password, errorCallback: passwordError });
+      this.props.submitCustomerGalleriesPassword({ path: this.path, password, errorCallback: passwordError });
     }
     else {
       passwordError();
@@ -172,12 +169,10 @@ export class CustomerGalleryViewer extends Component {
     let activeGalleryId = this.state.activeGalleryId;
     const activeCategory = customerGalleries.categories[activeGalleryId] || {};
     const zip = customerGalleries.zip[activeGalleryId];
-    const hasCategories = Object.keys(customerGalleries.categories).length > 0;
-    const hasImages = Object.keys(gallery).length > 0;
     const passwordClass = classNames({ ['eb__input']: true, ['eb__input_error']: this.state.passwordError });
     let customerGalleriesComponent = (
       <div>
-        <h1 className="cg__title"><span className="capitalize">{this.path}</span> Gallery</h1>
+        <h1 className="cg__title"><span className="capitalize">{this.path}</span></h1>
         <form onSubmit={this.submitPassword} className="customer__gallery__form eb__form">
           <input data-contact-type="Password" type="password" placeholder="Enter Password" className={passwordClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
           <button onClick={this.submitPassword} className="eb__send_btn">Submit</button>

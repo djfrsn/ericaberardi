@@ -20,6 +20,7 @@ const initialState = {
   contactEmail: '',
   contactSubject: '',
   contactMessage: '',
+  allFieldsHaveValues: false,
   ...intialErrorsState
 };
 

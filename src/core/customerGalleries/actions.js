@@ -21,6 +21,7 @@ import forIn from 'lodash.forin';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
 import utils from 'utils';
+import slugify from 'slugify';
 
 export function clearGalleriesToast() {
   return dispatch => {
@@ -65,7 +66,7 @@ function parseImages(images) {
 export function hydrateCustomerGalleries(data) {
   return (dispatch, getState) => {
     const { auth } = getState();
-    const snapshotRaw = data ? data : { categories: {}, images: {} };
+    const snapshotRaw = data ? data : { categories: {}, images: {}, zip: {} };
     const images = snapshotRaw.images || {};
     let parsedImages = {};
 
@@ -73,7 +74,7 @@ export function hydrateCustomerGalleries(data) {
       parsedImages = parseImages(images); // refresh orderby numbering
     }
 
-    const snapshot = { ...snapshotRaw, images: parsedImages };
+    const snapshot = { ...snapshotRaw, images: parsedImages, zip: snapshotRaw.zip ? snapshotRaw.zip : {} };
 
     dispatch({
       type: CG_HYDRATE_GALLERIES,
@@ -107,10 +108,11 @@ export function createCategory(category) {
 
     if (isValidCategory(category)) {
       const id = firebase.database('customerGalleries').ref().child('categories').push().key;
+      category = category.toLowerCase();
       firebase.database().ref(`customerGalleries/categories/${id}`).set({
         id,
-        category: category.toLowerCase(),
-        publicId: utils.uuid(),
+        category,
+        slug: slugify(category),
         secretId: utils.uuid(),
         orderBy: ++categoriesLength,
         pending: true

@@ -212,6 +212,7 @@ export class CustomerGalleries extends Component {
   }
   render() {
     const { gallery } = this.state;
+    let activeGalleryId = this.state.activeGalleryId;
     let customerGalleries = <p style={{textAlign: 'center', marginTop: '60px'}}><Link to="/login">Login</Link> to use customer galleries.</p>;
     const authenticated = this.props.auth.authenticated;
     const galleriesLength = Object.keys(this.props.customerGalleries.categories).length;
@@ -237,6 +238,7 @@ export class CustomerGalleries extends Component {
       </Dropzone>
       <p className="gallery__dropzone_help">*Pending images have a yellow border.</p>
     </div>) : null;
+    const zip = this.props.customerGalleries.zip[activeGalleryId];
     if (authenticated) {
       customerGalleries = (
         <div className="g-row cg__container" ref={ref => { this.galleryContainer = ref; }}>
@@ -251,9 +253,12 @@ export class CustomerGalleries extends Component {
             {authenticated ? (<h2 className={dropZoneTitleClass}>Upload Files</h2>) : null}
             {galleryDropZone}
             {authenticated ? (
-              <Dropzone className="gallery__dropzone zip_file" activeClassName="active" accept="multipart/x-zip, application/zip, application/x-compressed, application/x-zip-compressed" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
-                <div>Upload Zip File</div>
-              </Dropzone>
+              <div>
+                <Dropzone className="gallery__dropzone zip_file" activeClassName="active" accept="multipart/x-zip, application/zip, application/x-compressed, application/x-zip-compressed" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+                  <div>Upload Zip File</div>
+                </Dropzone>
+                {zip ? (<p className="zip_file_p">Download: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
+              </div>
               ) : null}
             <div className="gallery">
               <Masonry

@@ -2,7 +2,15 @@
   margin-top: 60px;
 }
 
-.cg__title {
+.zip_file_p, .cg__title {
   text-align: center;
+}
+
+.cg__title {
   font-size: 2em;
+}
+
+.zip_file_p {
+  font-family: $alt-font-family;
+  margin-top: 10px;
 }

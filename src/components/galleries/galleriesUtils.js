@@ -7,8 +7,11 @@ import { parsePath } from 'lava';
 export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
-  const galleries = props.galleries.images;
-  const categories = props.galleries.categories;
+  const isCustomerGalleries = scope.constructor.name === 'CustomerGalleries';
+  const galleriesPropName = isCustomerGalleries ? 'customerGalleries' : 'galleries';
+  const galleriesRoute = isCustomerGalleries ? 'customer-galleries' : 'galleries';
+  const galleries = props[galleriesPropName].images;
+  const categories = props[galleriesPropName].categories;
 
 
   if (Object.keys(categories).length > 0) {
@@ -24,7 +27,7 @@ export function hydrateActiveGallery(props, scope) {
     let activeGallery = galleries[activeGalleryId];
 
     if (path !== galleryPath) { // if needed correct browser url to show current category
-      scope.context.router.replace(`/galleries/${galleryPath}`);
+      scope.context.router.replace(`/${galleriesRoute}/${galleryPath}`);
     }
 
     const gallery = {};
@@ -32,12 +35,12 @@ export function hydrateActiveGallery(props, scope) {
     forIn(activeGallery, (image, id) => {
       gallery[id] = {
         ...image, // force show when seqImagesLoaded is disabled...
-        show: !scope.props.galleries.seqImagesLoadedEnabled ? true : false // since that function would otherwise reveals images
+        show: !scope.props[galleriesPropName].seqImagesLoadedEnabled ? true : false // since that function would otherwise reveals images
       };
     });
 
     scope.setState({ ...scope.state, gallery, activeGalleryId });
-    if (!scope.props.galleries.forceImagesLoadedOff) {
+    if (!scope.props[galleriesPropName].forceImagesLoadedOff) {
       scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added
     }
   }
@@ -52,8 +55,9 @@ export function unbindImagesLoaded(element) {
 // http://masonry.desandro.com/extras.html
 // https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element, scope) {
+  const galleriesPropName = scope.constructor.name === 'CustomerGalleries' ? 'customerGalleries' : 'galleries';
   const imgLoad = imagesLoaded(element);
-  if (scope.props.galleries.seqImagesLoadedEnabled) {
+  if (scope.props[galleriesPropName].seqImagesLoadedEnabled) {
     scope.props.seqImagesLoadedEnabled(false); // set false to signify imgLoad.progress event handler has been set
   }
 

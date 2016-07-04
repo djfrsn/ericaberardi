@@ -3,7 +3,7 @@ import cn from 'classnames';
 import forIn from 'lodash.forin';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
-import * as gUtils from './galleriesUtils';
+import * as gUtils from '../galleries/galleriesUtils';
 
 function getImages(opts) {
   let images = [];

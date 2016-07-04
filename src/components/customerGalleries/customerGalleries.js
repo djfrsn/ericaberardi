@@ -15,7 +15,7 @@ import { customerGalleriesActions } from 'core/customerGalleries';
 import { lightboxActions } from 'core/lightbox';
 import { toastActions } from 'core/toast';
 import { deleteImagesAlert, unapprovedUploadAlert } from './galleriesAlerts';
-import * as gUtils from './galleriesUtils';
+import * as gUtils from '../galleries/galleriesUtils';
 import { parsePath } from 'lava';
 import galleryCategories from './galleryCategories';
 import galleryImages from './galleryImages';
@@ -38,7 +38,6 @@ export class CustomerGalleries extends Component {
     clearGalleriesToast: PropTypes.func.isRequired,
     createCategory: PropTypes.func.isRequired,
     customerGalleries: PropTypes.object.isRequired,
-    highlightGalleriesLink: PropTypes.func.isRequired,
     hydrateCustomerGalleries: PropTypes.func.isRequired,
     location: PropTypes.object.isRequired,
     onGalleryDeleteImages: PropTypes.func.isRequired,
@@ -69,7 +68,6 @@ export class CustomerGalleries extends Component {
   }
   componentWillMount() {
     this.unbindImagesLoaded = false;
-    this.props.highlightGalleriesLink(true);
   }
   componentDidMount() {
     window.onresize = debounce(() => {
@@ -109,7 +107,6 @@ export class CustomerGalleries extends Component {
   componentWillUnmount() {
     this.resetTaggedForGalleryDelete();
     this.props.toggleGalleryDelete(false);
-    this.props.highlightGalleriesLink(false);
     this.unbindImagesLoaded = true;
     this.galleriesPathname = '';
     gUtils.unbindImagesLoaded(this.galleryContainer);

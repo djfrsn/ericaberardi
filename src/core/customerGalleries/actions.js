@@ -10,7 +10,6 @@ import {
   CG_CHANGE_CATEGORY_IMAGE_ORDER,
   CG_CHANGE_GALLERY_IMAGE_ORDER,
   CG_CHANGE_CATEGORY_PREVIEW_IMAGE,
-  CG_HIGHLIGHT_GALLERIES_LINK,
   CG_CREATE_CATEGORY_SUCCESS,
   CG_CREATE_CATEGORY_ERROR,
   CG_UPLOAD_GALLERY_IMAGE_SUCCESS,
@@ -346,15 +345,6 @@ export function changeCategoryPreviewImage(opts) {
           type: 'error'
         }
       });
-    });
-  };
-}
-
-export function highlightGalleriesLink(toggle) {
-  return dispatch => {
-    dispatch({
-      type: CG_HIGHLIGHT_GALLERIES_LINK,
-      payload: toggle
     });
   };
 }

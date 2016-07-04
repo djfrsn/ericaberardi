@@ -14,8 +14,7 @@ import {
   CG_TAG_IMAGE_FOR_DELETION,
   CG_CHANGE_CATEGORY_IMAGE_ORDER,
   CG_CHANGE_GALLERY_IMAGE_ORDER,
-  CG_CHANGE_CATEGORY_PREVIEW_IMAGE,
-  CG_HIGHLIGHT_GALLERIES_LINK
+  CG_CHANGE_CATEGORY_PREVIEW_IMAGE
 } from './action-types';
 import forIn from 'lodash.forin';
 
@@ -25,7 +24,6 @@ export const initialState = {
   zip: {},
   toast: {},
   galleryDeleteEnabled: false,
-  highlightGalleriesLink: false,
   seqImagesLoadedEnabled: false,
   taggedForDeleteCount: 0
 };
@@ -210,12 +208,6 @@ export function customerGalleriesReducer(state = initialState, action) {
       return {
         ...state,
         categories: action.payload.categories
-      };
-
-    case CG_HIGHLIGHT_GALLERIES_LINK:
-      return {
-        ...state,
-        highlightGalleriesLink: action.payload
       };
 
     default:

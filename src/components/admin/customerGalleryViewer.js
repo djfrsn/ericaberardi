@@ -182,7 +182,7 @@ export class CustomerGalleryViewer extends Component {
     if (isApprovedCustomer && activeCategory.secretId === this.props.auth.secretId) {
       customerGalleriesComponent = (
         <div>
-          <h1 className="cg__title"><span className="capitalize">{activeCategory.category}</span> Gallery</h1>
+          <h1 className="cg__title"><span className="capitalize">{activeCategory.category}</span></h1>
           {zip ? (<p className="zip_file_p">Download Gallery: <a href={zip.src} target="_blank" download="true">{zip.name}</a></p>) : null}
           <div className="gallery">
             <Masonry

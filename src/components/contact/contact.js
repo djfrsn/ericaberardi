@@ -64,7 +64,8 @@ export class Contact extends Component {
       type: 'success'
     });
   }
-  sendEmail = () => {
+  sendEmail = e => {
+    e.preventDefault();
     const { contactName, contactEmail, contactMessage } = this.state;
     this.props.sendEmail({ contactName, contactEmail, contactMessage});
   }
@@ -72,6 +73,7 @@ export class Contact extends Component {
     const { nameError, emailError, textareaError } = this.state;
     const contactNameClass = classNames({ ['contact__name']: true, ['eb__input_error']: nameError });
     const contactEmailClass = classNames({ ['contact__email']: true, ['eb__input_error']: emailError });
+    const contactSubjectClass = classNames({ ['contact__subject']: true, ['eb__input_error']: emailError });
     const contactTextAreaClass = classNames({ ['contact__textarea']: true, ['eb__input_error']: textareaError });
     return (
       <div className="g-row">
@@ -81,6 +83,7 @@ export class Contact extends Component {
               <h2 className="contact__form_title">Nice to meet you!</h2>
               <input data-contact-type="Name" type="text" placeholder="Name" className={contactNameClass} value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
               <input data-contact-type="Email" type="text" placeholder="Email" className={contactEmailClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
+              <input data-contact-type="Subject" type="text" placeholder="Subject" className={contactSubjectClass} value={this.state.contactSubject} onChange={this.handleChange} ref={ref => { this.contactSubject = ref; }}/>
               <textarea data-contact-type="Message" name="message" placeholder="Message" className={contactTextAreaClass} value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
               <button onClick={this.sendEmail} className="contact__send">Send</button>
             </form>

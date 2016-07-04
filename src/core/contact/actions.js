@@ -3,7 +3,7 @@ import {
   SEND_EMAIL_ERROR,
   CLEAR_EMAIL_DATA
 } from './action-types';
-
+import utils from 'utils';
 
 function validateString(str, min, max) {
   let valid = false;
@@ -60,6 +60,19 @@ function validateEmailInputs(data) {
           }
           break;
 
+        case 'contactSubject':
+          validate = validateString(data[prop], 2, 150);
+          if (!validate.valid) {
+            success = false;
+            err.push({
+              firstLine: 'Error!',
+              secondLine: 'Please enter a valid subject!.',
+              type: 'error',
+              errName: 'subject'
+            });
+          }
+          break;
+
         case 'contactMessage':
           validate = validateString(data[prop], 20, 2000);
           if (!validate.valid) {
@@ -82,20 +95,40 @@ function validateEmailInputs(data) {
 }
 
 export function sendEmail(data) {
-  return dispatch => {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    const database = firebase.database();
     const validation = validateEmailInputs(data);
 
-    if (!validation.valid) {
+    if (!validation.success) {
       dispatch({
         type: SEND_EMAIL_ERROR,
         payload: { validation }
       });
     }
     else {
-      // mailgun pow!!!
-      dispatch({
-        type: SEND_EMAIL_SUCCESS,
-        payload: { data: data, validation }
+      const emailData = {
+        fromEmail: data.contactEmail,
+        fromName: data.contactName,
+        'subject': data.contactSubject,
+        message: data.contactMessage
+      };
+      emailjs.send('postmark', 'template_m5wrGxSz', emailData).then(() => {
+        database.ref(`logs/emails/${utils.uuid()}`).set(emailData);
+        dispatch({
+          type: SEND_EMAIL_SUCCESS,
+          payload: { data: data, validation }
+        });
+      }, () => {
+        dispatch({
+          type: SEND_EMAIL_ERROR,
+          payload: { validation: { success: false, err: {
+            firstLine: 'Error!',
+            secondLine: 'Failed to send email! Please try again.',
+            type: 'error',
+            errName: 'sendEMail'
+          } } }
+        });
       });
     }
   };

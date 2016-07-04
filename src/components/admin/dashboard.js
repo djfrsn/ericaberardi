@@ -61,7 +61,7 @@ export class DashBoard extends Component {
           <span className="dashboard__link_divider">&#8226;</span>
           <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory} data-type="customerGalleries">Delete Customer Galleries Category</a>
           <span className="dashboard__link_divider">&#8226;</span>
-          <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory}>Delete Galleries Category</a>
+          <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory}>Delete Public Galleries Category</a>
           <div className={pendingChangesClass}>
             {pendingUpdatesTitle}
             <div className="pending-changes__list_wrapper">

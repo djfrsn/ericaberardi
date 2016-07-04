@@ -7,7 +7,8 @@
 }
 
 .cg__title {
-  font-size: 2em;
+  font-family: $alt-font-family;
+  font-size: 1.9em;
 }
 
 .zip_file_p {
@@ -16,6 +17,7 @@
 }
 
 .cg_customer__link_wrapper {
+  font-family: $alt-font-family;
   margin-top: 40px;
   text-align: center;
 }

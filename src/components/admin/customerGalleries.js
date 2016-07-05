@@ -79,8 +79,9 @@ export class CustomerGalleries extends Component {
     const routeChange = pathname !== galleriesPathname || pathname === '/customer-galleries';
     const galleryChange = !deepEqual(nextProps.customerGalleries.images, this.props.customerGalleries.images);
     const categoriesChange = !deepEqual(nextProps.customerGalleries.categories, this.props.customerGalleries.categories);
+    const hasCategories = Object.keys(nextProps.customerGalleries.categories).length > 0;
 
-    if (routeChange || galleryChange || categoriesChange) {
+    if (routeChange || galleryChange || categoriesChange && hasCategories) {
       this.galleriesPathname = pathname; // update active gallery on route/galleriessState change
       this.hydrateActiveGallery(nextProps, this);
     }

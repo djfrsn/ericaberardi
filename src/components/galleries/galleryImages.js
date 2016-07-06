@@ -10,8 +10,8 @@ function getImages(opts) {
   let orderByOptions = [];
   const favPreviewImg = typeof opts.favPreviewImg === 'boolean' ? opts.favPreviewImg : true;
   const orderByControls = typeof opts.orderByControls === 'boolean' ? opts.orderByControls : true;
-  const isCustomerGalleryViewer = opts.scope.constructor.name === 'CustomerGalleryViewer';
-  const galleriesPropName = opts.scope.constructor.name === 'CustomerGalleries' || isCustomerGalleryViewer ? 'customerGalleries' : 'galleries';
+  const isCustomerGalleryViewer = opts.scope.constructorName === 'CustomerGalleryViewer';
+  const galleriesPropName = opts.scope.constructorName === 'CustomerGalleries' || isCustomerGalleryViewer ? 'customerGalleries' : 'galleries';
   const authenticated = opts.scope.props.auth.authenticated;
   forIn(opts.gallery, image => {
     orderByOptions.push(

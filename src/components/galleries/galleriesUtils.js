@@ -15,7 +15,6 @@ export function hydrateActiveGallery(props, scope) {
   const galleries = props[galleriesPropName].images;
   const categories = props[galleriesPropName].categories;
 
-
   if (Object.keys(categories).length > 0) {
     const defaultGallery = categories[Object.keys(categories)[0]];
     const galleryMatch = filter(categories, { category: path })[0];
@@ -81,7 +80,6 @@ export function seqImagesLoaded(element, scope) {
     }
   });
 }
-
 
 // media queries
 export function mq() {

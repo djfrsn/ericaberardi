@@ -13,6 +13,7 @@ function getImages(opts) {
   const isCustomerGalleryViewer = opts.scope.constructorName === 'CustomerGalleryViewer';
   const galleriesPropName = opts.scope.constructorName === 'CustomerGalleries' || isCustomerGalleryViewer ? 'customerGalleries' : 'galleries';
   const authenticated = opts.scope.props.auth.authenticated;
+
   forIn(opts.gallery, image => {
     orderByOptions.push(
       <option key={`orderby-${image.id}`} data-id={image.id} value={image.orderBy}>{image.orderBy}</option>

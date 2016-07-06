@@ -99,11 +99,13 @@ export class CustomerGalleries extends Component {
     this.loadImagesSeq();
   }
   componentWillUnmount() {
-    this.resetTaggedForGalleryDelete();
-    this.props.toggleGalleryDelete(false);
     this.unbindImagesLoaded = true;
     this.galleriesPathname = '';
-    gUtils.unbindImagesLoaded(this.galleryContainer);
+    if (this.props.auth.authenticated) {
+      this.resetTaggedForGalleryDelete();
+      this.props.toggleGalleryDelete(false);
+      gUtils.unbindImagesLoaded(this.galleryContainer);
+    }
     window.onresize = () => {}; // remove listener
   }
   onDrop(files) {

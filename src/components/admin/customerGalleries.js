@@ -57,6 +57,9 @@ export class CustomerGalleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    if (!this.props.auth.authenticated) {
+      this.context.router.replace('/login');
+    }
     this.constructorName = 'CustomerGalleries'; // uglifyjs mangles constructor names, use this one instead
     if (Object.keys(this.props.customerGalleries.categories).length > 0) {
       this.hydrateActiveGallery(this.props, this);

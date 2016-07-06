@@ -57,6 +57,7 @@ export class CustomerGalleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    this.constructorName = 'CustomerGalleries'; // uglifyjs mangles constructor names, use this one instead
     if (Object.keys(this.props.customerGalleries.categories).length > 0) {
       this.hydrateActiveGallery(this.props, this);
     } // ensure gallery is active when component mounts & componentsWillRecieveProps isn't fired

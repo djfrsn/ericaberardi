@@ -7,8 +7,7 @@ import orderBy from 'lodash.orderBy';
 function getCategories(opts) {
   const authenticated = opts.scope.props.auth.authenticated;
   const orderByControls = typeof opts.orderByControls === 'boolean' ? opts.orderByControls : true;
-  console.log('constructor', opts.scope.constructor.name); // eslint-disable-line no-console
-  const isCustomerGalleries = opts.scope.constructor.name === 'CustomerGalleries';
+  const isCustomerGalleries = opts.scope.constructorName === 'CustomerGalleries';
   const galleriesPropName = isCustomerGalleries ? 'customerGalleries' : 'galleries';
   const galleriesRoute = isCustomerGalleries ? 'customer-galleries' : 'galleries';
   let categories = [];

@@ -54,6 +54,7 @@ export class Galleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    this.constructorName = 'Galleries'; // uglifyjs mangles constructor names, use this one instead
     this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
     const { pathname } = this.props.location;

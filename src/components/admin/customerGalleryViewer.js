@@ -76,7 +76,7 @@ export class CustomerGalleryViewer extends Component {
       });
     }
     else if (galleriesHydrated) {
-      initCustomerAuth();
+      initCustomerAuth(); // handle case where customer visits this url using html browser history api
     }
   }
   componentDidMount() {

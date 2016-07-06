@@ -21,15 +21,17 @@ const store = configureStore({
 const history = syncHistoryWithStore(browserHistory, store);
 
 firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes to update protected data
-  let customerGalleries = firebase.database().ref('customerGalleries');
-
-  customerGalleries.on('value', snapshot => {
-    store.dispatch(customerGalleriesActions.hydrateCustomerGalleries(snapshot.val()));
-  });
 
   store.dispatch(galleriesActions.hydrateGalleries()); // hydrate to hide/show protected content
+
   if (user) {
     store.dispatch(authActions.hydrateAuth());
+
+    let customerGalleries = firebase.database().ref('customerGalleries');
+
+    customerGalleries.on('value', snapshot => {
+      store.dispatch(customerGalleriesActions.hydrateCustomerGalleries(snapshot.val()));
+    });
   }
 });
 

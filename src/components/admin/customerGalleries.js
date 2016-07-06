@@ -67,9 +67,7 @@ export class CustomerGalleries extends Component {
     window.onresize = debounce(() => {
       gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     }, 500);
-    if (this.props.auth.authenticated) {
-      this.loadImagesSeq();
-    }
+    this.loadImagesSeq();
     const { pathname } = this.props.location;
     this.path = parsePath(pathname).path; // stores currentCategory
   }
@@ -137,7 +135,7 @@ export class CustomerGalleries extends Component {
     gUtils.hydrateActiveGallery(props, this); // set current gallery images src
   }
   loadImagesSeq = () => {
-    if (this.props.customerGalleries.seqImagesLoadedEnabled) { // enabled/disabled to prevent over binding
+    if (this.props.customerGalleries.seqImagesLoadedEnabled && this.props.auth.authenticated) { // enabled/disabled to prevent over binding
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }

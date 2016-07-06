@@ -42,6 +42,7 @@ export function hydrateActiveGallery(props, scope) {
 
     scope.setState({ ...scope.state, gallery, activeGalleryId });
     if (!scope.props[galleriesPropName].forceImagesLoadedOff) {
+      // TODO: check out the below line..I don't think this does anything
       scope.props.seqImagesLoadedEnabled(true); // enable to allow imgLoad.progress event to rebind handler after additional images have been added
     }
   }

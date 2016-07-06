@@ -5,6 +5,7 @@ const config = require('./webpack.base');
 const DefinePlugin = webpack.DefinePlugin;
 const HotModuleReplacementPlugin = webpack.HotModuleReplacementPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const WebpackBrowserPlugin = require('webpack-browser-plugin');
 const NoErrorsPlugin = webpack.NoErrorsPlugin;
 const OccurenceOrderPlugin = webpack.optimize.OccurenceOrderPlugin;
 
@@ -57,6 +58,7 @@ module.exports = {
     new OccurenceOrderPlugin(),
     new HotModuleReplacementPlugin(),
     new NoErrorsPlugin(),
+    new WebpackBrowserPlugin(),
     new HtmlWebpackPlugin({
       chunksSortMode: 'none',
       filename: 'index.html',

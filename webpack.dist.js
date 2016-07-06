@@ -45,6 +45,14 @@ module.exports = {
       hash: true,
       inject: 'body',
       template: './src/index.html'
+    }),
+    new UglifyJsPlugin({
+      compress: {
+        dead_code: true, // eslint-disable-line camelcase
+        screw_ie8: true, // eslint-disable-line camelcase
+        unused: true,
+        warnings: false
+      }
     })
   ],
 

@@ -56,6 +56,7 @@ export class CustomerGalleryViewer extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    this.constructorName = 'CustomerGalleryViewer'; // uglifyjs mangles constructor names, use this one instead
     this.unbindImagesLoaded = false;
     const { pathname } = this.props.location;
     this.path = parsePath(pathname).path; // stores currentCategory

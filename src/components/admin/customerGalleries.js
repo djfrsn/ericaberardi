@@ -67,7 +67,9 @@ export class CustomerGalleries extends Component {
     window.onresize = debounce(() => {
       gUtils.resizeGallery(this); // handle responsive columns and image width/height on resizes
     }, 500);
-    this.loadImagesSeq();
+    if (this.props.auth.authenticated) {
+      this.loadImagesSeq();
+    }
     const { pathname } = this.props.location;
     this.path = parsePath(pathname).path; // stores currentCategory
   }

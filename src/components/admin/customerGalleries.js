@@ -134,7 +134,9 @@ export class CustomerGalleries extends Component {
     }
   }
   hydrateActiveGallery = props => {
-    gUtils.hydrateActiveGallery(props, this); // set current gallery images src
+    if (this.props.auth.authenticated) {
+      gUtils.hydrateActiveGallery(props, this); // set current gallery images src
+    }
   }
   loadImagesSeq = () => {
     if (this.props.customerGalleries.seqImagesLoadedEnabled && this.props.auth.authenticated) { // enabled/disabled to prevent over binding

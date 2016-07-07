@@ -30,7 +30,7 @@ function getCategories(opts) {
   forIn(categoriesProps, (category, key, list) => {
     const galleryLink = 'gallery__link';
     const defaultGallery = list[Object.keys(list)[0]];
-    const categoryAccepted = (opts.category === '/' ? defaultGallery.category : opts.category) === category.category; // if path is root, default to first category
+    const categoryAccepted = (opts.slug === '/' ? defaultGallery.slug : opts.slug) === category.slug; // if path is root, default to first category
     const className = categoryAccepted ? `${galleryLink} active` : galleryLink;
     const protectedCategory = category.pending && !authenticated;
     if (category && !protectedCategory) {
@@ -39,7 +39,7 @@ function getCategories(opts) {
           {authenticated && orderByControls ? <div className="select-style"><select name="categoryOrderby" className="gallery_category_orderby" value={category.orderBy} onChange={opts.scope.onChangeGalleryCategoryOrder}>
             {sortedOrderByCategories}
           </select></div> : null}
-          <Link to={`/${galleriesRoute}/${category.category}`} className={className}>{category.category}</Link>
+          <Link to={`/${galleriesRoute}/${category.slug}`} className={className}>{category.category}</Link>
         </li>
       );
     }

@@ -62,7 +62,7 @@ export class CustomerGalleryViewer extends Component {
     this.path = parsePath(pathname).path; // stores currentCategory
     const galleriesHydrated = this.props.customerGalleries.galleriesHydrated;
     const initCustomerAuth = () => {
-      const customerGalleryId = sessionStorage.getItem('customerSecretId');
+      const customerGalleryId = sessionStorage.getItem(`customerSecretId-${this.path}`);
       if (customerGalleryId) {
         this.props.hydrateCustomerAuth(customerGalleryId);
       }
@@ -90,11 +90,11 @@ export class CustomerGalleryViewer extends Component {
     const galleriesPathname = this.galleriesPathname;
     const toast = nextProps.customerGalleries.toast;
     this.path = parsePath(pathname).path;
-    const categories = this.props.customerGalleries.categories;
+    const categories = nextProps.customerGalleries.categories;
     const category = findKey(categories, {slug: this.path });
 
-    if (!category && this.props.customerGalleries.galleriesHydrated ) {
-      this.context.router.replace('/gallery'); // send to not found page
+    if (!category && nextProps.customerGalleries.galleriesHydrated ) {
+      this.context.router.replace('/'); // Data has been synced and we can't match w/ a category...send user home
     }
     // Is custom authenticated & accessing their gallery?
     if (category) {

@@ -18,7 +18,7 @@ export function hydrateActiveGallery(props, scope) {
   if (Object.keys(categories).length > 0) {
 
     const defaultGallery = categories[Object.keys(categories)[0]];
-    const galleryMatch = filter(categories, { category: path })[0];
+    const galleryMatch = filter(categories, { slug: path })[0];
 
     const galleryPath = galleryMatch ? galleryMatch.slug : defaultGallery.slug;
 

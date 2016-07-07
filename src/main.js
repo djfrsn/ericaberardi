@@ -23,7 +23,6 @@ const history = syncHistoryWithStore(browserHistory, store);
 firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes to update protected data
 
   store.dispatch(galleriesActions.hydrateGalleries()); // hydrate to hide/show protected content
-  store.dispatch(customerGalleriesActions.hydrateCustomerGalleries());
 
   if (user) {
     store.dispatch(authActions.hydrateAuth());

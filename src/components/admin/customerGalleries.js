@@ -246,7 +246,7 @@ export class CustomerGalleries extends Component {
             <h1 className="cg__title">Customer Galleries</h1>
             <div className="gallery__navigation">
               <ul className="galleries__links">
-                {galleryCategories( { props: this.props, category: this.path, scope: this, orderByControls: false })}
+                {galleryCategories( { props: this.props, slug: this.path, scope: this, orderByControls: false })}
               </ul>
             </div>
             {addCategory}

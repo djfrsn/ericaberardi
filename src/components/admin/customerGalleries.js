@@ -225,7 +225,7 @@ export class CustomerGalleries extends Component {
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: !hasCategories });
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: !hasImages }); // hide dropzone until images loaded
     const galleryDeleteToggle = !customerGalleries.galleryDeleteEnabled;
-    const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
+    const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle, ['hidden']: !hasImages });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
     const addCategory = authenticated ? (<div className={galleryAddCategoryClass}>
       <form onSubmit={this.onCreateCategory}>

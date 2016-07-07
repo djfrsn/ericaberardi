@@ -91,19 +91,22 @@ export class CustomerGalleryViewer extends Component {
     const toast = nextProps.customerGalleries.toast;
     this.path = parsePath(pathname).path;
     const categories = this.props.customerGalleries.categories;
-    const category = findKey(categories, {category: this.path });
+    const category = findKey(categories, {slug: this.path });
+
     if (!category && this.props.customerGalleries.galleriesHydrated ) {
       this.context.router.replace('/gallery'); // send to not found page
     }
     // Is custom authenticated & accessing their gallery?
-    if (nextProps.auth.isApprovedCustomer && categories[category].secretId === nextProps.auth.secretId ) {
-      const routeChange = pathname !== galleriesPathname || pathname === '/customer-galleries';
-      const galleryChange = !deepEqual(nextProps.customerGalleries.images, this.props.customerGalleries.images);
-      const categoriesChange = !deepEqual(nextProps.customerGalleries.categories, this.props.customerGalleries.categories);
+    if (category) {
+      if (nextProps.auth.isApprovedCustomer && categories[category].secretId === nextProps.auth.secretId ) {
+        const routeChange = pathname !== galleriesPathname || pathname === '/customer-galleries';
+        const galleryChange = !deepEqual(nextProps.customerGalleries.images, this.props.customerGalleries.images);
+        const categoriesChange = !deepEqual(nextProps.customerGalleries.categories, this.props.customerGalleries.categories);
 
-      if (routeChange || galleryChange || categoriesChange) {
-        this.galleriesPathname = pathname; // update active gallery on route/galleriessState change
-        this.hydrateActiveGallery(nextProps, this);
+        if (routeChange || galleryChange || categoriesChange) {
+          this.galleriesPathname = pathname; // update active gallery on route/galleriessState change
+          this.hydrateActiveGallery(nextProps, this);
+        }
       }
     }
     if (toast.type) {

@@ -16,13 +16,14 @@ export function hydrateActiveGallery(props, scope) {
   const categories = props[galleriesPropName].categories;
 
   if (Object.keys(categories).length > 0) {
+
     const defaultGallery = categories[Object.keys(categories)[0]];
     const galleryMatch = filter(categories, { category: path })[0];
 
-    const galleryPath = galleryMatch ? galleryMatch.category : defaultGallery.category;
+    const galleryPath = galleryMatch ? galleryMatch.slug : defaultGallery.slug;
 
     const category = () => {
-      return categories[filter(categories, { category: galleryPath })[0].id || defaultGallery.id];
+      return categories[filter(categories, { slug: galleryPath })[0].id || defaultGallery.id];
     };
     let activeGalleryId = category().id;
     let activeGallery = galleries[activeGalleryId];

@@ -52,7 +52,7 @@ export function submitCustomerGalleriesPassword(opts) {
   return (dispatch, getState) => {
     const { customerGalleries } = getState();
     const categories = customerGalleries.categories;
-    const category = findKey(categories, {category: opts.path });
+    const category = findKey(categories, {slug: opts.path });
     const secretId = categories[category].secretId;
     if (category && secretId === opts.password) {
       sessionStorage.setItem('customerSecretId', secretId);

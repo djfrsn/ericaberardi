@@ -129,12 +129,12 @@ export function createCategory(category) {
   };
 }
 
-export function toggleGalleryDelete() {
+export function toggleGalleryDelete(bool) {
   return (dispatch, getState) => {
     const { galleries } = getState();
     dispatch({
       type: TOGGLE_GALLERY_DELETE,
-      payload: !galleries.galleryDeleteEnabled
+      payload: typeof bool === 'boolean' ? bool : !galleries.galleryDeleteEnabled
     });
   };
 }

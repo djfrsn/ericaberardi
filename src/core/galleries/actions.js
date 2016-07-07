@@ -21,6 +21,7 @@ import forIn from 'lodash.forin';
 import delay from 'lodash.delay';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
+import slugify from 'slugify';
 
 export function clearGalleriesToast() {
   return dispatch => {
@@ -107,9 +108,11 @@ export function createCategory(category) {
 
     if (isValidCategory(category)) {
       const id = firebase.database('galleries').ref().child('categories').push().key;
+      category = category.toLowerCase();
       firebase.database().ref(`galleries/categories/${id}`).set({
         id,
-        category: category.toLowerCase(),
+        category,
+        slug: slugify(category),
         orderBy: ++categoriesLength,
         pending: true
       }).then(() => {

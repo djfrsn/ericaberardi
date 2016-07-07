@@ -57,6 +57,10 @@ export class CustomerGalleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    if (!this.props.auth.authenticated) {
+      this.context.router.replace('/login');
+    }
+    this.constructorName = 'CustomerGalleries'; // uglifyjs mangles constructor names, use this one instead
     if (Object.keys(this.props.customerGalleries.categories).length > 0) {
       this.hydrateActiveGallery(this.props, this);
     } // ensure gallery is active when component mounts & componentsWillRecieveProps isn't fired
@@ -99,11 +103,13 @@ export class CustomerGalleries extends Component {
     this.loadImagesSeq();
   }
   componentWillUnmount() {
-    this.resetTaggedForGalleryDelete();
-    this.props.toggleGalleryDelete(false);
     this.unbindImagesLoaded = true;
     this.galleriesPathname = '';
-    gUtils.unbindImagesLoaded(this.galleryContainer);
+    if (this.props.auth.authenticated) {
+      this.resetTaggedForGalleryDelete();
+      this.props.toggleGalleryDelete(false);
+      gUtils.unbindImagesLoaded(this.galleryContainer);
+    }
     window.onresize = () => {}; // remove listener
   }
   onDrop(files) {
@@ -132,10 +138,12 @@ export class CustomerGalleries extends Component {
     }
   }
   hydrateActiveGallery = props => {
-    gUtils.hydrateActiveGallery(props, this); // set current gallery images src
+    if (this.props.auth.authenticated) {
+      gUtils.hydrateActiveGallery(props, this); // set current gallery images src
+    }
   }
   loadImagesSeq = () => {
-    if (this.props.customerGalleries.seqImagesLoadedEnabled) { // enabled/disabled to prevent over binding
+    if (this.props.customerGalleries.seqImagesLoadedEnabled && this.props.auth.authenticated) { // enabled/disabled to prevent over binding
       gUtils.seqImagesLoaded(this.galleryContainer, this); // show images progressively as they load
     }
   }
@@ -218,7 +226,7 @@ export class CustomerGalleries extends Component {
     const galleryDropZoneClass = cn({ ['gallery__dropzone_container']: true, ['hidden']: !hasCategories });
     const galleryDeleteControlsClass = cn({ ['gallery__delete_controls']: true, ['hidden']: !hasImages }); // hide dropzone until images loaded
     const galleryDeleteToggle = !customerGalleries.galleryDeleteEnabled;
-    const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle });
+    const galleryHelpMsgClass = cn({ ['delete__help_message']: true, ['invisible']: galleryDeleteToggle, ['hidden']: !hasImages });
     const galleryDeleteMsgClass = cn({ ['delete__toggle_message']: true, ['invisible']: !this.state.showDeleteToggleMsg });
     const addCategory = authenticated ? (<div className={galleryAddCategoryClass}>
       <form onSubmit={this.onCreateCategory}>
@@ -239,7 +247,7 @@ export class CustomerGalleries extends Component {
             <h1 className="cg__title">Customer Galleries</h1>
             <div className="gallery__navigation">
               <ul className="galleries__links">
-                {galleryCategories( { props: this.props, category: this.path, scope: this, orderByControls: false })}
+                {galleryCategories( { props: this.props, slug: this.path, scope: this, orderByControls: false })}
               </ul>
             </div>
             {addCategory}

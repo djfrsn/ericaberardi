@@ -54,6 +54,7 @@ export class Galleries extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    this.constructorName = 'Galleries'; // uglifyjs mangles constructor names, use this one instead
     this.unbindImagesLoaded = false;
     this.props.highlightGalleriesLink(true);
     const { pathname } = this.props.location;
@@ -222,7 +223,7 @@ export class Galleries extends Component {
         <div className="g-col" >
           <div className="gallery__navigation">
             <ul className="galleries__links">
-              {galleryCategories( { props: this.props, category: this.path, scope: this })}
+              {galleryCategories( { props: this.props, slug: this.path, scope: this })}
             </ul>
           </div>
           {addCategory}

@@ -56,12 +56,13 @@ export class CustomerGalleryViewer extends Component {
     loadImagesSeq: true
   }
   componentWillMount() {
+    this.constructorName = 'CustomerGalleryViewer'; // uglifyjs mangles constructor names, use this one instead
     this.unbindImagesLoaded = false;
     const { pathname } = this.props.location;
     this.path = parsePath(pathname).path; // stores currentCategory
     const galleriesHydrated = this.props.customerGalleries.galleriesHydrated;
     const initCustomerAuth = () => {
-      const customerGalleryId = sessionStorage.getItem('customerSecretId');
+      const customerGalleryId = sessionStorage.getItem(`customerSecretId-${this.path}`);
       if (customerGalleryId) {
         this.props.hydrateCustomerAuth(customerGalleryId);
       }
@@ -75,7 +76,7 @@ export class CustomerGalleryViewer extends Component {
       });
     }
     else if (galleriesHydrated) {
-      initCustomerAuth();
+      initCustomerAuth(); // handle case where customer visits this url using html browser history api
     }
   }
   componentDidMount() {
@@ -89,20 +90,23 @@ export class CustomerGalleryViewer extends Component {
     const galleriesPathname = this.galleriesPathname;
     const toast = nextProps.customerGalleries.toast;
     this.path = parsePath(pathname).path;
-    const categories = this.props.customerGalleries.categories;
-    const category = findKey(categories, {category: this.path });
-    if (!category && this.props.customerGalleries.galleriesHydrated ) {
-      this.context.router.replace('/gallery'); // send to not found page
+    const categories = nextProps.customerGalleries.categories;
+    const category = findKey(categories, {slug: this.path });
+
+    if (!category && nextProps.customerGalleries.galleriesHydrated ) {
+      this.context.router.replace('/'); // Data has been synced and we can't match w/ a category...send user home
     }
     // Is custom authenticated & accessing their gallery?
-    if (nextProps.auth.isApprovedCustomer && categories[category].secretId === nextProps.auth.secretId ) {
-      const routeChange = pathname !== galleriesPathname || pathname === '/customer-galleries';
-      const galleryChange = !deepEqual(nextProps.customerGalleries.images, this.props.customerGalleries.images);
-      const categoriesChange = !deepEqual(nextProps.customerGalleries.categories, this.props.customerGalleries.categories);
+    if (category) {
+      if (nextProps.auth.isApprovedCustomer && categories[category].secretId === nextProps.auth.secretId ) {
+        const routeChange = pathname !== galleriesPathname || pathname === '/customer-galleries';
+        const galleryChange = !deepEqual(nextProps.customerGalleries.images, this.props.customerGalleries.images);
+        const categoriesChange = !deepEqual(nextProps.customerGalleries.categories, this.props.customerGalleries.categories);
 
-      if (routeChange || galleryChange || categoriesChange) {
-        this.galleriesPathname = pathname; // update active gallery on route/galleriessState change
-        this.hydrateActiveGallery(nextProps, this);
+        if (routeChange || galleryChange || categoriesChange) {
+          this.galleriesPathname = pathname; // update active gallery on route/galleriessState change
+          this.hydrateActiveGallery(nextProps, this);
+        }
       }
     }
     if (toast.type) {

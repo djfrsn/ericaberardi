@@ -7,23 +7,23 @@ import { parsePath } from 'lava';
 export function hydrateActiveGallery(props, scope) {
   const { pathname } = props.location;
   const path = parsePath(pathname).path;
-  const isCustomerGalleries = scope.constructor.name === 'CustomerGalleries';
-  const isCustomerGalleryViewer = scope.constructor.name === 'CustomerGalleryViewer';
+  const isCustomerGalleries = scope.constructorName === 'CustomerGalleries';
+  const isCustomerGalleryViewer = scope.constructorName === 'CustomerGalleryViewer';
   const galleriesPropName = isCustomerGalleries || isCustomerGalleryViewer ? 'customerGalleries' : 'galleries';
-  const baseRoute = scope.constructor.name === 'CustomerGalleryViewer' ? 'gallery' : 'galleries';
+  const baseRoute = scope.constructorName === 'CustomerGalleryViewer' ? 'gallery' : 'galleries';
   const galleriesRoute = isCustomerGalleries ? 'customer-galleries' : baseRoute;
   const galleries = props[galleriesPropName].images;
   const categories = props[galleriesPropName].categories;
 
-
   if (Object.keys(categories).length > 0) {
-    const defaultGallery = categories[Object.keys(categories)[0]];
-    const galleryMatch = filter(categories, { category: path })[0];
 
-    const galleryPath = galleryMatch ? galleryMatch.category : defaultGallery.category;
+    const defaultGallery = categories[Object.keys(categories)[0]];
+    const galleryMatch = filter(categories, { slug: path })[0];
+
+    const galleryPath = galleryMatch ? galleryMatch.slug : defaultGallery.slug;
 
     const category = () => {
-      return categories[filter(categories, { category: galleryPath })[0].id || defaultGallery.id];
+      return categories[filter(categories, { slug: galleryPath })[0].id || defaultGallery.id];
     };
     let activeGalleryId = category().id;
     let activeGallery = galleries[activeGalleryId];
@@ -57,7 +57,7 @@ export function unbindImagesLoaded(element) {
 // http://masonry.desandro.com/extras.html
 // https://github.com/desandro/imagesloaded
 export function seqImagesLoaded(element, scope) {
-  const galleriesPropName = scope.constructor.name === 'CustomerGalleries' || scope.constructor.name === 'CustomerGalleryViewer' ? 'customerGalleries' : 'galleries';
+  const galleriesPropName = scope.constructorName === 'CustomerGalleries' || scope.constructorName === 'CustomerGalleryViewer' ? 'customerGalleries' : 'galleries';
   const imgLoad = imagesLoaded(element);
   if (scope.props[galleriesPropName].seqImagesLoadedEnabled) {
     scope.props.seqImagesLoadedEnabled(false); // set false to signify imgLoad.progress event handler has been set
@@ -81,7 +81,6 @@ export function seqImagesLoaded(element, scope) {
     }
   });
 }
-
 
 // media queries
 export function mq() {

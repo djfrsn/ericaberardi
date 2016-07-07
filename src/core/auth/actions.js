@@ -28,7 +28,7 @@ export function hydrateCustomerAuth(customerSecretId) {
     const { customerGalleries } = getState();
     const categories = customerGalleries.categories;
     const category = findKey(categories, { secretId: customerSecretId });
-    const secretId = categories[category].secretId;
+    const secretId = category ? categories[category].secretId : null;
     if (secretId === customerSecretId) {
       dispatch({
         type: CUSTOMER_SIGN_IN_SUCCESS,
@@ -52,10 +52,10 @@ export function submitCustomerGalleriesPassword(opts) {
   return (dispatch, getState) => {
     const { customerGalleries } = getState();
     const categories = customerGalleries.categories;
-    const category = findKey(categories, {category: opts.path });
+    const category = findKey(categories, {slug: opts.path });
     const secretId = categories[category].secretId;
     if (category && secretId === opts.password) {
-      sessionStorage.setItem('customerSecretId', secretId);
+      sessionStorage.setItem(`customerSecretId-${opts.path}`, secretId);
       dispatch({
         type: CUSTOMER_SIGN_IN_SUCCESS,
         payload: { secretId }

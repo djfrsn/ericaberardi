@@ -78,7 +78,7 @@ export class Header extends Component {
         <div className="g-row">
           <div className="g-col header__wrapper">
             <Link to="/" onClick={this.reRender} className="home__link" >
-              <img className="header__logo" src="https://firebasestorage.googleapis.com/v0/b/erica-berardi.appspot.com/o/EB_LOGO.png?alt=media&token=a83a9991-d54d-43c7-9c7c-631e9c93332b"/>
+              <img className="header__logo" src="https://firebasestorage.googleapis.com/v0/b/erica-berardi.appspot.com/o/EB_LOGO.png?alt=media&token=237df6b3-5e19-44b2-9888-20b65ce7c2d8"/>
             </Link>
             <ul className="header__links">
               <li><Link to="/galleries" className="header__link" onClick={this.reRender} ref={ref => { this.galleriesLink = ref; }}>Galleries</Link></li>

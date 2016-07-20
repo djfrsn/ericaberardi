@@ -48,7 +48,6 @@ module.exports = {
       inject: 'body',
       template: './src/index.html'
     }),
-    new OfflinePlugin(),
     new FaviconsWebpackPlugin('./eb_fav.png'),
     new UglifyJsPlugin({
       compress: {
@@ -57,7 +56,8 @@ module.exports = {
         unused: true,
         warnings: false
       }
-    })
+    }),
+    new OfflinePlugin()
   ],
 
   stats: {

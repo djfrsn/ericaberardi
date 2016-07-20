@@ -8,6 +8,7 @@ const DefinePlugin = webpack.DefinePlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const OfflinePlugin = require('offline-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const OccurenceOrderPlugin = webpack.optimize.OccurenceOrderPlugin;
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
@@ -48,6 +49,7 @@ module.exports = {
       template: './src/index.html'
     }),
     new OfflinePlugin(),
+    new FaviconsWebpackPlugin('./eb_fav.png'),
     new UglifyJsPlugin({
       compress: {
         dead_code: true, // eslint-disable-line camelcase

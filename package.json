@@ -14,8 +14,8 @@
     "node": ">=5.2"
   },
   "scripts": {
-    "build": "npm run lint && npm run clean && webpack --config webpack.dist.js --progress && cp -r ./src/images ./target/images",
-    "build-dev": "npm run lint && npm run clean && NODE_ENV=development webpack --config webpack.dist.js --progress && cp -r ./src/images ./target/images",
+    "build": "npm run lint && npm run clean && webpack --config webpack.dist.js --progress",
+    "build-dev": "npm run lint && npm run clean && NODE_ENV=development webpack --config webpack.dist.js --progress",
     "clean": "del-cli ./target",
     "lint": "eslint -c .eslintrc ./src",
     "start": "NODE_ENV=development webpack-dev-server --config webpack.dev.js --progress",

@@ -7,6 +7,7 @@ const DedupePlugin = webpack.optimize.DedupePlugin;
 const DefinePlugin = webpack.DefinePlugin;
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
 const OccurenceOrderPlugin = webpack.optimize.OccurenceOrderPlugin;
 const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
@@ -46,6 +47,7 @@ module.exports = {
       inject: 'body',
       template: './src/index.html'
     }),
+    new OfflinePlugin(),
     new UglifyJsPlugin({
       compress: {
         dead_code: true, // eslint-disable-line camelcase

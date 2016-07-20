@@ -37,7 +37,7 @@ module.exports = {
     new DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new ExtractTextPlugin('styles.css'),
+    new ExtractTextPlugin('styles-[hash].css'),
     new OccurenceOrderPlugin(),
     new DedupePlugin(),
     new AggressiveMergingPlugin(),

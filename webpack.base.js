@@ -1,4 +1,5 @@
 const autoprefixer = require('autoprefixer');
+const cssnano = require('cssnano');
 const path = require('path');
 
 
@@ -20,7 +21,7 @@ module.exports = {
   },
 
   output: {
-    filename: '[name].js',
+    filename: '[name]-[hash].js',
     path: path.resolve('./target'),
     publicPath: '/'
   },
@@ -36,7 +37,8 @@ module.exports = {
   },
 
   postcss: [
-    autoprefixer({ browsers: ['last 3 versions', 'Firefox ESR'] })
+    autoprefixer({ browsers: ['last 3 versions', 'Firefox ESR'] }),
+    cssnano
   ],
 
   sassLoader: {

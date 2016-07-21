@@ -25,7 +25,7 @@ export class PricingContent extends Component {
     let component = <p style={{textAlign: 'center', marginTop: '60px'}}><Link to="/login">Login</Link> to edit content.</p>;
     if (auth.authenticated) {
       component = (<div>
-         hello
+         hi
       </div>);
     }
     return (

@@ -1,6 +1,4 @@
 import React from 'react';
-// import displayContentComponent from './displayContentComponent';
-
 import NewsReportingContent from './displayContentComponent/newsReportingContent';
 import PricingContent from './displayContentComponent/pricingContent';
 

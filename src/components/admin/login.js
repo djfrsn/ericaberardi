@@ -36,7 +36,7 @@ export class Login extends Component {
     return (
       <div className="g-row sign-in">
         <div className="g-col">
-          <h1 className="sign-in__heading">Admin</h1>
+          <h1 className="page__heading">Admin</h1>
           {component}
         </div>
       </div>

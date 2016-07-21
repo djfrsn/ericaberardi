@@ -31,7 +31,7 @@ import Contact from './contact/contact';
 import Login from './admin/login';
 import CustomerGalleries from './admin/customerGalleries';
 import CustomerGalleryViewer from './admin/customerGalleryViewer';
-import ContentEdit from './admin/contentEdit';
+import ContentEdit from './admin/contentEditing';
 import Dashboard from './admin/dashboard';
 import NotFound from './app/notFound';
 

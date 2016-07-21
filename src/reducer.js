@@ -5,6 +5,7 @@ import { routerReducer } from 'react-router-redux';
 import { authReducer } from 'core/auth';
 import { adminReducer } from 'core/admin';
 import { customerGalleriesReducer } from 'core/customerGalleries';
+import { contentEditingReducer } from 'core/contentEditing';
 import { galleriesReducer } from 'core/galleries';
 import { lightboxReducer } from 'core/lightbox';
 import { newsReportingReducer } from 'core/newsReporting';
@@ -18,6 +19,7 @@ export default combineReducers({
   auth: authReducer,
   admin: adminReducer,
   customerGalleries: customerGalleriesReducer,
+  contentEditing: contentEditingReducer,
   galleries: galleriesReducer,
   lightbox: lightboxReducer,
   newsReporting: newsReportingReducer,

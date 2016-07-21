@@ -10,6 +10,7 @@ import { authActions /* , authRouteResolver */ } from 'core/auth';
 import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
 import { customerGalleriesActions } from 'core/customerGalleries';
+import { contentEditingActions } from 'core/contentEditing';
 import { newsReportingActions } from 'core/newsReporting';
 import { pricingActions } from 'core/pricing';
 import { FIREBASE_CONFIG } from './config';
@@ -45,8 +46,10 @@ galleries.on('value', snapshot => {
   store.dispatch(adminActions.setPendingUpdates('galleries', data));
   store.dispatch(galleriesActions.hydrateGalleries(data));
 });
+
 newsReporting.on('value', snapshot => {
   store.dispatch(newsReportingActions.hydrateNewsReporting(snapshot.val()));
+  store.dispatch(contentEditingActions.loadContent('news-reporting', snapshot.val()));
 });
 
 
@@ -54,6 +57,7 @@ pricing.on('value', snapshot => {
   const data = snapshot.val();
   store.dispatch(adminActions.setPendingUpdates('pricing', data));
   store.dispatch(pricingActions.hydratePricing(data));
+  store.dispatch(contentEditingActions.loadContent('pricing', snapshot.val()));
 });
 
 ReactDOM.render((

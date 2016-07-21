@@ -64,7 +64,7 @@
   text-align: center;
 }
 
-.sign-in__heading {
+.page__heading {
   margin-bottom: 36px;
   font-size: 30px;
   font-weight: 300;
@@ -87,6 +87,27 @@
   .eb__form_title {
     font-size: 0.9em;
     margin-left: 0;
+  }
+}
+
+
+//===================================================================
+//  CONTENT EDITING
+//===================================================================
+
+.content-editing {
+  margin-top: 60px;
+}
+
+.route__links {
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  margin: 0 auto;
+
+  span, a {
+    display: inline-block;
+    font-size: 1.2em;
   }
 }
 

@@ -9,6 +9,7 @@ export const LOGIN_PATH = '/login';
 export const CUSTOMER_GALLERIES_PATH = '/customer-galleries';
 export const CUSTOMER_GALLERY_PATH = '/customer-galleries/:gallery';
 export const CUSTOMER_GALLERY_SECRET_PATH = '/gallery/:gallery';
+export const CONTENT_EDIT_PATH = '/content-edit';
 export const DASHBOARD_PATH = '/dashboard';
 export const HOME_PATH = '/home';
 export const GALLERIES_PATH = '/galleries';

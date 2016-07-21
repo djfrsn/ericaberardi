@@ -53,15 +53,17 @@ export class DashBoard extends Component {
       const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.confirmUndo}>Undo Edits</button>) : null;
       dashboard = (<div><h1 className="dashboard__header">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
-          <a onClick={this.changeEmail} className="dashboard__link" >Change Email</a>
-          <span className="dashboard__link_divider">&#8226;</span>
-          <a onClick={this.changePassword} className="dashboard__link" >Change Password</a>
+          <Link to="/content-edit" className="dashboard__link" >Content Editing</Link>
           <span className="dashboard__link_divider">&#8226;</span>
           <Link to="/customer-galleries" className="dashboard__link" >Customer Galleries</Link>
-          <span className="dashboard__link_divider">&#8226;</span>
+          <span className="dashboard__link_break"></span>
           <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory} data-type="customerGalleries">Delete Customer Galleries Category</a>
           <span className="dashboard__link_divider">&#8226;</span>
           <a href="#" className="dashboard__link" onClick={this.deleteGalleriesCategory}>Delete Public Galleries Category</a>
+          <span className="dashboard__link_break"></span>
+          <a onClick={this.changeEmail} className="dashboard__link" >Change Email</a>
+          <span className="dashboard__link_divider">&#8226;</span>
+          <a onClick={this.changePassword} className="dashboard__link" >Change Password</a>
           <div className={pendingChangesClass}>
             {pendingUpdatesTitle}
             <div className="pending-changes__list_wrapper">

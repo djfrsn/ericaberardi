@@ -105,9 +105,15 @@
   width: 100%;
   margin: 0 auto;
 
-  span, a {
+  > div {
     display: inline-block;
-    font-size: 1.2em;
+    span, a {
+      display: inline-block;
+      font-size: 1.2em;
+    }
+    a {
+      text-transform: capitalize;
+    }
   }
 }
 

@@ -7,6 +7,7 @@ import {
   LOGIN_PATH,
   DASHBOARD_PATH,
   CONTENT_EDIT_PATH,
+  CONTENT_EDIT_CATEGORY_PATH,
   CUSTOMER_GALLERIES_PATH,
   CUSTOMER_GALLERY_PATH,
   CUSTOMER_GALLERY_SECRET_PATH,
@@ -63,6 +64,7 @@ export class Root extends Component {
             <Route component={CustomerGalleries} path={CUSTOMER_GALLERY_PATH}/>
             <Route component={CustomerGalleryViewer} path={CUSTOMER_GALLERY_SECRET_PATH}/>
             <Route component={ContentEdit} path={CONTENT_EDIT_PATH}/>
+            <Route component={ContentEdit} path={CONTENT_EDIT_CATEGORY_PATH}/>
             <Route component={Dashboard} path={DASHBOARD_PATH}/>
             <Route component={NotFound} path="*"/>
           </Route>

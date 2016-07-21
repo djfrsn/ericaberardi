@@ -53,7 +53,7 @@ export class DashBoard extends Component {
       const clearEditsButton = hasPendingUpdates ? (<button className="eb-button pending-changes__undo" onClick={this.confirmUndo}>Undo Edits</button>) : null;
       dashboard = (<div><h1 className="dashboard__header">Admin DashBoard</h1>
         <div className="dashboard__wrapper">
-          <Link to="/content-edit" className="dashboard__link" >Content Editing</Link>
+          <Link to="/content-editing" className="dashboard__link" >Content Editing</Link>
           <span className="dashboard__link_divider">&#8226;</span>
           <Link to="/customer-galleries" className="dashboard__link" >Customer Galleries</Link>
           <span className="dashboard__link_break"></span>

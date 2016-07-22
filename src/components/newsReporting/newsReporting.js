@@ -1,8 +1,7 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { newsReportingActions } from 'core/newsReporting';
-import { authActions } from 'core/auth';
-import articles from './articles';
+import { authActions } from 'core/auth';import articles from './articles';
 import { textEditCanvas } from 'helpers/textEdit';
 import forIn from 'lodash.forin';
 
@@ -34,6 +33,14 @@ export class NewsReporting extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     newsReporting: PropTypes.object.isRequired
+  }
+  onDrop(files) {
+    if (!this.state.isDragReject) {
+      this.props.onDropAccept(files, this.props.className); // eslint-disable-line react/prop-types
+    } // this.props here is actually equal to props for Dropzone component
+  }
+  onDropAccept = (files, className) => {
+      // this.props.uploadGalleryImage({ files, unapprovedUploadAlert, gallery: this.state.gallery, categoryId: this.state.activeGalleryId, category: this.path });
   }
   textEditTargetReverted = opts => {
     let dispatchType;
@@ -67,7 +74,7 @@ export class NewsReporting extends Component {
         <div className="g-col" >
           <div className="articles__container">
             {authenticated && Object.keys(data).length > 0 ? <i onClick={this.editArticles} className="fa fa-pencil-square-o newsreporting_article_edit" aria-hidden="true"></i> : null}
-            {articles(data)}
+            {articles(data, this)}
           </div>
         </div>
       </div>

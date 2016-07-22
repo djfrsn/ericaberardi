@@ -35,7 +35,17 @@
   justify-content: flex-end;
   font-size: 1.5em;
 }
+.articles__dropzone {
+  button {
+    @include interaction-base();
+    @include button-base();
+  }
+}
 
+.article__src_input {
+  @include interaction-base();
+  border-bottom: 1px solid $colors-black;
+}
 
 @media (max-width: 960px) {
   .articles__container {

@@ -324,7 +324,8 @@ function getNewState(opts) {
           content: parent.pendingcontent ? parent.pendingcontent : parent.content,
           pendingtitle: null,
           pendingpublisher: null,
-          pendingcontent: null
+          pendingcontent: null,
+          pendingsrc: null
         };
       }
     });
@@ -584,6 +585,7 @@ function removePendingPricingData(opts) {
 function removePendingnewsReportingData(opts) {
 
   const database = opts.firebase.database();
+  const storage = opts.firebase.storage();
   let callbackCount = 1;
   let pendingNewsReportingCount = 0;
   forIn(opts.data, dt => {
@@ -599,7 +601,8 @@ function removePendingnewsReportingData(opts) {
           pending: false,
           pendingtitle: null,
           pendingpublisher: null,
-          pendingcontent: null
+          pendingcontent: null,
+          pendingsrc: null
         };
         database.ref(`newsReporting/articles/${arti.id}`).set(newArticle).then(() => {
           if (callbackCount === pendingNewsReportingCount) {
@@ -607,6 +610,11 @@ function removePendingnewsReportingData(opts) {
           }
           callbackCount++;
         });
+        if (arti.pendingsrc) {
+          storage.ref().child(arti.pendingsrc).delete().catch(error => {
+            database.ref(`logs/errors/articles/shouldDelete/article/${arti.id}`).set({functionName: 'removePendingnewsReportingData', 'info': `This was a failure for deleting the following data: ${arti.fullPath}`, error});
+          });
+        }
       });
 
     }

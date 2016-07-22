@@ -6,8 +6,6 @@ import { Route, Router, IndexRoute } from 'react-router';
 import {
   LOGIN_PATH,
   DASHBOARD_PATH,
-  CONTENT_EDIT_PATH,
-  CONTENT_EDIT_CATEGORY_PATH,
   CUSTOMER_GALLERIES_PATH,
   CUSTOMER_GALLERY_PATH,
   CUSTOMER_GALLERY_SECRET_PATH,
@@ -32,7 +30,6 @@ import Contact from './contact/contact';
 import Login from './admin/login';
 import CustomerGalleries from './admin/customerGalleries';
 import CustomerGalleryViewer from './admin/customerGalleryViewer';
-import ContentEdit from './admin/contentEditing';
 import Dashboard from './admin/dashboard';
 import NotFound from './app/notFound';
 
@@ -63,8 +60,6 @@ export class Root extends Component {
             <Route component={CustomerGalleries} path={CUSTOMER_GALLERIES_PATH}/>
             <Route component={CustomerGalleries} path={CUSTOMER_GALLERY_PATH}/>
             <Route component={CustomerGalleryViewer} path={CUSTOMER_GALLERY_SECRET_PATH}/>
-            <Route component={ContentEdit} path={CONTENT_EDIT_PATH}/>
-            <Route component={ContentEdit} path={CONTENT_EDIT_CATEGORY_PATH}/>
             <Route component={Dashboard} path={DASHBOARD_PATH}/>
             <Route component={NotFound} path="*"/>
           </Route>

@@ -5,7 +5,7 @@ import {
 
 
 export const initialState = {
-  articles: []
+  articles: {}
 };
 
 export function newsReportingReducer(state = initialState, action) {
@@ -21,6 +21,6 @@ export function newsReportingReducer(state = initialState, action) {
 function hydrateNewsReporting(state, action) {
   return {
     ...state,
-    articles: action.payload
+    articles: action.payload.articles
   };
 }

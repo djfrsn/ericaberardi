@@ -1,15 +1,20 @@
 import React from 'react';
-// import * as gUtils from './galleriesUtils';
+import forIn from 'lodash.forin';
 
 export default articles => {
-  return articles.map(element => {
-    return element ? (
-      <div key={element.id} className="article">
-        <h2>{element.title}</h2>
-        <h4>{element.publisher}</h4>
-        <p className="article__content">{element.content}</p>
-        <a href={element.src} target="_blank" className="article__link">Read Full Story</a>
-      </div>
-      ) : null;
+  let elements = [];
+  forIn(articles, element => {
+    if (element) {
+      const id = element.id;
+      elements.push(
+        <div key={id} className="article" data-textedittargetparent>
+          <h2 data-texteditid={id} data-textedittarget>{element.title}</h2>
+          <h4 data-texteditid={id} data-textedittarget>{element.publisher}</h4>
+          <p className="article__content" data-texteditid={id} data-textedittarget data-textedittype="textarea">{element.content}</p>
+          <a href={element.src} target="_blank" className="article__link">Read Full Story</a>
+        </div>
+      );
+    }
   });
+  return elements;
 };

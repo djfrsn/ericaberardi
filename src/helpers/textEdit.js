@@ -79,7 +79,8 @@ export function textEditCanvas(opts) {
     const targetId = utils.uuid();
     target.classList.add('hidden');
     target.setAttribute('data-textedittargetid', targetId);
-    let textEditInput = document.createElement(textInputType);
+    let optionalTextInputType = target.dataset.textedittype ? target.dataset.textedittype : null;
+    let textEditInput = document.createElement(optionalTextInputType ? optionalTextInputType : textInputType);
     textEditInput.className = textEditInputClassName;
     textEditInput.setAttribute('data-texteditinputid', targetId);
     textEditInput.value = target.innerText;

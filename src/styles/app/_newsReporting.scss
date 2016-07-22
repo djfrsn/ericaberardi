@@ -29,6 +29,14 @@
   }
 }
 
+.newsreporting_article_edit {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+  font-size: 1.5em;
+}
+
+
 @media (max-width: 960px) {
   .articles__container {
     width: 90%;

@@ -47,7 +47,9 @@ galleries.on('value', snapshot => {
 });
 
 newsReporting.on('value', snapshot => {
-  store.dispatch(newsReportingActions.hydrateNewsReporting(snapshot.val()));
+  const data = snapshot.val();
+  store.dispatch(adminActions.setPendingUpdates('newsReporting', data));
+  store.dispatch(newsReportingActions.hydrateNewsReporting(data));
 });
 
 

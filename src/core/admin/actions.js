@@ -193,6 +193,19 @@ function getPendingPricing(pendingUpdates, opts) {
   return pendingUpdates;
 }
 
+function getPendingNewsReporting(pendingUpdates, opts) {
+  forIn(opts.snapshot, prop => {
+    let pendingProp = {};
+    forIn(prop, (child, key) => {
+      if (child.pending) {
+        pendingProp[key] = child;
+      }
+    });
+  });
+
+  return pendingUpdates;
+}
+
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
 // each key/value pair contains all pending updates for each route
 function dispatchPendingUpdates(opts) {
@@ -206,6 +219,9 @@ function dispatchPendingUpdates(opts) {
       pendingUpdates = getPendingGalleries(pendingUpdates, opts);
     }
     if (opts.category === 'pricing') {
+      pendingUpdates = getPendingNewsReporting(pendingUpdates, opts);
+    }
+    if (opts.category === 'newsReporting') {
       pendingUpdates = getPendingPricing(pendingUpdates, opts);
     }
   }
@@ -247,6 +263,9 @@ export function setPendingUpdates(category, snapshot) {
         case 'pricing':
           dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
+        case 'newsReporting':
+          dispatchPendingUpdates({dispatch, category, admin, snapshot});
+          break;
 
         default:
       }
@@ -254,6 +273,7 @@ export function setPendingUpdates(category, snapshot) {
   };
 }
 
+// TODO: refactor this into switch that calls functions that return newState for each category
 // Function used to create new state on publish, this is a good place to reset/update data before publish
 // Set 'pending: false' for each child of a given pendingUpdate category & do any other state updates before publshing to db
 function getNewState(opts) {
@@ -291,6 +311,24 @@ function getNewState(opts) {
       }
     });
   }
+  else if (opts.category === 'newsReporting') {
+    newPendingState[opts.parent] = { ...opts.state[opts.parent] }; // extend to avoid losing data other than objects
+    forIn(opts.state[opts.parent], parent => {
+      const parentId = parent.id;
+      newPendingState[opts.parent][parentId] = { ...parent, pending: false };
+      if (parent.pending) { // update article if it's pending
+        newPendingState[opts.parent][parentId] = {
+          ...newPendingState[opts.parent][parentId],
+          title: parent.pendingtitle ? parent.pendingtitle : parent.title,
+          publisher: parent.pendingpublisher ? parent.pendingpublisher : parent.publisher,
+          content: parent.pendingcontent ? parent.pendingcontent : parent.content,
+          pendingtitle: null,
+          pendingpublisher: null,
+          pendingcontent: null
+        };
+      }
+    });
+  }
 
   return newPendingState;
 }
@@ -316,6 +354,11 @@ function getPendingChangeMinimums(category) {
       minChildCount = 1;
       break;
 
+    case 'newsReporting':
+      minParentCount = 3;
+      minChildCount = 0;
+      break;
+
     default:
   }
 
@@ -327,21 +370,24 @@ function getPendingChangeMinimums(category) {
 function validatePendingChanges(opts) {
   const { minParentCount, minChildCount } = getPendingChangeMinimums(opts.category);
   let validChanges = false;
+  const categories = ['galleries', 'customerGalleries', 'pricing', 'newsReporting', 'about'];
 
-  if (opts.category === 'galleries' || opts.category === 'customerGalleries' || opts.category === 'pricing') {
+  if (categories.indexOf(opts.category) >= 0) {
     const parent = opts.state[opts.parent];
     const parentCount = Object.keys(parent).length;
     if (parentCount >= minParentCount) {
       let stateValid = true;
       let index = 1;
 
-      forIn(parent, child => {
-        const children = opts.state[opts.child][child.id] || {};
-        if (Object.keys(children).length < minChildCount && index <= minParentCount) {
-          stateValid = false;
-        }
-        index++;
-      });
+      if (opts.child) {
+        forIn(parent, child => {
+          const children = opts.state[opts.child][child.id] || {};
+          if (Object.keys(children).length < minChildCount && index <= minParentCount) {
+            stateValid = false;
+          }
+          index++;
+        });
+      }
       validChanges = stateValid;
     }
   }
@@ -362,21 +408,22 @@ function publishContent(opts) {
 
     opts.databaseKeys.forEach(key => {
       // iterate through category children & set data in firebase
-
-      database.ref(`${opts.category}/${key}`).set(newState[key]).then(() => {
-        opts.dispatch({
-          type: CLEAR_PENDING_UPDATES
-        });
-        if (opts.databaseKeys.length === callbackCount) {
-          successCallback = opts.callbacks.successCallback;
-          if (utils.isFunction(successCallback)) {
-            delay(() => {
-              successCallback(); // call final publish/success callback
-            }, 0);
+      if (key) {
+        database.ref(`${opts.category}/${key}`).set(newState[key]).then(() => {
+          opts.dispatch({
+            type: CLEAR_PENDING_UPDATES
+          });
+          if (opts.databaseKeys.length === callbackCount) {
+            successCallback = opts.callbacks.successCallback;
+            if (utils.isFunction(successCallback)) {
+              delay(() => {
+                successCallback(); // call final publish/success callback
+              }, 0);
+            }
           }
-        }
-        callbackCount++;
-      });
+          callbackCount++;
+        });
+      }
     });
   }
   else {
@@ -411,6 +458,9 @@ export function publishPendingUpdates(successCallback, errorCallback) {
           break;
         case 'pricing':
           publishContent({dispatch, getState, category, parent: 'categories', child: 'packages', databaseKeys: ['categories', 'packages'], state, callbacks});
+          break;
+        case 'newsReporting':
+          publishContent({dispatch, getState, category, parent: 'articles', child: null, databaseKeys: ['articles'], state, callbacks});
           break;
 
         default:
@@ -531,6 +581,38 @@ function removePendingPricingData(opts) {
   });
 }
 
+function removePendingnewsReportingData(opts) {
+
+  const database = opts.firebase.database();
+  let callbackCount = 1;
+  let pendingNewsReportingCount = 0;
+  forIn(opts.data, dt => {
+    pendingNewsReportingCount += Object.keys(dt).length;
+  });
+
+  // set new pendingData for each packages/categories
+  forIn(opts.data, (data, type) => {
+    if (type === 'articles') { // is it a category or package?
+      forIn(data, arti => {
+        const newArticle = {
+          ...arti,
+          pending: false,
+          pendingtitle: null,
+          pendingpublisher: null,
+          pendingcontent: null
+        };
+        database.ref(`newsReporting/articles/${arti.id}`).set(newArticle).then(() => {
+          if (callbackCount === pendingNewsReportingCount) {
+            successCB(opts.successCallback);
+          }
+          callbackCount++;
+        });
+      });
+
+    }
+  });
+}
+
 // General strategy
 // check pending content by category & create new state without this data
 export function removePendingUpdates(cb) {
@@ -554,6 +636,10 @@ export function removePendingUpdates(cb) {
             break;
           case 'pricing':
             removePendingPricingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+            callbackCount++;
+            break;
+          case 'newsReporting':
+            removePendingnewsReportingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
             callbackCount++;
             break;
 

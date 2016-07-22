@@ -10,3 +10,11 @@ export function hydrateNewsReporting(data) {
     });
   };
 }
+
+export function editArticles(opts) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    firebase.database().ref('newsReporting/articles').set(opts.articles);
+  };
+}
+

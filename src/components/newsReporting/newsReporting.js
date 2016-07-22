@@ -4,11 +4,30 @@ import { newsReportingActions } from 'core/newsReporting';
 import { authActions } from 'core/auth';
 import articles from './articles';
 import { textEditCanvas } from 'helpers/textEdit';
+import forIn from 'lodash.forin';
 
+// determine if articles have changed & update articles with pending data if so
 function parseArticles(opts) {
-  let parsedArticles = {};
+  let equal = true;
+  let newArticles = {};
 
-  return parsedArticles;
+  forIn(opts.newArticles, (article, type) => {
+    const typeData = type.split('-');
+    const articleType = typeData[0];
+    const articleId = typeData[1];
+    const prevArticle = opts.prevArticles[articleId];
+    if (!newArticles[articleId]) {
+      newArticles[articleId] = { ...prevArticle }; // create new article object
+    }
+    const prevText = prevArticle[articleType];
+    if (article.text !== prevText) {
+      newArticles[articleId].pending = true; // update article with pending text
+      newArticles[articleId][`pending${articleType}`] = article.text;
+      equal = false;
+    }
+  });
+
+  return { equal, newArticles };
 }
 
 export class NewsReporting extends Component {
@@ -24,7 +43,7 @@ export class NewsReporting extends Component {
       dispatchType = 'editArticles';
       const parsedArticles = parseArticles({ newArticles: opts.data, prevArticles: this.props.newsReporting.articles });
       valueChanged = !parsedArticles.equal;
-      data = { newPkgsCategory: parsedArticles.newPkgsCategory };
+      data = { articles: parsedArticles.newArticles };
     }
 
     if (valueChanged) {

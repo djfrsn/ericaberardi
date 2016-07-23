@@ -4,7 +4,6 @@ import { newsReportingActions } from 'core/newsReporting';
 import { authActions } from 'core/auth';import articles from './articles';
 import { textEditCanvas } from 'helpers/textEdit';
 import forIn from 'lodash.forin';
-import delay from 'lodash.delay';
 
 // determine if articles have changed & update articles with pending data if so
 function parseArticles(opts) {

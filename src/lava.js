@@ -1,5 +1,5 @@
-import forIn from 'lodash.forin';
-import findIndex from 'lodash.findindex';
+// import forIn from 'lodash.forin';
+// import findIndex from 'lodash.findindex';
 /*
 * Lava: utils for building apps with firebase services
 */
@@ -28,9 +28,9 @@ export function parsePath(val) { // takes paths like galleries/sports || /galler
 * Database
 */
 
-export function localStorage(category, data) {
-  // strategy
-  // when data changes we store data by route
-  // on page load we hydrate the store with data from local storage
-  // 3 day cache expiration
-}
+// export function localStorage(category, data) {
+//   // strategy
+//   // when data changes we store data by route
+//   // on page load we hydrate the store with data from local storage
+//   // 3 day cache expiration
+// }

@@ -67,27 +67,6 @@ export function submitCustomerGalleriesPassword(opts) {
   };
 }
 
-function authenticate(provider) {
-  return (dispatch, getState) => {
-    const { firebase } = getState();
-
-    firebase.authWithOAuthPopup(provider, (error, authData) => {
-      if (error) {
-        console.error('ERROR @ authWithOAuthPopup :', error); // eslint-disable-line no-console
-      }
-      else {
-        dispatch({
-          type: SIGN_IN_SUCCESS,
-          payload: authData,
-          meta: {
-            timestamp: Date.now()
-          }
-        });
-      }
-    });
-  };
-}
-
 export function signInWithEmail(email, password, router) {
   return (dispatch, getState) => {
     const { firebase } = getState();

@@ -9,9 +9,15 @@ export class Login extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
     history: PropTypes.object.isRequired,
+    resetAuthMessages: PropTypes.func.isRequired,
     signInWithEmail: PropTypes.func.isRequired,
     signOut: PropTypes.func.isRequired
   };
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.signInError) {
+      this.props.resetAuthMessages();
+    }
+  }
   onSignOut = e => {
     e.preventDefault();
     this.props.signOut(this.context.router);

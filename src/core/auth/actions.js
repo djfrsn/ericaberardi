@@ -38,7 +38,7 @@ export function hydrateCustomerAuth(customerSecretId) {
   };
 }
 
-export function resetAuthMessages(timeout = 3250) {
+export function resetAuthMessages(timeout = 4000) {
   return dispatch => {
     delay(() => {
       dispatch({
@@ -137,21 +137,6 @@ export function changeEmail(opts) {
     });
   };
 }
-
-export function signInWithGithub() {
-  return authenticate('github');
-}
-
-
-export function signInWithGoogle() {
-  return authenticate('google');
-}
-
-
-export function signInWithTwitter() {
-  return authenticate('twitter');
-}
-
 
 export function signOut(router) {
   return (dispatch, getState) => {

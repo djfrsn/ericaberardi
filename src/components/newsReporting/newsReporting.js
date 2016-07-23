@@ -39,9 +39,9 @@ function parseArticles(opts) {
         // delete existing pending files without the same name
         if (prevArticle.pendingfile.name !== newFile.name) {
           const prevPendingFile = prevArticle.pendingfile;
-          if (prevPendingFile.fullPath && !newArticles[articleId].pendingfiledeleted) { // is it a firebase file?
-            newArticles[articleId].pendingfiledeleted = true;
-            opts.scope.props.deleteArticleFile(prevArticle);
+          if (prevPendingFile.fullPath && !newArticles[articleId].pendingfiledeleted) {
+            newArticles[articleId].pendingfiledeleted = true; // if the user is replacing an already pending file
+            opts.scope.props.deleteArticleFile(prevArticle); // we should delete the previous pending file
           }
         }
       }

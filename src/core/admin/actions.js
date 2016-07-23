@@ -327,7 +327,7 @@ function getNewNewsReportingState(newPendingState, opts) {
         title: parent.pendingtitle ? parent.pendingtitle : parent.title,
         publisher: parent.pendingpublisher ? parent.pendingpublisher : parent.publisher,
         content: parent.pendingcontent ? parent.pendingcontent : parent.content,
-        pendingtitle: null,
+        pendingtitle: null, // set keys to null to erase them from db
         pendingpublisher: null,
         pendingcontent: null,
         pendingsrc: null,
@@ -665,9 +665,7 @@ function removePendingNewsReportingData(opts) {
           const storageRef = storage.ref();
           // Create a reference to the file to delete
           const fileRef = storageRef.child(arti.pendingfile.fullPath);
-          fileRef.delete().then(() => {
-            console.log('file deleted')
-          });
+          fileRef.delete();
         }
       });
 

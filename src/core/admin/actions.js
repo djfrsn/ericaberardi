@@ -350,10 +350,20 @@ function getNewNewsReportingState(newPendingState, opts) {
       }
       // if either a new file has been upload or the src has changed we will delete the existing file if one exist
       if ((parent.pendingfile || parent.pendingsrc) && parent.file) { // delete existing file
-        const storageRef = storage.ref();
-        // Create a reference to the file to delete
-        const fileRef = storageRef.child(parent.file.fullPath);
-        fileRef.delete();
+        const duplicateFile = (() => {
+          let isDuplicate = false;
+          const hasPendingFile = typeof parent.pendingfile === 'object';
+          if (hasPendingFile) {
+            isDuplicate = parent.pendingfile.name === parent.file.name;
+          }
+          return isDuplicate;
+        })(); // run this to check if the pending file is the same as the existing one. If it is we shouldn't delete it.
+        if (!duplicateFile) {
+          const storageRef = storage.ref();
+          // Create a reference to the file to delete
+          const fileRef = storageRef.child(parent.file.fullPath);
+          fileRef.delete();
+        }
       }
     }
   });
@@ -444,7 +454,18 @@ function validatePendingChanges(opts) {
   return validChanges;
 }
 
-// NOTE: This method should work for any category/page, data for each category/page must be structured similar for this to work
+// NOTE: This method should work for any category/page/route that stores data in the db
+// data for each category/page must be structured in the same way for this to work
+// content scheme:
+// { // root of db
+//   "category": {
+//     "parent" {
+//       "2zv234" : {} // parentdata
+//     }
+//   }
+// }
+// Children(with as many children as you'd like) of parents can be made by formatting the data like so:
+// category/parent/:id/parentdata/parent/:id/parentdata
 function publishContent(opts) {
   const { firebase } = opts.getState();
   const changesValidated = validatePendingChanges(opts);

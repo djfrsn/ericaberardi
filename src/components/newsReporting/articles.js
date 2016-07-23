@@ -2,7 +2,7 @@ import React from 'react';
 import Dropzone from 'react-dropzone';
 import forIn from 'lodash.forin';
 
-// TODO: add label for article input
+// TODO: add label for article input & only show in text editing mode
 export default (articles, scope) => {
   let elements = [];
   forIn(articles, element => {
@@ -19,8 +19,8 @@ export default (articles, scope) => {
           <h4 data-texteditid={`publisher-${id}`} data-textedittarget>{publisher}</h4>
           <p className="article__content" data-texteditid={`content-${id}`} data-textedittarget data-textedittype="textarea">{content}</p>
           <a href={src} target="_blank" className="article__link">Read Full Story</a>
-          {authenticated ? <input type="text" className="article__src_input" placeholder={src} ref={ref => scope[`newUrl-${id}`] = ref}/> : null}
-          {authenticated ? <Dropzone id={id} className="articles__dropzone doc_file" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={scope.onDropAccept} onDrop={scope.onDrop}>
+          {authenticated && scope.state.isEditing ? <div><label htmlFor={`article__src_input-${id}`}>Article Link</label><input type="text" id={`article__src_input-${id}`} className="article__src_input" placeholder={src} ref={ref => scope[`newUrl-${id}`] = ref}/></div> : null}
+          {authenticated && scope.state.isEditing ? <Dropzone id={id} className="articles__dropzone doc_file" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={scope.onDropAccept} onDrop={scope.onDrop}>
             <button>Upload New File</button>
           </Dropzone> : null}
         </div>

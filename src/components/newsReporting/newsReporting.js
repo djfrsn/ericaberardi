@@ -34,6 +34,7 @@ export class NewsReporting extends Component {
     auth: PropTypes.object.isRequired,
     newsReporting: PropTypes.object.isRequired
   }
+  state = {}
   onDrop(files) {
     if (!this.state.isDragReject) {
       this.props.onDropAccept(files, this.props.className); // eslint-disable-line react/prop-types
@@ -56,6 +57,7 @@ export class NewsReporting extends Component {
     if (valueChanged) {
       this.props[dispatchType](data);
     }
+    this.setState({ ...this.state, isEditing: false});
   }
   editArticles = e => {
     textEditCanvas({
@@ -65,6 +67,7 @@ export class NewsReporting extends Component {
       callback: this.textEditTargetReverted,
       meta: { type: 'articles' }
     });
+    this.setState({ ...this.state, isEditing: true});
   }
   render() {
     const authenticated = this.props.auth.authenticated;

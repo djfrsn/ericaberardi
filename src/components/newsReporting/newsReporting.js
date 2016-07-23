@@ -4,6 +4,7 @@ import { newsReportingActions } from 'core/newsReporting';
 import { authActions } from 'core/auth';import articles from './articles';
 import { textEditCanvas } from 'helpers/textEdit';
 import forIn from 'lodash.forin';
+import delay from 'lodash.delay';
 
 // determine if articles have changed & update articles with pending data if so
 function parseArticles(opts) {
@@ -25,23 +26,22 @@ function parseArticles(opts) {
       equal = false;
     }
     // check if link src
-    const newSrc = opts.scope.state[`src-${articleId}`];
+    const newSrc = opts.scope.state.articleSrcs[`src-${articleId}`];
     if (newSrc) {
       newArticles[articleId].pending = true;
       newArticles[articleId].pendingsrc = newSrc;
       equal = false;
     }
     // check to see if file has been uploaded
-    let newFile = opts.scope.state[`file-${articleId}`];
+    let newFile = opts.scope.state.files[`file-${articleId}`];
     if (newFile) {
       if (newArticles[articleId].pendingfile) {
         // delete existing pending files without the same name
-        if (newArticles[articleId].pendingfile.name !== newFile.name) {
-          const prevPendingFile = newArticles[articleId].pendingfile;
-          console.log(prevPendingFile, newFile);
-          // TODO: actually get the prevPendingFile
-          if (prevPendingFile.fullPath) { // is it a firebase file?
-            opts.scope.props.deleteArticleFile(prevPendingFile);
+        if (prevArticle.pendingfile.name !== newFile.name) {
+          const prevPendingFile = prevArticle.pendingfile;
+          if (prevPendingFile.fullPath && !newArticles[articleId].pendingfiledeleted) { // is it a firebase file?
+            newArticles[articleId].pendingfiledeleted = true;
+            opts.scope.props.deleteArticleFile(prevArticle);
           }
         }
       }
@@ -63,7 +63,7 @@ export class NewsReporting extends Component {
     editArticles: PropTypes.func.isRequired,
     newsReporting: PropTypes.object.isRequired
   }
-  state = {}
+  state = { articleSrcs: {}, files: {} }
   onDrop(files) {
     if (!this.state.isDragReject) {
       this.props.onDropAccept(files, this.props.id); // eslint-disable-line react/prop-types
@@ -71,15 +71,20 @@ export class NewsReporting extends Component {
   }
   onDropAccept = (files, id) => {
     this.setState({
-      [`file-${id}`]: files
+      files: {
+        ...this.state.files,
+        [`file-${id}`]: files
+      }
     });
-    // mime type images or docs
   }
   onArticleSrcChange = e => {
     const currentTarget = e.currentTarget;
     this.setState({
       ...this.state,
-      [`src-${currentTarget.dataset.articleid}`]: currentTarget.value
+      articleSrcs: {
+        ...this.state.articleSrcs,
+        [`src-${currentTarget.dataset.articleid}`]: currentTarget.value
+      }
     });
   }
   textEditTargetReverted = opts => {
@@ -94,9 +99,9 @@ export class NewsReporting extends Component {
     }
 
     if (valueChanged) {
-      this.props[dispatchType](data);
+      this.props[dispatchType](data); // update db with changes
     }
-    this.setState({ ...this.state, isEditing: false});
+    this.setState({ ...this.state, isEditing: false, files: {}, articleSrcs: {} });
   }
   editArticles = e => {
     textEditCanvas({

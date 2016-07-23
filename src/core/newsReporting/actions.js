@@ -39,7 +39,8 @@ export function editArticles(opts) {
             const imageData = { id, src, publisher: article.publisher, articleId: article.id, contentType, downloadURLs, fullPath, name, size, timeCreated };
             const newArticle = {
               ...article,
-              pendingfile: imageData
+              pendingfile: imageData,
+              pendingfiledeleted: null
             };
 
             // update meta
@@ -51,17 +52,14 @@ export function editArticles(opts) {
   };
 }
 
-export function deleteArticleFile(pendingfile) {
+export function deleteArticleFile(prevArticle) {
   return (dispatch, getState) => {
     const { firebase } = getState();
     const storage = firebase.storage();
     const storageRef = storage.ref();
-            console.log(pendingfile)
     // Create a reference to the file to delete
-    const fileRef = storageRef.child(pendingfile.fullPath);
-    fileRef.delete().then(() => {
-      console.log('file deleted')
-    });
+    const fileRef = storageRef.child(prevArticle.pendingfile.fullPath);
+    fileRef.delete();
   };
 }
 

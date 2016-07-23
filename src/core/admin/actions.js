@@ -331,7 +331,8 @@ function getNewNewsReportingState(newPendingState, opts) {
         pendingpublisher: null,
         pendingcontent: null,
         pendingsrc: null,
-        pendingfile: null
+        pendingfile: null,
+        pendingfiledeleted: null
       };
       if (parent.pendingfile) {
         newPendingState[opts.parent][parentId] = {
@@ -650,7 +651,8 @@ function removePendingNewsReportingData(opts) {
           pendingtitle: null,
           pendingpublisher: null,
           pendingcontent: null,
-          pendingsrc: null
+          pendingsrc: null,
+          pendingfiledeleted: null
         };
         database.ref(`newsReporting/articles/${arti.id}`).set(newArticle).then(() => {
           if (callbackCount === pendingNewsReportingCount) {

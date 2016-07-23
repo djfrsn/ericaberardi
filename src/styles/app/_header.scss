@@ -20,17 +20,18 @@
 
 .home__link {
   @include flex-perfect-center(flex-start);
-  flex: 1;
+  flex: 0;
+  flex-direction: column;
   color: inherit;
   text-decoration: none;
 }
 
 .header__title {
-  font-size: 1.5em;
+  font-size: 1.2em;
   font-weight: 400;
   text-rendering: auto;
   transform: translate(0,0);
-}
+  }
 
 .header__sub_title {
   color: $colors-gray;
@@ -133,8 +134,8 @@
   }
 
   .home__link {
-    flex: initial;
-    font-size: 1em;
+    flex: 0;
+    font-size: 0.7em;
     @include flex-perfect-center();
   }
 }

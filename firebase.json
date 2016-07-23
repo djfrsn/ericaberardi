@@ -22,6 +22,11 @@
     "headers" : [ {
       "key" : "Cache-Control",
       "value" : "max-age=7200"
+    }, {
+    "source" : "**/*.@(js)",
+    "headers" : [ {
+      "key" : "Cache-Control",
+      "value" : "max-age=7200"
     } ]
   } ],
   "cleanUrls": true,

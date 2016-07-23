@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import { routerReducer } from 'react-router-redux';
 
 // Reducers
+import { aboutReducer } from 'core/about';
 import { authReducer } from 'core/auth';
 import { adminReducer } from 'core/admin';
 import { customerGalleriesReducer } from 'core/customerGalleries';
@@ -15,6 +16,7 @@ import { firebaseReducer } from 'core/firebase';
 
 
 export default combineReducers({
+  about: aboutReducer,
   auth: authReducer,
   admin: adminReducer,
   customerGalleries: customerGalleriesReducer,

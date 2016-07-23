@@ -1,0 +1,1 @@
+export const HYDRATE_ABOUT = 'HYDRATE_ABOUT';

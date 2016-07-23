@@ -1,6 +1,10 @@
 {
     "rules": {
         ".write": "auth !== null",
+        "about": {
+            ".read": true,
+            ".write": "auth !== null"
+        },
         "galleries": {
             ".read": true,
             ".write": "auth !== null"

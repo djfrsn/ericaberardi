@@ -35,8 +35,8 @@ function parseArticles(opts) {
     // check to see if file has been uploaded
     let newFile = opts.scope.state.files[`file-${articleId}`];
     if (newFile) {
-      if (newArticles[articleId].pendingfile) {
-        // delete existing pending files without the same name
+      // delete existing pending files without the same name to avoid keeping files
+      if (prevArticle.pendingfile) { // if the user uploads mutiple files for the same article before publishing/undoEdits
         if (prevArticle.pendingfile.name !== newFile.name) {
           const prevPendingFile = prevArticle.pendingfile;
           if (prevPendingFile.fullPath && !newArticles[articleId].pendingfiledeleted) {

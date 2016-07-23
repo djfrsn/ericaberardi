@@ -387,8 +387,9 @@ export function uploadGalleryImage(data) {
     }
 
     forEach(approvedFiles, (file, key) => {
-      const storageRef = storage.ref().child(file.name);
-      const imageRef = storageRef.child(`${categoryId}/${file.name}`);
+      // TODO: Test correct file storage folder names by only set
+      const storageRef = storage.ref().child(categoryId); // name of folder
+      const imageRef = storageRef.child(file.name); // name of file
       const uploadImage = imageRef.put(file);
 
       uploadImage.on('state_changed', () => {

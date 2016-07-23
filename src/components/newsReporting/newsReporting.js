@@ -24,6 +24,33 @@ function parseArticles(opts) {
       newArticles[articleId][`pending${articleType}`] = article.text;
       equal = false;
     }
+    // check if link src
+    const newSrc = opts.scope.state[`src-${articleId}`];
+    if (newSrc) {
+      newArticles[articleId].pending = true;
+      newArticles[articleId].pendingsrc = newSrc;
+      equal = false;
+    }
+    // check to see if file has been uploaded
+    let newFile = opts.scope.state[`file-${articleId}`];
+    if (newFile) {
+      if (newArticles[articleId].pendingfile) {
+        // delete existing pending files without the same name
+        if (newArticles[articleId].pendingfile.name !== newFile.name) {
+          const prevPendingFile = newArticles[articleId].pendingfile;
+          console.log(prevPendingFile, newFile);
+          // TODO: actually get the prevPendingFile
+          if (prevPendingFile.fullPath) { // is it a firebase file?
+            opts.scope.props.deleteArticleFile(prevPendingFile);
+          }
+        }
+      }
+      newFile = newFile[0];
+      newArticles[articleId].pending = true;
+      newArticles[articleId].pendingsrc = `File Upload [${newFile.name}]`;
+      newArticles[articleId].pendingfile = newFile;
+      equal = false;
+    }
   });
 
   return { equal, newArticles };
@@ -32,16 +59,28 @@ function parseArticles(opts) {
 export class NewsReporting extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
+    deleteArticleFile: PropTypes.func.isRequired,
+    editArticles: PropTypes.func.isRequired,
     newsReporting: PropTypes.object.isRequired
   }
   state = {}
   onDrop(files) {
     if (!this.state.isDragReject) {
-      this.props.onDropAccept(files, this.props.className); // eslint-disable-line react/prop-types
+      this.props.onDropAccept(files, this.props.id); // eslint-disable-line react/prop-types
     } // this.props here is actually equal to props for Dropzone component
   }
-  onDropAccept = (files, className) => {
-      // this.props.uploadGalleryImage({ files, unapprovedUploadAlert, gallery: this.state.gallery, categoryId: this.state.activeGalleryId, category: this.path });
+  onDropAccept = (files, id) => {
+    this.setState({
+      [`file-${id}`]: files
+    });
+    // mime type images or docs
+  }
+  onArticleSrcChange = e => {
+    const currentTarget = e.currentTarget;
+    this.setState({
+      ...this.state,
+      [`src-${currentTarget.dataset.articleid}`]: currentTarget.value
+    });
   }
   textEditTargetReverted = opts => {
     let dispatchType;
@@ -49,7 +88,7 @@ export class NewsReporting extends Component {
     let data = {};
     if (opts.meta.type === 'articles') {
       dispatchType = 'editArticles';
-      const parsedArticles = parseArticles({ newArticles: opts.data, prevArticles: this.props.newsReporting.articles });
+      const parsedArticles = parseArticles({ newArticles: opts.data, prevArticles: this.props.newsReporting.articles, scope: this });
       valueChanged = !parsedArticles.equal;
       data = { articles: parsedArticles.newArticles };
     }

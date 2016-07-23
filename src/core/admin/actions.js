@@ -273,62 +273,109 @@ export function setPendingUpdates(category, snapshot) {
   };
 }
 
-// TODO: refactor this into switch that calls functions that return newState for each category
+function getNewGalleriesState(newPendingState, opts) {
+  newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing existing data
+
+  forIn(opts.state[opts.parent], parent => {
+    const parentId = parent.id;
+    newPendingState[opts.parent][parentId] = { ...parent, pending: false }; // create new parent
+    const children = opts.state[opts.child][parentId]; // looks for galleries/images/:id
+    if (children) {
+      forIn(children, child => { // add each new image to new state
+        newPendingState[opts.child][parentId][child.id] = {...child, pending: false, shouldDelete: null };
+      });
+    }
+  });
+
+  return newPendingState;
+}
+
+function getNewPricingState(newPendingState, opts) {
+  newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing data other than objects
+
+  forIn(opts.state[opts.parent], parent => {
+    const parentId = parent.id;
+    const category = parent.pendingCategory ? parent.pendingCategory : parent.category;
+    newPendingState[opts.parent][parentId] = { ...parent, category, pending: false };
+    const child = opts.state[opts.child][parentId];
+    let newChild = newPendingState[opts.child][parentId] = {...child, pending: false};
+    if (child.pending) { // crawl packages data for anything pending and create a new package
+      forIn(child.packages, pkg => {
+        const details = pkg.pendingDetails ? pkg.pendingDetails : pkg.details;
+        const title = pkg.pendingTitle ? pkg.pendingTitle : pkg.title;
+        pkg.pendingDetails = null; // clear key's from firebase data
+        pkg.pendingTitle = null;
+        newChild.packages[pkg.id] = { ...pkg, details, title };
+      });
+    }
+  });
+
+  return newPendingState;
+}
+
+function getNewNewsReportingState(newPendingState, opts) {
+  const storage = opts.firebase.storage();
+  newPendingState[opts.parent] = { ...opts.state[opts.parent] }; // extend to avoid losing data other than objects
+
+  forIn(opts.state[opts.parent], parent => {
+    const parentId = parent.id;
+    newPendingState[opts.parent][parentId] = { ...parent, pending: null };
+
+    if (parent.pending) { // update article if it's pending
+      newPendingState[opts.parent][parentId] = {
+        ...newPendingState[opts.parent][parentId],
+        title: parent.pendingtitle ? parent.pendingtitle : parent.title,
+        publisher: parent.pendingpublisher ? parent.pendingpublisher : parent.publisher,
+        content: parent.pendingcontent ? parent.pendingcontent : parent.content,
+        pendingtitle: null,
+        pendingpublisher: null,
+        pendingcontent: null,
+        pendingsrc: null,
+        pendingfile: null
+      };
+      if (parent.pendingfile) {
+        newPendingState[opts.parent][parentId] = {
+          ...newPendingState[opts.parent][parentId],
+          src: parent.pendingfile.src,
+          file: parent.pendingfile
+        };
+      }
+      else if (parent.pendingsrc) { // this block runs for text src only change
+        newPendingState[opts.parent][parentId] = {
+          ...newPendingState[opts.parent][parentId],
+          src: parent.pendingsrc,
+          file: null
+        };
+      }
+      // if either a new file has been upload or the src has changed we will delete the existing file if one exist
+      if ((parent.pendingfile || parent.pendingsrc) && parent.file) { // delete existing file
+        const storageRef = storage.ref();
+        // Create a reference to the file to delete
+        const fileRef = storageRef.child(parent.file.fullPath);
+        fileRef.delete();
+      }
+    }
+  });
+
+  return newPendingState;
+}
+
 // Function used to create new state on publish, this is a good place to reset/update data before publish
 // Set 'pending: false' for each child of a given pendingUpdate category & do any other state updates before publshing to db
 function getNewState(opts) {
   let newPendingState = { ...opts.state };
 
-  if (opts.category === 'galleries') {
-    newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing data other than objects
-    forIn(opts.state[opts.parent], parent => {
-      const parentId = parent.id;
-      newPendingState[opts.parent][parentId] = { ...parent, pending: false }; // create new parent
-      const children = opts.state[opts.child][parentId]; // looks for galleries/images/:id
-      if (children) {
-        forIn(children, child => { // add each new image to new state
-          newPendingState[opts.child][parentId][child.id] = {...child, pending: false, shouldDelete: null };
-        });
-      }
-    });
-  }
-  else if (opts.category === 'pricing') {
-    newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing data other than objects
-    forIn(opts.state[opts.parent], parent => {
-      const parentId = parent.id;
-      const category = parent.pendingCategory ? parent.pendingCategory : parent.category;
-      newPendingState[opts.parent][parentId] = { ...parent, category, pending: false };
-      const child = opts.state[opts.child][parentId];
-      let newChild = newPendingState[opts.child][parentId] = {...child, pending: false};
-      if (child.pending) { // crawl packages data for anything pending and create a new package
-        forIn(child.packages, pkg => {
-          const details = pkg.pendingDetails ? pkg.pendingDetails : pkg.details;
-          const title = pkg.pendingTitle ? pkg.pendingTitle : pkg.title;
-          pkg.pendingDetails = null; // clear key's from firebase data
-          pkg.pendingTitle = null;
-          newChild.packages[pkg.id] = { ...pkg, details, title };
-        });
-      }
-    });
-  }
-  else if (opts.category === 'newsReporting') {
-    newPendingState[opts.parent] = { ...opts.state[opts.parent] }; // extend to avoid losing data other than objects
-    forIn(opts.state[opts.parent], parent => {
-      const parentId = parent.id;
-      newPendingState[opts.parent][parentId] = { ...parent, pending: false };
-      if (parent.pending) { // update article if it's pending
-        newPendingState[opts.parent][parentId] = {
-          ...newPendingState[opts.parent][parentId],
-          title: parent.pendingtitle ? parent.pendingtitle : parent.title,
-          publisher: parent.pendingpublisher ? parent.pendingpublisher : parent.publisher,
-          content: parent.pendingcontent ? parent.pendingcontent : parent.content,
-          pendingtitle: null,
-          pendingpublisher: null,
-          pendingcontent: null,
-          pendingsrc: null
-        };
-      }
-    });
+  switch (opts.category) {
+    case 'galleries':
+      newPendingState = getNewGalleriesState(newPendingState, opts);
+      break;
+    case 'pricing':
+      newPendingState = getNewPricingState(newPendingState, opts);
+      break;
+    case 'newsReporting':
+      newPendingState = getNewNewsReportingState(newPendingState, opts);
+      break;
+    default:
   }
 
   return newPendingState;
@@ -402,7 +449,7 @@ function publishContent(opts) {
   const changesValidated = validatePendingChanges(opts);
 
   if (changesValidated) {
-    const newState = getNewState({ category: opts.category, setStatus: false, state: opts.state, parent: opts.parent, child: opts.child }); // set pending status of all children to false
+    const newState = getNewState({ category: opts.category, setStatus: false, state: opts.state, parent: opts.parent, child: opts.child, firebase }); // set pending status of all children to false
     const database = firebase.database();
     let callbackCount = 1;
     let successCallback;
@@ -582,7 +629,7 @@ function removePendingPricingData(opts) {
   });
 }
 
-function removePendingnewsReportingData(opts) {
+function removePendingNewsReportingData(opts) {
 
   const database = opts.firebase.database();
   const storage = opts.firebase.storage();
@@ -598,6 +645,7 @@ function removePendingnewsReportingData(opts) {
       forIn(data, arti => {
         const newArticle = {
           ...arti,
+          hasFile: null,
           pending: false,
           pendingtitle: null,
           pendingpublisher: null,
@@ -610,9 +658,13 @@ function removePendingnewsReportingData(opts) {
           }
           callbackCount++;
         });
-        if (arti.pendingsrc) {
-          storage.ref().child(arti.pendingsrc).delete().catch(error => {
-            database.ref(`logs/errors/articles/shouldDelete/article/${arti.id}`).set({functionName: 'removePendingnewsReportingData', 'info': `This was a failure for deleting the following data: ${arti.fullPath}`, error});
+        // delete any pending files
+        if (arti.pendingfile) {
+          const storageRef = storage.ref();
+          // Create a reference to the file to delete
+          const fileRef = storageRef.child(arti.pendingfile.fullPath);
+          fileRef.delete().then(() => {
+            console.log('file deleted')
           });
         }
       });
@@ -647,7 +699,7 @@ export function removePendingUpdates(cb) {
             callbackCount++;
             break;
           case 'newsReporting':
-            removePendingnewsReportingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+            removePendingNewsReportingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
             callbackCount++;
             break;
 

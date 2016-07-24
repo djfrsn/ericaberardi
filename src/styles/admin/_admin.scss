@@ -18,6 +18,14 @@
   }
 }
 
+.page_edit_icon {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  font-size: 1.5em;
+  margin-bottom: 15px;
+}
+
 .eb-button__container {
   width: 50%;
   margin: 0 auto;

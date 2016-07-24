@@ -17,7 +17,7 @@ export default (articles, scope) => {
           <h2 data-texteditid={`title-${id}`} data-textedittarget>{title}</h2>
           <h4 data-texteditid={`publisher-${id}`} data-textedittarget>{publisher}</h4>
           <p className="article__content" data-texteditid={`content-${id}`} data-textedittarget data-textedittype="textarea">{content}</p>
-          <a href={src} target="_blank" className="article__link">Read Full Story</a>
+          {!scope.state.isEditing ? <a href={src} target="_blank" className="article__link">Read Full Story</a> : null}
           {authenticated && scope.state.isEditing ? <div><label htmlFor={`article__src_input-${id}`}>Article Link</label><input type="text" id={`article__src_input-${id}`} className="article__src_input" placeholder={src} data-articleid={id} defaultValue={src} onChange={scope.onArticleSrcChange}/></div> : null}
           {authenticated && scope.state.isEditing ? <Dropzone id={id} className="articles__dropzone doc_file" activeClassName="active" accept="image/jpeg, image/png, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, text/plain, application/zip, application/x-compressed-zip" onDropAccept={scope.onDropAccept} onDrop={scope.onDrop}>
             <button>Upload New File</button>

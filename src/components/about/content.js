@@ -3,12 +3,12 @@ import forIn from 'lodash.forin';
 import forEach from 'lodash.foreach';
 import orderBy from 'lodash.orderBy';
 
-export default (content, scope) => {
+export default content => {
   let elements = [];
- let sortedContent = [];
+  let sortedContent = [];
   forIn(content, element => {
     if (element) {
-      elements.push(<p key={element.id} orderby={element.orderby} className="about__content__p">{element.text}</p>);
+      elements.push(<p key={element.id} orderby={element.orderby} className="about__content__p" data-textedittarget data-texteditid={`content-${element.id}`} data-textedittype="textarea">{element.content}</p>);
     }
   });
 

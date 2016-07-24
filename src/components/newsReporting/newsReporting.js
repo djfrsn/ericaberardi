@@ -119,7 +119,7 @@ export class NewsReporting extends Component {
       <div className="g-row">
         <div className="g-col" >
           <div className="articles__container">
-            {authenticated && Object.keys(data).length > 0 ? <i onClick={this.editArticles} className="fa fa-pencil-square-o newsreporting_article_edit" aria-hidden="true"></i> : null}
+            {authenticated && Object.keys(data).length > 0 ? <i onClick={this.editArticles} className="fa fa-pencil-square-o page_edit_icon" aria-hidden="true"></i> : null}
             {articles(data, this)}
           </div>
         </div>

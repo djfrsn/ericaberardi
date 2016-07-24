@@ -5,78 +5,109 @@ import { aboutActions } from 'core/about';
 import { textEditCanvas } from 'helpers/textEdit';
 import content from './content';
 import forIn from 'lodash.forin';
-// determine if articles have changed & update articles with pending data if so
-function parseArticles(opts) {
+import Dropzone from 'react-dropzone';
+// determine if about data has changed & update articles with pending data if so
+function parseAbout(opts) {
   let equal = true;
-  let newArticles = {};
+  let newAbout = {
+    content: {},
+    resume: {},
+    profilepicture: {}
+  };
 
-  forIn(opts.newArticles, (article, type) => {
+  forIn(opts.newAbout, (about, type) => {
     const typeData = type.split('-');
-    const articleType = typeData[0];
-    const articleId = typeData[1];
-    const prevArticle = opts.prevArticles[articleId];
-    if (!newArticles[articleId]) {
-      newArticles[articleId] = { ...prevArticle }; // create new article object
+    const aboutType = typeData[0];
+    const aboutId = typeData[1];
+    const prevAbout = opts.prevAbout[aboutType][aboutId];
+
+    if (!newAbout[aboutType][aboutId]) {
+      newAbout[aboutType][aboutId] = { ...prevAbout }; // create new about object
     }
-    const prevText = prevArticle[articleType];
-    if (article.text !== prevText) {
-      newArticles[articleId].pending = true; // update article with pending text
-      newArticles[articleId][`pending${articleType}`] = article.text;
+    const prevText = prevAbout.content;
+    if (about.text !== prevText) {
+      newAbout[aboutType][aboutId].pending = true; // update about with pending text
+      newAbout[aboutType][aboutId][`pending${aboutType}`] = about.content;
       equal = false;
     }
-    // check if link src
-    const newSrc = opts.scope.state.articleSrcs[`src-${articleId}`];
-    if (newSrc) {
-      newArticles[articleId].pending = true;
-      newArticles[articleId].pendingsrc = newSrc;
+    // TODO: refactor the next two sets of methods into two functions
+    // // check if profile picture/resume src changed
+    const newResumeSrc = opts.scope.state.resume[`resume-src-${aboutId}`];
+    if (newResumeSrc) {
+      newAbout[aboutType][aboutId].pending = true;
+      newAbout[aboutType][aboutId].pendingsrc = newResumeSrc;
       equal = false;
     }
+    const newProfilepictureSrc = opts.scope.state.profilepicture[`profilepicture-src-${aboutId}`];
+    if (newProfilepictureSrc) {
+      newAbout[aboutType][aboutId].pending = true;
+      newAbout[aboutType][aboutId].pendingsrc = newProfilepictureSrc;
+      equal = false;
+    }
+    debugger
     // check to see if file has been uploaded
-    let newFile = opts.scope.state.files[`file-${articleId}`];
-    if (newFile) {
+    let newProfilePicture = opts.scope.state.profilepicture[`profilepicture-file-${aboutId}`];
+    if (newProfilePicture) {
       // delete existing pending files without the same name to avoid keeping files
-      if (prevArticle.pendingfile) { // if the user uploads mutiple files for the same article before publishing/undoEdits
-        if (prevArticle.pendingfile.name !== newFile.name) {
-          const prevPendingFile = prevArticle.pendingfile;
-          if (prevPendingFile.fullPath && !newArticles[articleId].pendingfiledeleted) {
-            newArticles[articleId].pendingfiledeleted = true; // if the user is replacing an already pending file
-            opts.scope.props.deleteArticleFile(prevArticle); // we should delete the previous pending file
+      if (prevAbout.pendingfile) { // if the user uploads mutiple files for the same about before publishing/undoEdits
+        if (prevAbout.pendingfile.name !== newProfilePicture.name) {
+          const prevPendingFile = prevAbout.pendingfile;
+          if (prevPendingFile.fullPath && !newAbout[aboutType][aboutId].pendingfiledeleted) {
+            newAbout[aboutType][aboutId].pendingfiledeleted = true; // if the user is replacing an already pending file
+            opts.scope.props.deleteAboutFile(prevAbout); // we should delete the previous pending file
           }
         }
       }
-      newFile = newFile[0];
-      newArticles[articleId].pending = true;
-      newArticles[articleId].pendingsrc = `File Upload [${newFile.name}]`;
-      newArticles[articleId].pendingfile = newFile;
+      newProfilePicture = newProfilePicture[0];
+      newAbout[aboutType][aboutId].pending = true;
+      newAbout[aboutType][aboutId].pendingsrc = `File Upload [${newProfilePicture.name}]`;
+      newAbout[aboutType][aboutId].pendingfile = newProfilePicture;
       equal = false;
     }
   });
 
-  return { equal, newArticles };
+  return { equal, newAbout };
 }
 
 export class About extends Component {
   static propTypes = {
     about: PropTypes.object.isRequired,
     auth: PropTypes.object.isRequired,
-    deleteArticleFile: PropTypes.func.isRequired,
-    editArticles: PropTypes.func.isRequired
+    deleteAboutFile: PropTypes.func.isRequired,
+    editAbout: PropTypes.func.isRequired
+  }
+  state = {
+    resume: {},
+    profilepicture: {}
+  }
+  onDrop(files) {
+    if (!this.state.isDragReject) {
+      this.props.onDropAccept(files, this.props.id); // eslint-disable-line react/prop-types
+    } // this.props here is actually equal to props for Dropzone component
+  }
+  onDropAccept = (files, id) => {
+    this.setState({
+      files: {
+        ...this.state.files,
+        [`img-${id}`]: files
+      }
+    });
   }
   textEditTargetReverted = opts => {
     let dispatchType;
     let valueChanged = false;
     let data = {};
-    if (opts.meta.type === 'articles') {
-      dispatchType = 'editArticles';
-      const parsedArticles = parseArticles({ newArticles: opts.data, prevArticles: this.props.about.content, scope: this });
-      valueChanged = !parsedArticles.equal;
-      data = { articles: parsedArticles.newArticles };
+    if (opts.meta.type === 'about') {
+      dispatchType = 'editAbout';
+      const parsedAbout = parseAbout({ newAbout: opts.data, prevAbout: this.props.about, scope: this });
+      valueChanged = !parsedAbout.equal;
+      data = { about: parsedAbout.newAbout };
     }
 
     if (valueChanged) {
       this.props[dispatchType](data); // update db with changes
     }
-    this.setState({ ...this.state, isEditing: false, files: {}, articleSrcs: {} });
+    this.setState({ ...this.state, isEditing: false });
   }
   editAbout = e => {
     textEditCanvas({
@@ -84,22 +115,49 @@ export class About extends Component {
       className: 'textEdit-about',
       inputParent: 'li',
       callback: this.textEditTargetReverted,
-      meta: { type: 'articles' }
+      meta: { type: 'about' }
     });
     this.setState({ ...this.state, isEditing: true});
   }
+  onAboutSrcChange = e => {
+    const currentTarget = e.currentTarget;
+    this.setState({
+      ...this.state,
+      [currentTarget.dataset.type]: {
+        ...this.state.profilepicture,
+        [`${currentTarget.dataset.type}-src-${currentTarget.dataset.id}`]: currentTarget.value
+      }
+    });
+  }
   render() {
-    const { about } = this.props;
-    const authenticated = this.props.auth.authenticated;
+    const { about, auth } = this.props;
+    const authenticated = auth.authenticated;
     const resumeEl = [];
     forIn(about.resume, resume => {
-      if (resume) {
+      if (this.state.isEditing) {
+        resumeEl.push(<div key={resume.id}>
+          <label htmlFor={`about__src_resume_input-${resume.id}`}>resume Link</label>
+          <input type="text" className="about__src_input" data-id={resume.id} data-type="resume" placeholder={resume.src} defaultValue={resume.src} onChange={this.onAboutSrcChange}/>
+          <Dropzone className="about__dropzone" data-id={resume.id} activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+            <button>Upload New File</button>
+          </Dropzone>
+        </div>);
+      }
+      else if (resume) {
         resumeEl.push(<a key={resume.id} href={resume.src} target="_blank" className="about__resume_link">{resume.linktext}</a>);
       }
     });
     const aboutImage = [];
     forIn(about.profilepicture, picture => {
-      if (picture) {
+      if (this.state.isEditing) {
+        aboutImage.push(<div key={picture.id}>
+          <label htmlFor={`about__src_input-${picture.id}`}>Picture Link</label><input type="text" data-id={picture.id} data-type="profilepicture" className="about__src_input" placeholder={picture.src} defaultValue={picture.src} onChange={this.onAboutSrcChange}/>
+          <Dropzone className="about__dropzone" data-id={picture.id} activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+            <button>Upload New File</button>
+          </Dropzone>
+        </div>);
+      }
+      else if (picture) {
         aboutImage.push(<img key={picture.id} className="about__image" src={picture.src}/>);
       }
     });
@@ -107,9 +165,9 @@ export class About extends Component {
       <div className="g-row">
         <div className="g-col" >
           <div className="about__container">
-            {authenticated && Object.keys(about.content).length > 0 ? <i onClick={this.editAbout} className="fa fa-pencil-square-o newsreporting_article_edit" aria-hidden="true"></i> : null}
             <div className="about__left_col">
-              <div className="about__content">
+              {authenticated && Object.keys(about.content).length > 0 ? <i onClick={this.editAbout} className="fa fa-pencil-square-o page_edit_icon" aria-hidden="true"></i> : null}
+              <div className="about__content" data-textedittargetparent>
                 {content(about.content)}
                 {resumeEl}
               </div>

@@ -29,13 +29,7 @@
   }
 }
 
-.newsreporting_article_edit {
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-end;
-  font-size: 1.5em;
-}
-.articles__dropzone {
+.articles__dropzone, .about_dropzone {
   button {
     @include interaction-base();
     @include button-base();

@@ -5,11 +5,10 @@ const config = require('./webpack.base');
 const DefinePlugin = webpack.DefinePlugin;
 const HotModuleReplacementPlugin = webpack.HotModuleReplacementPlugin;
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const WebpackBrowserPlugin = require('webpack-browser-plugin');
 const OfflinePlugin = require('offline-plugin');
 const NoErrorsPlugin = webpack.NoErrorsPlugin;
 const OccurenceOrderPlugin = webpack.optimize.OccurenceOrderPlugin;
-
+const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 module.exports = {
   cache: true,
@@ -59,7 +58,6 @@ module.exports = {
     new OccurenceOrderPlugin(),
     new HotModuleReplacementPlugin(),
     new NoErrorsPlugin(),
-    new WebpackBrowserPlugin(),
     new OfflinePlugin(),
     new HtmlWebpackPlugin({
       chunksSortMode: 'none',
@@ -67,7 +65,8 @@ module.exports = {
       hash: true,
       inject: 'body',
       template: './src/index.html'
-    })
+    }),
+    new OpenBrowserPlugin({ url: 'http://localhost:3000' })
   ],
 
   devServer: {

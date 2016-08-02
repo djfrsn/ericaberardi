@@ -6,7 +6,8 @@ import { textEditCanvas } from 'helpers/textEdit';
 import content from './content';
 import forIn from 'lodash.forin';
 import Dropzone from 'react-dropzone';
-// determine if about data has changed & update articles with pending data if so
+// TODO: Export this into a seperate file, as well as the ones for pricing/news reporting
+// determine if about data has changed & update text/files with pending data if so
 function parseAbout(opts) {
   let equal = true;
   let newAbout = {
@@ -14,7 +15,7 @@ function parseAbout(opts) {
     resume: {},
     profilepicture: {}
   };
-
+  // Check text for any changes
   forIn(opts.newAbout, (about, type) => {
     const typeData = type.split('-');
     const aboutType = typeData[0];
@@ -27,44 +28,58 @@ function parseAbout(opts) {
     const prevText = prevAbout.content;
     if (about.text !== prevText) {
       newAbout[aboutType][aboutId].pending = true; // update about with pending text
-      newAbout[aboutType][aboutId][`pending${aboutType}`] = about.content;
-      equal = false;
-    }
-    // TODO: refactor the next two sets of methods into two functions
-    // // check if profile picture/resume src changed
-    const newResumeSrc = opts.scope.state.resume[`resume-src-${aboutId}`];
-    if (newResumeSrc) {
-      newAbout[aboutType][aboutId].pending = true;
-      newAbout[aboutType][aboutId].pendingsrc = newResumeSrc;
-      equal = false;
-    }
-    const newProfilepictureSrc = opts.scope.state.profilepicture[`profilepicture-src-${aboutId}`];
-    if (newProfilepictureSrc) {
-      newAbout[aboutType][aboutId].pending = true;
-      newAbout[aboutType][aboutId].pendingsrc = newProfilepictureSrc;
-      equal = false;
-    }
-    debugger
-    // check to see if file has been uploaded
-    let newProfilePicture = opts.scope.state.profilepicture[`profilepicture-file-${aboutId}`];
-    if (newProfilePicture) {
-      // delete existing pending files without the same name to avoid keeping files
-      if (prevAbout.pendingfile) { // if the user uploads mutiple files for the same about before publishing/undoEdits
-        if (prevAbout.pendingfile.name !== newProfilePicture.name) {
-          const prevPendingFile = prevAbout.pendingfile;
-          if (prevPendingFile.fullPath && !newAbout[aboutType][aboutId].pendingfiledeleted) {
-            newAbout[aboutType][aboutId].pendingfiledeleted = true; // if the user is replacing an already pending file
-            opts.scope.props.deleteAboutFile(prevAbout); // we should delete the previous pending file
-          }
-        }
-      }
-      newProfilePicture = newProfilePicture[0];
-      newAbout[aboutType][aboutId].pending = true;
-      newAbout[aboutType][aboutId].pendingsrc = `File Upload [${newProfilePicture.name}]`;
-      newAbout[aboutType][aboutId].pendingfile = newProfilePicture;
+      newAbout[aboutType][aboutId][`pending${aboutType}`] = about.text;
       equal = false;
     }
   });
+
+  const aboutProps = opts.scope.props.about;
+
+  const checkSrc = options => {
+    forIn(options.aboutProps[options.type], data => {
+      const newDataSrc = opts.scope.state[options.type][`${[options.type]}-src-${data.id}`];
+      if (newDataSrc) {
+        newAbout[options.type][data.id] = { ...data };
+        newAbout[options.type][data.id].pending = true;
+        newAbout[options.type][data.id].pendingsrc = newDataSrc;
+        equal = false;
+      }
+    });
+  };
+
+  const checkFiles = options => {
+    forIn(options.aboutProps[options.type], data => {
+      let dataId = data.id;
+      let type = options.type;
+      let prevAbout = opts.prevAbout[type][dataId];
+
+      // check to see if file has been uploaded
+      let newFile = opts.scope.state[type][`${type}-file-${dataId}`];
+      if (newFile) {
+        // delete existing pending files without the same name to avoid keeping files
+        if (prevAbout.pendingfile) { // if the user uploads mutiple files for the same about before publishing/undoEdits
+          if (prevAbout.pendingfile.name !== newFile.name) {
+            const prevPendingFile = prevAbout.pendingfile;
+            if (prevPendingFile.fullPath && !newAbout[type][dataId].pendingfiledeleted) {
+              newAbout[type][dataId].pendingfiledeleted = true; // if the user is replacing an already pending file
+              opts.scope.props.deleteAboutFile(prevAbout); // we should delete the previous pending file
+            }
+          }
+        }
+        newAbout[type][dataId] = { ...data }; // get id & existing src
+        newAbout[type][dataId].pending = true;
+        newAbout[type][dataId].pendingsrc = newFile.preview;
+        newAbout[type][dataId].pendingfile = newFile;
+        equal = false;
+      }
+    });
+  };
+  // Determine if src text has changed
+  checkSrc({ aboutProps, type: 'resume' });
+  checkSrc({ aboutProps, type: 'profilepicture' });
+  // Determine if any new files have been uploaded
+  checkFiles({ aboutProps, type: 'resume' });
+  checkFiles({ aboutProps, type: 'profilepicture' });
 
   return { equal, newAbout };
 }
@@ -82,14 +97,16 @@ export class About extends Component {
   }
   onDrop(files) {
     if (!this.state.isDragReject) {
-      this.props.onDropAccept(files, this.props.id); // eslint-disable-line react/prop-types
+      this.props.onDropAccept(files, this); // eslint-disable-line react/prop-types
     } // this.props here is actually equal to props for Dropzone component
   }
-  onDropAccept = (files, id) => {
+  onDropAccept = (files, scope) => {
+    var dataType = scope.props['data-type'];
     this.setState({
-      files: {
-        ...this.state.files,
-        [`img-${id}`]: files
+      ...this.state,
+      [dataType]: {
+        ...this.state[dataType],
+        [`${dataType}-file-${scope.props['data-id']}`]: files[0]
       }
     });
   }
@@ -138,7 +155,7 @@ export class About extends Component {
         resumeEl.push(<div key={resume.id}>
           <label htmlFor={`about__src_resume_input-${resume.id}`}>resume Link</label>
           <input type="text" className="about__src_input" data-id={resume.id} data-type="resume" placeholder={resume.src} defaultValue={resume.src} onChange={this.onAboutSrcChange}/>
-          <Dropzone className="about__dropzone" data-id={resume.id} activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+          <Dropzone className="about__dropzone" data-id={resume.id} data-type="resume" activeClassName="active" accept="image/jpeg, image/png, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, text/plain" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
             <button>Upload New File</button>
           </Dropzone>
         </div>);
@@ -152,7 +169,7 @@ export class About extends Component {
       if (this.state.isEditing) {
         aboutImage.push(<div key={picture.id}>
           <label htmlFor={`about__src_input-${picture.id}`}>Picture Link</label><input type="text" data-id={picture.id} data-type="profilepicture" className="about__src_input" placeholder={picture.src} defaultValue={picture.src} onChange={this.onAboutSrcChange}/>
-          <Dropzone className="about__dropzone" data-id={picture.id} activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
+          <Dropzone className="about__dropzone" data-id={picture.id} data-type="profilepicture" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
             <button>Upload New File</button>
           </Dropzone>
         </div>);

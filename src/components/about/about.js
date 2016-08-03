@@ -25,8 +25,8 @@ function parseAbout(opts) {
     if (!newAbout[aboutType][aboutId]) {
       newAbout[aboutType][aboutId] = { ...prevAbout }; // create new about object
     }
-    const prevText = prevAbout.content;
-    if (about.text !== prevText) {
+    const prevText = prevAbout.pendingcontent ? prevAbout.pendingcontent : prevAbout.content; // use pendingcontent or original content
+    if (about.text !== prevText) { // for comparison with about.text
       newAbout[aboutType][aboutId].pending = true; // update about with pending text
       newAbout[aboutType][aboutId][`pending${aboutType}`] = about.text;
       equal = false;
@@ -56,6 +56,7 @@ function parseAbout(opts) {
       // check to see if file has been uploaded
       let newFile = opts.scope.state[type][`${type}-file-${dataId}`];
       if (newFile) {
+        newAbout[type][dataId] = { ...data }; // get id & existing src
         // delete existing pending files without the same name to avoid keeping files
         if (prevAbout.pendingfile) { // if the user uploads mutiple files for the same about before publishing/undoEdits
           if (prevAbout.pendingfile.name !== newFile.name) {
@@ -66,7 +67,6 @@ function parseAbout(opts) {
             }
           }
         }
-        newAbout[type][dataId] = { ...data }; // get id & existing src
         newAbout[type][dataId].pending = true;
         newAbout[type][dataId].pendingsrc = newFile.preview;
         newAbout[type][dataId].pendingfile = newFile;

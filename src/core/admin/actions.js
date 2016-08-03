@@ -721,7 +721,7 @@ function removePendingNewsReportingData(opts) {
         const newArticle = {
           ...arti,
           hasFile: null,
-          pending: false,
+          pending: null,
           pendingtitle: null,
           pendingpublisher: null,
           pendingcontent: null,
@@ -743,6 +743,61 @@ function removePendingNewsReportingData(opts) {
         }
       });
 
+    }
+  });
+}
+
+
+function removePendingAboutData(opts) {
+
+  const database = opts.firebase.database();
+  const storage = opts.firebase.storage();
+  let callbackCount = 1;
+  let pendingAboutCount = 0;
+  forIn(opts.data, dt => {
+    pendingAboutCount += Object.keys(dt).length;
+  });
+
+  // set new pendingData for each packages/categories
+  forIn(opts.data, (data, type) => {
+    if (type === 'content') { // is it a category or package?
+      forIn(data, cont => {
+        const newContent = {
+          ...cont,
+          pending: null,
+          pendingcontent: null
+        };
+        database.ref(`about/content/${cont.id}`).set(newContent).then(() => {
+          if (callbackCount === pendingAboutCount) {
+            successCB(opts.successCallback);
+          }
+          callbackCount++;
+        });
+      });
+    }
+    if (type === 'profilepicture' || type === 'resume') { // is it a category or package?
+      forIn(data, dt => {
+        const newData = {
+          ...dt,
+          pending: null,
+          pendingfile: null,
+          pendingsrc: null
+        };
+
+        database.ref(`about/${type}/${dt.id}`).set(newData).then(() => {
+          if (callbackCount === pendingAboutCount) {
+            successCB(opts.successCallback);
+          }
+          callbackCount++;
+        });
+        // delete any pending files
+        if (dt.pendingfile) {
+          const storageRef = storage.ref();
+          // Create a reference to the file to delete
+          const fileRef = storageRef.child(dt.pendingfile.fullPath);
+          fileRef.delete();
+        }
+      });
     }
   });
 }
@@ -774,6 +829,10 @@ export function removePendingUpdates(cb) {
             break;
           case 'newsReporting':
             removePendingNewsReportingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+            callbackCount++;
+            break;
+          case 'about':
+            removePendingAboutData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
             callbackCount++;
             break;
 

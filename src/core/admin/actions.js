@@ -159,7 +159,7 @@ function getPendingGalleries(pendingUpdates, opts) {
         pendingUpdates[opts.category][key] = pendingProp; // update new pendingProp
       }
     }
-    else if (isImages(opts.category, key)) { // images are nested differently than categories....
+    else if (isImages(opts.category, key)) { // images are nested 2lvls deep so extra logic is needed....
       const pendingImages = getPendingImages(prop);
       let hasPendingImages = false;
       forIn(pendingImages, images => {
@@ -176,7 +176,7 @@ function getPendingGalleries(pendingUpdates, opts) {
   return pendingUpdates;
 }
 
-function getPendingPricing(pendingUpdates, opts) {
+function getPendingUpdates(pendingUpdates, opts) {
   forIn(opts.snapshot, (prop, key) => {
     let pendingProp = {};
     forIn(prop, (child, key) => {
@@ -193,25 +193,12 @@ function getPendingPricing(pendingUpdates, opts) {
   return pendingUpdates;
 }
 
-function getPendingNewsReporting(pendingUpdates, opts) {
-  forIn(opts.snapshot, prop => {
-    let pendingProp = {};
-    forIn(prop, (child, key) => {
-      if (child.pending) {
-        pendingProp[key] = child;
-      }
-    });
-  });
-
-  return pendingUpdates;
-}
-
 // Updates are set based on routes in this shape { galleries: data, about: data, contact: data }
 // each key/value pair contains all pending updates for each route
 function dispatchPendingUpdates(opts) {
   let pendingUpdates = { ...opts.admin.pendingUpdates }; // apply current pending updates
 
-  pendingUpdates[opts.category] = {}; // reset pending updates for a category
+  pendingUpdates[opts.category] = {}; // reset pending updates for for current category
 
   if (Object.keys(opts.snapshot).length > 0) { // register pending updates if any exist
     // set any pending data onto pendingUpdates object by category
@@ -219,10 +206,13 @@ function dispatchPendingUpdates(opts) {
       pendingUpdates = getPendingGalleries(pendingUpdates, opts);
     }
     if (opts.category === 'pricing') {
-      pendingUpdates = getPendingNewsReporting(pendingUpdates, opts);
+      pendingUpdates = getPendingUpdates(pendingUpdates, opts);
+    }
+    if (opts.category === 'about') {
+      pendingUpdates = getPendingUpdates(pendingUpdates, opts);
     }
     if (opts.category === 'newsReporting') {
-      pendingUpdates = getPendingPricing(pendingUpdates, opts);
+      pendingUpdates = getPendingUpdates(pendingUpdates, opts);
     }
   }
 
@@ -261,6 +251,9 @@ export function setPendingUpdates(category, snapshot) {
           dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
         case 'pricing':
+          dispatchPendingUpdates({dispatch, category, admin, snapshot});
+          break;
+        case 'about':
           dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
         case 'newsReporting':
@@ -460,7 +453,7 @@ function validatePendingChanges(opts) {
 // { // root of db
 //   "category": {
 //     "parent" {
-//       "2zv234" : {} // parentdata
+//       "2zv234" : { ...data }
 //     }
 //   }
 // }

@@ -50,7 +50,7 @@ galleries.on('value', snapshot => {
 
 about.on('value', snapshot => {
   const data = snapshot.val();
-  // store.dispatch(adminActions.setPendingUpdates('about', data));
+  store.dispatch(adminActions.setPendingUpdates('about', data));
   store.dispatch(aboutActions.hydrateAbout(data));
 });
 

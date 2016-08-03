@@ -284,7 +284,7 @@ function getNewGalleriesState(newPendingState, opts) {
 }
 
 function getNewPricingState(newPendingState, opts) {
-  newPendingState[opts.child] = { ...opts.state[opts.child] }; // extend to avoid losing data other than objects
+  newPendingState[opts.child] = { ...opts.state[opts.child] };
 
   forIn(opts.state[opts.parent], parent => {
     const parentId = parent.id;
@@ -306,9 +306,71 @@ function getNewPricingState(newPendingState, opts) {
   return newPendingState;
 }
 
+function deleteExistingFiles(parent, storage) {
+  const duplicateFile = (() => {
+    let isDuplicate = false;
+    const hasPendingFile = typeof parent.pendingfile === 'object';
+    if (hasPendingFile) {
+      isDuplicate = parent.pendingfile.name === parent.file.name;
+    }
+    return isDuplicate;
+  })(); // run this to check if the pending file is the same as the existing one. If it is we shouldn't delete it.
+  if (!duplicateFile) {
+    const storageRef = storage.ref();
+    // Create a reference to the file to delete
+    const fileRef = storageRef.child(parent.file.fullPath);
+    fileRef.delete();
+  }
+}
+
+function getNewAboutState(newPendingState, opts) {
+  const storage = opts.firebase.storage();
+  newPendingState = { ...opts.state };
+
+  forIn(opts.state, (category, key) => {
+    forIn(category, parent => {
+      if (parent.pending) {
+        if (parent.pendingcontent) {
+          newPendingState[key][parent.id] = {
+            ...parent,
+            content: parent.pendingcontent,
+            pendingcontent: null,
+            pending: null
+          };
+        }
+        if (parent.pendingfile) {
+          newPendingState[key][parent.id] = {
+            ...parent,
+            file: parent.pendingfile,
+            src: parent.pendingfile.src,
+            pendingsrc: null,
+            pendingfile: null,
+            pending: null
+          };
+        }
+        else if (parent.pendingsrc) {  // this block runs for text src only change
+          newPendingState[key][parent.id] = {
+            ...parent,
+            src: parent.pendingfile.src,
+            file: null,
+            pendingsrc: null,
+            pendingfile: null,
+            pending: null
+          };
+        }
+        if ((parent.pendingfile || parent.pendingsrc) && parent.file) { // delete existing file
+          deleteExistingFiles(parent, storage);
+        }
+      }
+    });
+  });
+
+  return newPendingState;
+}
+
 function getNewNewsReportingState(newPendingState, opts) {
   const storage = opts.firebase.storage();
-  newPendingState[opts.parent] = { ...opts.state[opts.parent] }; // extend to avoid losing data other than objects
+  newPendingState[opts.parent] = { ...opts.state[opts.parent] };
 
   forIn(opts.state[opts.parent], parent => {
     const parentId = parent.id;
@@ -343,20 +405,7 @@ function getNewNewsReportingState(newPendingState, opts) {
       }
       // if either a new file has been upload or the src has changed we will delete the existing file if one exist
       if ((parent.pendingfile || parent.pendingsrc) && parent.file) { // delete existing file
-        const duplicateFile = (() => {
-          let isDuplicate = false;
-          const hasPendingFile = typeof parent.pendingfile === 'object';
-          if (hasPendingFile) {
-            isDuplicate = parent.pendingfile.name === parent.file.name;
-          }
-          return isDuplicate;
-        })(); // run this to check if the pending file is the same as the existing one. If it is we shouldn't delete it.
-        if (!duplicateFile) {
-          const storageRef = storage.ref();
-          // Create a reference to the file to delete
-          const fileRef = storageRef.child(parent.file.fullPath);
-          fileRef.delete();
-        }
+        deleteExistingFiles(parent, storage);
       }
     }
   });
@@ -379,6 +428,9 @@ function getNewState(opts) {
     case 'newsReporting':
       newPendingState = getNewNewsReportingState(newPendingState, opts);
       break;
+    case 'about':
+      newPendingState = getNewAboutState(newPendingState, opts);
+      break;
     default:
   }
 
@@ -387,8 +439,8 @@ function getNewState(opts) {
 
 // Minimums for how many categorys/children should exist in the db
 function getPendingChangeMinimums(category) {
-  let minParentCount = 1;
-  let minChildCount = 1;
+  let minParentCount = 99;
+  let minChildCount = 99;
 
   switch (category) {
     case 'galleries':
@@ -398,6 +450,11 @@ function getPendingChangeMinimums(category) {
 
     case 'customerGalleries':
       minParentCount = 0;
+      minChildCount = 0;
+      break;
+
+    case 'about':
+      minParentCount = 3;
       minChildCount = 0;
       break;
 
@@ -464,7 +521,7 @@ function publishContent(opts) {
   const changesValidated = validatePendingChanges(opts);
 
   if (changesValidated) {
-    const newState = getNewState({ category: opts.category, setStatus: false, state: opts.state, parent: opts.parent, child: opts.child, firebase }); // set pending status of all children to false
+    const newState = getNewState({ category: opts.category, setStatus: false, state: opts.state, parent: opts.parent, child: opts.child, firebase }); // set pending status of all children to false & return fresh state
     const database = firebase.database();
     let callbackCount = 1;
     let successCallback;
@@ -473,12 +530,12 @@ function publishContent(opts) {
       // iterate through category children & set data in firebase
       if (key) {
         database.ref(`${opts.category}/${key}`).set(newState[key]).then(() => {
-          opts.dispatch({
-            type: CLEAR_PENDING_UPDATES
-          });
           if (opts.databaseKeys.length === callbackCount) {
             successCallback = opts.callbacks.successCallback;
             if (utils.isFunction(successCallback)) {
+              opts.dispatch({
+                type: CLEAR_PENDING_UPDATES
+              });
               delay(() => {
                 successCallback(); // call final publish/success callback
               }, 0);
@@ -521,6 +578,9 @@ export function publishPendingUpdates(successCallback, errorCallback) {
           break;
         case 'pricing':
           publishContent({dispatch, getState, category, parent: 'categories', child: 'packages', databaseKeys: ['categories', 'packages'], state, callbacks});
+          break;
+        case 'about':
+          publishContent({dispatch, getState, category, parent: 'content', child: null, databaseKeys: ['content', 'profilepicture', 'resume'], state, callbacks});
           break;
         case 'newsReporting':
           publishContent({dispatch, getState, category, parent: 'articles', child: null, databaseKeys: ['articles'], state, callbacks});

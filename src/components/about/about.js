@@ -151,31 +151,33 @@ export class About extends Component {
     const authenticated = auth.authenticated;
     const resumeEl = [];
     forIn(about.resume, resume => {
+      const resumesrc = resume.pendingsrc ? resume.pendingsrc : resume.src;
       if (this.state.isEditing) {
         resumeEl.push(<div key={resume.id}>
           <label htmlFor={`about__src_resume_input-${resume.id}`}>resume Link</label>
-          <input type="text" className="about__src_input" data-id={resume.id} data-type="resume" placeholder={resume.src} defaultValue={resume.src} onChange={this.onAboutSrcChange}/>
+          <input type="text" className="about__src_input" data-id={resume.id} data-type="resume" placeholder={resumesrc} defaultValue={resumesrc} onChange={this.onAboutSrcChange}/>
           <Dropzone className="about__dropzone" data-id={resume.id} data-type="resume" activeClassName="active" accept="image/jpeg, image/png, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, text/plain" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
             <button>Upload New File</button>
           </Dropzone>
         </div>);
       }
       else if (resume) {
-        resumeEl.push(<a key={resume.id} href={resume.src} target="_blank" className="about__resume_link">{resume.linktext}</a>);
+        resumeEl.push(<a key={resume.id} href={resumesrc} target="_blank" className="about__resume_link">{resume.linktext}</a>);
       }
     });
     const aboutImage = [];
     forIn(about.profilepicture, picture => {
+      const picturesrc = picture.pendingsrc ? picture.pendingsrc : picture.src;
       if (this.state.isEditing) {
         aboutImage.push(<div key={picture.id}>
-          <label htmlFor={`about__src_input-${picture.id}`}>Picture Link</label><input type="text" data-id={picture.id} data-type="profilepicture" className="about__src_input" placeholder={picture.src} defaultValue={picture.src} onChange={this.onAboutSrcChange}/>
+          <label htmlFor={`about__src_input-${picture.id}`}>Picture Link</label><input type="text" data-id={picture.id} data-type="profilepicture" className="about__src_input" placeholder={picturesrc} defaultValue={picturesrc} onChange={this.onAboutSrcChange}/>
           <Dropzone className="about__dropzone" data-id={picture.id} data-type="profilepicture" activeClassName="active" accept="image/jpeg, image/png" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
             <button>Upload New File</button>
           </Dropzone>
         </div>);
       }
       else if (picture) {
-        aboutImage.push(<img key={picture.id} className="about__image" src={picture.src}/>);
+        aboutImage.push(<img key={picture.id} className="about__image" src={picturesrc}/>);
       }
     });
     return (

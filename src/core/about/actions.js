@@ -19,11 +19,11 @@ export function editAbout(opts) {
     const storage = firebase.storage();
     const database = firebase.database();
 
-    // upload any pending files
     forIn(about, (data, category) => {
       if (category === 'content') {
-        //database.ref('about/content').set(data);
+        database.ref('about/content').set(data);
       }
+      // upload new profilepicture or resume
       if ((category === 'profilepicture' || category === 'resume') && Object.keys(data).length > 0) {
         const filedata = data[Object.keys(data)[0]];
         const pendingfile = filedata.pendingfile;

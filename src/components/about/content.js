@@ -7,8 +7,9 @@ export default content => {
   let elements = [];
   let sortedContent = [];
   forIn(content, element => {
+    const content = element.pendingcontent ? element.pendingcontent : element.content;
     if (element) {
-      elements.push(<p key={element.id} orderby={element.orderby} className="about__content__p" data-textedittarget data-texteditid={`content-${element.id}`} data-textedittype="textarea">{element.content}</p>);
+      elements.push(<p key={element.id} orderby={element.orderby} className="about__content__p" data-textedittarget data-texteditid={`content-${element.id}`} data-textedittype="textarea">{content}</p>);
     }
   });
 

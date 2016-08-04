@@ -205,13 +205,16 @@ function dispatchPendingUpdates(opts) {
     if (opts.category === 'galleries') {
       pendingUpdates = getPendingGalleries(pendingUpdates, opts);
     }
+    if (opts.category === 'newsReporting') {
+      pendingUpdates = getPendingUpdates(pendingUpdates, opts);
+    }
     if (opts.category === 'pricing') {
       pendingUpdates = getPendingUpdates(pendingUpdates, opts);
     }
     if (opts.category === 'about') {
       pendingUpdates = getPendingUpdates(pendingUpdates, opts);
     }
-    if (opts.category === 'newsReporting') {
+    if (opts.category === 'contact') {
       pendingUpdates = getPendingUpdates(pendingUpdates, opts);
     }
   }
@@ -250,13 +253,16 @@ export function setPendingUpdates(category, snapshot) {
         case 'galleries':
           dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
+        case 'newsReporting':
+          dispatchPendingUpdates({dispatch, category, admin, snapshot});
+          break;
         case 'pricing':
           dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
         case 'about':
           dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
-        case 'newsReporting':
+        case 'contact':
           dispatchPendingUpdates({dispatch, category, admin, snapshot});
           break;
 
@@ -323,51 +329,6 @@ function deleteExistingFiles(parent, storage) {
   }
 }
 
-function getNewAboutState(newPendingState, opts) {
-  const storage = opts.firebase.storage();
-  newPendingState = { ...opts.state };
-
-  forIn(opts.state, (category, key) => {
-    forIn(category, parent => {
-      if (parent.pending) {
-        if (parent.pendingcontent) {
-          newPendingState[key][parent.id] = {
-            ...parent,
-            content: parent.pendingcontent,
-            pendingcontent: null,
-            pending: null
-          };
-        }
-        if (parent.pendingfile) {
-          newPendingState[key][parent.id] = {
-            ...parent,
-            file: parent.pendingfile,
-            src: parent.pendingfile.src,
-            pendingsrc: null,
-            pendingfile: null,
-            pending: null
-          };
-        }
-        else if (parent.pendingsrc) {  // this block runs for text src only change
-          newPendingState[key][parent.id] = {
-            ...parent,
-            src: parent.pendingfile.src,
-            file: null,
-            pendingsrc: null,
-            pendingfile: null,
-            pending: null
-          };
-        }
-        if ((parent.pendingfile || parent.pendingsrc) && parent.file) { // delete existing file
-          deleteExistingFiles(parent, storage);
-        }
-      }
-    });
-  });
-
-  return newPendingState;
-}
-
 function getNewNewsReportingState(newPendingState, opts) {
   const storage = opts.firebase.storage();
   newPendingState[opts.parent] = { ...opts.state[opts.parent] };
@@ -413,6 +374,80 @@ function getNewNewsReportingState(newPendingState, opts) {
   return newPendingState;
 }
 
+function getNewAboutState(newPendingState, opts) {
+  const storage = opts.firebase.storage();
+  newPendingState = { ...opts.state };
+
+  forIn(opts.state, (category, key) => {
+    forIn(category, parent => {
+      if (parent.pending) {
+        if (parent.pendingcontent) {
+          newPendingState[key][parent.id] = {
+            ...parent,
+            content: parent.pendingcontent,
+            pendingcontent: null,
+            pending: null
+          };
+        }
+        if (parent.pendingfile) {
+          newPendingState[key][parent.id] = {
+            ...parent,
+            file: parent.pendingfile,
+            src: parent.pendingfile.src,
+            pendingsrc: null,
+            pendingfile: null,
+            pending: null
+          };
+        }
+        else if (parent.pendingsrc) {  // this block runs for text src only change
+          newPendingState[key][parent.id] = {
+            ...parent,
+            src: parent.pendingfile.src,
+            file: null,
+            pendingsrc: null,
+            pendingfile: null,
+            pending: null
+          };
+        }
+        if ((parent.pendingfile || parent.pendingsrc) && parent.file) { // delete existing file
+          deleteExistingFiles(parent, storage);
+        }
+      }
+    });
+  });
+
+  return newPendingState;
+}
+
+function getNewContactState(newPendingState, opts) {
+  newPendingState = { ...opts.state.content };
+
+  forIn(opts.state.content, (category, key) => {
+    forIn(category, parent => {
+      if (parent.pending) {
+        if (parent.pendingtext) {
+          newPendingState[key][parent.id] = {
+            ...parent,
+            text: parent.pendingtext,
+            pendingtext: null,
+            pending: null
+          };
+        }
+        if (parent.pendingsrc) {
+          newPendingState[key][parent.id] = {
+            ...parent,
+            src: parent.pendingsrc,
+            pendingsrc: null,
+            pending: null
+          };
+        }
+      }
+    });
+  });
+
+  return newPendingState;
+}
+
 // Function used to create new state on publish, this is a good place to reset/update data before publish
 // Set 'pending: false' for each child of a given pendingUpdate category & do any other state updates before publshing to db
 function getNewState(opts) {
@@ -422,14 +457,17 @@ function getNewState(opts) {
     case 'galleries':
       newPendingState = getNewGalleriesState(newPendingState, opts);
       break;
-    case 'pricing':
-      newPendingState = getNewPricingState(newPendingState, opts);
-      break;
     case 'newsReporting':
       newPendingState = getNewNewsReportingState(newPendingState, opts);
       break;
+    case 'pricing':
+      newPendingState = getNewPricingState(newPendingState, opts);
+      break;
     case 'about':
       newPendingState = getNewAboutState(newPendingState, opts);
+      break;
+    case 'contact':
+      newPendingState = getNewContactState(newPendingState, opts);
       break;
     default:
   }
@@ -448,12 +486,7 @@ function getPendingChangeMinimums(category) {
       minChildCount = 4;
       break;
 
-    case 'customerGalleries':
-      minParentCount = 0;
-      minChildCount = 0;
-      break;
-
-    case 'about':
+    case 'newsReporting':
       minParentCount = 3;
       minChildCount = 0;
       break;
@@ -463,8 +496,18 @@ function getPendingChangeMinimums(category) {
       minChildCount = 1;
       break;
 
-    case 'newsReporting':
+    case 'about':
       minParentCount = 3;
+      minChildCount = 0;
+      break;
+
+    case 'contact':
+      minParentCount = 3;
+      minChildCount = 0;
+      break;
+
+    case 'customerGalleries':
+      minParentCount = 0;
       minChildCount = 0;
       break;
 
@@ -479,7 +522,7 @@ function getPendingChangeMinimums(category) {
 function validatePendingChanges(opts) {
   const { minParentCount, minChildCount } = getPendingChangeMinimums(opts.category);
   let validChanges = false;
-  const categories = ['galleries', 'customerGalleries', 'pricing', 'newsReporting', 'about'];
+  const categories = ['galleries', 'newsReporting', 'pricing', 'about', 'contact', 'customerGalleries'];
 
   if (categories.indexOf(opts.category) >= 0) {
     const parent = opts.state[opts.parent];
@@ -504,9 +547,9 @@ function validatePendingChanges(opts) {
   return validChanges;
 }
 
-// NOTE: This method should work for any category/page/route that stores data in the db
-// data for each category/page must be structured in the same way for this to work
-// content scheme:
+// NOTE: This method is for any category/page/route that stores data in the db
+// Data for each category/page must be structured in the same way for this to work
+// Schema:
 // { // root of db
 //   "category": {
 //     "parent" {
@@ -576,14 +619,17 @@ export function publishPendingUpdates(successCallback, errorCallback) {
         case 'galleries':
           publishContent({dispatch, getState, category, parent: 'categories', child: 'images', databaseKeys: ['categories', 'images'], state, callbacks});
           break;
+        case 'newsReporting':
+          publishContent({dispatch, getState, category, parent: 'articles', child: null, databaseKeys: ['articles'], state, callbacks});
+          break;
         case 'pricing':
           publishContent({dispatch, getState, category, parent: 'categories', child: 'packages', databaseKeys: ['categories', 'packages'], state, callbacks});
           break;
         case 'about':
           publishContent({dispatch, getState, category, parent: 'content', child: null, databaseKeys: ['content', 'profilepicture', 'resume'], state, callbacks});
           break;
-        case 'newsReporting':
-          publishContent({dispatch, getState, category, parent: 'articles', child: null, databaseKeys: ['articles'], state, callbacks});
+        case 'contact':
+          publishContent({dispatch, getState, category, parent: 'content', child: null, databaseKeys: ['email', 'form', 'socialicons'], state, callbacks});
           break;
 
         default:

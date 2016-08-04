@@ -58,7 +58,7 @@ about.on('value', snapshot => {
 
 contact.on('value', snapshot => {
   const data = snapshot.val();
-  // store.dispatch(adminActions.setPendingUpdates('contact', data));
+  store.dispatch(adminActions.setPendingUpdates('contact', data));
   store.dispatch(contactActions.hydrateContact(data));
 });
 

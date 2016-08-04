@@ -1,14 +1,14 @@
 import React, { Component } from 'react';
-import socialIcons from './socialIcons';
+import SocialIcons from './socialIcons';
 
-export class NotFound extends Component {
+export class Footer extends Component {
   render() {
     // const authenticated = this.props.auth.authenticated;
     return (
       <div className="g-row">
-        <div className="g-col notfound">
+        <div className="g-col footer">
 
-          {socialIcons()}
+          <SocialIcons/>
 
           <footer>© 2016 by Erica Berardi Photography LLC & <a href="https://digitalarch.com">Digital Architecture</a></footer>
         </div>
@@ -17,4 +17,4 @@ export class NotFound extends Component {
   }
 }
 
-export default NotFound;
+export default Footer;

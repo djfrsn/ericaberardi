@@ -1,5 +1,6 @@
 
 import {
+  HYDRATE_CONTACT,
   SEND_EMAIL_SUCCESS,
   SEND_EMAIL_ERROR,
   CLEAR_EMAIL_DATA
@@ -12,12 +13,18 @@ const emailInitialState = {
 };
 
 export const initialState = {
-  email: emailInitialState
+  email: emailInitialState,
+  content: {}
 };
 
 
 export function contactReducer(state = initialState, action) {
   switch (action.type) {
+    case HYDRATE_CONTACT:
+      return {
+        ...state,
+        content: action.payload
+      };
     case SEND_EMAIL_SUCCESS:
       return {
         ...state,

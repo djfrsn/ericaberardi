@@ -13,6 +13,7 @@ import { galleriesActions } from 'core/galleries';
 import { customerGalleriesActions } from 'core/customerGalleries';
 import { newsReportingActions } from 'core/newsReporting';
 import { pricingActions } from 'core/pricing';
+import { contactActions } from 'core/contact';
 import { FIREBASE_CONFIG } from './config';
 import configureStore from './store';
 
@@ -40,6 +41,7 @@ firebase.auth().onAuthStateChanged(user => { // run everytime auth state changes
 let galleries = firebase.database().ref('galleries');
 let newsReporting = firebase.database().ref('newsReporting');
 let about = firebase.database().ref('about');
+let contact = firebase.database().ref('contact');
 let pricing = firebase.database().ref('pricing');
 
 galleries.on('value', snapshot => {
@@ -52,6 +54,12 @@ about.on('value', snapshot => {
   const data = snapshot.val();
   store.dispatch(adminActions.setPendingUpdates('about', data));
   store.dispatch(aboutActions.hydrateAbout(data));
+});
+
+contact.on('value', snapshot => {
+  const data = snapshot.val();
+  // store.dispatch(adminActions.setPendingUpdates('contact', data));
+  store.dispatch(contactActions.hydrateContact(data));
 });
 
 newsReporting.on('value', snapshot => {

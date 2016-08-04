@@ -5,8 +5,9 @@ import { toastActions } from 'core/toast';
 import { contactActions } from 'core/contact';
 import { textEditCanvas } from 'helpers/textEdit';
 import forEach from 'lodash.foreach';
+import forIn from 'lodash.forin';
 import delay from 'lodash.delay';
-import socialIcons from '../partials/socialIcons';
+import SocialIcons from '../partials/socialIcons';
 import classNames from 'classnames';
 
 const intialErrorsState = {
@@ -119,8 +120,10 @@ export class Contact extends Component {
     });
   }
   render() {
-    const { auth } = this.props;
-    const contact = { hello: 'hi' };
+    const { auth, contact } = this.props;
+    const contentAvailable = Object.keys(contact.content).length > 0;
+    const contactFormTitle = contentAvailable ? contact.content.form[Object.keys(contact.content.form)[0]].text : '';
+    const contactEmail = contentAvailable ? contact.content.email[Object.keys(contact.content.email)[0]].text : '';
     const authenticated = auth.authenticated;
     const { nameError, emailError, subjectError, textareaError, allFieldsHaveValues } = this.state;
     const contactNameClass = classNames({ ['contact__name']: true, ['eb__input_error']: nameError });
@@ -130,34 +133,31 @@ export class Contact extends Component {
     const recaptchaClass = classNames({ ['g-recaptcha']: true, ['hidden']: !allFieldsHaveValues });
     let socialIconsEditingInputs = null;
     if (this.state.isEditing) {
-      socialIconsEditingInputs = (<div>
-        <label htmlFor="facebookicon">Facebook Link</label>
-        <input type="text" id="facebookicon" data-type="facebook" onChange={this.onIconSrcChange}/>
-        <label htmlFor="twittericon">Twitter Link</label>
-        <input type="text" id="twittericon" data-type="twitter" onChange={this.onIconSrcChange}/>
-        <label htmlFor="instagramicon">Instagram Link</label>
-        <input type="text" id="instagramicon" data-type="instagram" onChange={this.onIconSrcChange}/>
-        <label htmlFor="googleicon">Google + Link</label>
-        <input type="text" id="googleicon" data-type="google" onChange={this.onIconSrcChange}/>
-      </div>);
+      socialIconsEditingInputs = [];
+      forIn(contact.content.socialicons, icon => {
+        socialIconsEditingInputs.push(<div key={icon.id}>
+          <label htmlFor={`${icon.type}icon`}>{icon.type} Link</label>
+          <input type="text" id={`${icon.type}icon`} data-type={icon.type} placeholder={icon.src} defaultValue={icon.src} onChange={this.onIconSrcChange}/>
+        </div>);
+      });
     }
     return (
       <div className="g-row">
         <div className="g-col" >
           <div className="contact__container">
-           {authenticated && Object.keys(contact).length > 0 ? <i onClick={this.editContact} className="fa fa-pencil-square-o page_edit_icon" aria-hidden="true"></i> : null}
-            <form onSubmit={this.sendEmail} className="contact__form" data-textedittargetparent>
-              <h2 className="contact__form_title" data-textedittarget data-texteditid="contact__form_title">Nice to meet you!</h2>
+           {authenticated && contentAvailable ? <i onClick={this.editContact} className="fa fa-pencil-square-o page_edit_icon" aria-hidden="true"></i> : null}
+            {contentAvailable ? <form onSubmit={this.sendEmail} className="contact__form" data-textedittargetparent>
+              <h2 className="contact__form_title" data-textedittarget data-texteditid="contact__form_title">{contactFormTitle}</h2>
               <input data-contact-type="Name" type="text" placeholder="Name" className={contactNameClass} value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
               <input data-contact-type="Email" type="text" placeholder="Email" className={contactEmailClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
               <input data-contact-type="Subject" type="text" placeholder="Subject" className={contactSubjectClass} value={this.state.contactSubject} onChange={this.handleChange} ref={ref => { this.contactSubject = ref; }}/>
               <textarea data-contact-type="Message" name="message" placeholder="Message" className={contactTextAreaClass} value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
               <div className={recaptchaClass} data-sitekey="6LeaQyQTAAAAADVFB5FGzAv-0d6Qsf_ZJoznUq1c"></div>
               <button onClick={this.sendEmail} className="contact__send">Send</button>
-            </form>
+            </form> : null}
             <div className="contact__social" data-textedittargetparent>
-              <a href="mailto:ericaberardiphotography@gmail.com" className="contact__email-link" data-textedittarget data-texteditid="contact__email-link">ericaberardiphotography@gmail.com</a>
-              {socialIcons({ className: 'contact__page'})}
+              <a href={`mailto:${contactEmail}`} className="contact__email-link" data-textedittarget data-texteditid="contact__email-link">{contactEmail}</a>
+              <SocialIcons selectorName="contact__page"/>
               {socialIconsEditingInputs}
             </div>
           </div>

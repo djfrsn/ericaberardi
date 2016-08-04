@@ -33,7 +33,7 @@ footer {
   }
 }
 
-.notfound {
+.notfound, .footer {
   margin-top: 60px;
   @include flex-perfect-center();
   flex-direction: column;

@@ -1,9 +1,19 @@
 import {
+  HYDRATE_CONTACT,
   SEND_EMAIL_SUCCESS,
   SEND_EMAIL_ERROR,
   CLEAR_EMAIL_DATA
 } from './action-types';
 import utils from 'utils';
+
+export function hydrateContact(data) {
+  return dispatch => {
+    dispatch({
+      type: HYDRATE_CONTACT,
+      payload: data
+    });
+  };
+}
 
 function validateString(str, min, max) {
   let valid = false;

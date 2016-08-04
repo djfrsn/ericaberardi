@@ -43,7 +43,7 @@ let newsReporting = firebase.database().ref('newsReporting');
 let about = firebase.database().ref('about');
 let contact = firebase.database().ref('contact');
 let pricing = firebase.database().ref('pricing');
-
+// dispatch pendingUpdates & hydrate state anytime the data changes
 galleries.on('value', snapshot => {
   const data = snapshot.val();
   store.dispatch(adminActions.setPendingUpdates('galleries', data));

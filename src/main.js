@@ -6,7 +6,7 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import * as firebase from 'firebase';
 import 'styles/styles.scss';
 import { Root } from 'components/root';
-import { authActions /* , authRouteResolver */ } from 'core/auth';
+import { authActions } from 'core/auth';
 import { aboutActions } from 'core/about';
 import { adminActions } from 'core/admin';
 import { galleriesActions } from 'core/galleries';
@@ -75,5 +75,5 @@ pricing.on('value', snapshot => {
 });
 
 ReactDOM.render((
-  <Root history={history} /* onEnter={authRouteResolver(store.getState)} */ store={store}/>
+  <Root history={history} store={store}/>
 ), document.querySelector('.app-root'));

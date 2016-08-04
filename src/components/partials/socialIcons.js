@@ -24,7 +24,7 @@ export class socialIcons extends Component {
     if (Object.keys(contact.content).length > 0) {
       forIn(contact.content.socialicons, icon => {
         icons.push(
-          <a key={icon.id} orderby={icon.orderby} href={icon.src} target="_blank" className="contact__social_link">
+          <a key={icon.id} orderby={icon.orderby} href={icon.pendingsrc ? icon.pendingsrc : icon.src} target="_blank" className="contact__social_link">
             <i className={`fa ${iconClassDictionary[icon.type]}`} aria-hidden="true"></i>
           </a>);
       });

@@ -15,6 +15,17 @@ export function hydrateContact(data) {
   };
 }
 
+export function editContact(opts) {
+  return (dispatch, getState) => {
+    const { firebase } = getState();
+    const data = opts.contact;
+    const database = firebase.database();
+
+    database.ref('contact').set(data);
+
+  };
+}
+
 function validateString(str, min, max) {
   let valid = false;
   let errType;

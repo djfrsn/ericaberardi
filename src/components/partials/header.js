@@ -71,7 +71,7 @@ export class Header extends Component {
   render() {
     const { auth, admin } = this.props;
     const pendingUpdatesCount = admin.pendingUpdatesCount;
-    const digits = getDigits(pendingUpdatesCount);
+    const digits = getDigits(pendingUpdatesCount); // add digits class to decrease font size when greater than singledigits
     const dashboardLinkClass = classNames({ ['header__link']: true, ['hasPendingUpdates']: pendingUpdatesCount > 0, [digits]: digits === 'singledigits' ? false : true });
     return (
       <header className="header">

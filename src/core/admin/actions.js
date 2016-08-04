@@ -558,7 +558,7 @@ function validatePendingChanges(opts) {
 //   }
 // }
 // Children(with as many children as you'd like) of parents can be made by formatting the data like so:
-// category/parent/:id/parentdata/parent/:id/parentdata
+// category/parent/:id/parentdata/parent/:id/parentdata ...pricing has the deepest dataset
 function publishContent(opts) {
   const { firebase } = opts.getState();
   const changesValidated = validatePendingChanges(opts);

@@ -760,9 +760,8 @@ function removePendingNewsReportingData(opts) {
     pendingNewsReportingCount += Object.keys(dt).length;
   });
 
-  // set new pendingData for each packages/categories
   forIn(opts.data, (data, type) => {
-    if (type === 'articles') { // is it a category or package?
+    if (type === 'articles') {
       forIn(data, arti => {
         const newArticle = {
           ...arti,
@@ -793,7 +792,6 @@ function removePendingNewsReportingData(opts) {
   });
 }
 
-
 function removePendingAboutData(opts) {
 
   const database = opts.firebase.database();
@@ -804,9 +802,8 @@ function removePendingAboutData(opts) {
     pendingAboutCount += Object.keys(dt).length;
   });
 
-  // set new pendingData for each packages/categories
   forIn(opts.data, (data, type) => {
-    if (type === 'content') { // is it a category or package?
+    if (type === 'content') {
       forIn(data, cont => {
         const newContent = {
           ...cont,
@@ -821,7 +818,7 @@ function removePendingAboutData(opts) {
         });
       });
     }
-    if (type === 'profilepicture' || type === 'resume') { // is it a category or package?
+    if (type === 'profilepicture' || type === 'resume') {
       forIn(data, dt => {
         const newData = {
           ...dt,
@@ -848,6 +845,51 @@ function removePendingAboutData(opts) {
   });
 }
 
+function removePendingContactData(opts) {
+
+  const database = opts.firebase.database();
+  let callbackCount = 1;
+  let pendingContactCount = 0;
+  forIn(opts.data, dt => {
+    pendingContactCount += Object.keys(dt).length;
+  });
+
+  forIn(opts.data, (data, type) => {
+    if (type === 'socialicons') {
+      forIn(data, icons => {
+        const newIcons = {
+          ...icons,
+          pending: null,
+          pendingsrc: null
+        };
+
+        database.ref(`contact/socialicons/${icons.id}`).set(newIcons).then(() => {
+          if (callbackCount === pendingContactCount) {
+            successCB(opts.successCallback);
+          }
+          callbackCount++;
+        });
+      });
+    }
+    if (type === 'email' || type === 'form') {
+      forIn(data, dt => {
+        const newData = {
+          ...dt,
+          pending: null,
+          pendingtext: null
+        };
+
+        database.ref(`contact/${type}/${dt.id}`).set(newData).then(() => {
+          if (callbackCount === pendingContactCount) {
+            successCB(opts.successCallback);
+          }
+          callbackCount++;
+        });
+      });
+    }
+  });
+}
+
 // General strategy
 // check pending content by category & create new state without this data
 export function removePendingUpdates(cb) {
@@ -869,16 +911,20 @@ export function removePendingUpdates(cb) {
             removePendingGalleriesData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
             callbackCount++;
             break;
-          case 'pricing':
-            removePendingPricingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
-            callbackCount++;
-            break;
           case 'newsReporting':
             removePendingNewsReportingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
             callbackCount++;
             break;
+          case 'pricing':
+            removePendingPricingData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+            callbackCount++;
+            break;
           case 'about':
             removePendingAboutData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
+            callbackCount++;
+            break;
+          case 'contact':
+            removePendingContactData({firebase, data, dispatch, pendingUpdatesCount, successCallback});
             callbackCount++;
             break;
 

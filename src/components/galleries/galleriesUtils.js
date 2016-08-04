@@ -172,7 +172,3 @@ export function imageTransform( opts ) {
     src: opts.src.includes('lorempixel') ? opts.src : {srcWidth, srcHeight}
   };
 }
-// TODO: set random height widths for images
-
-// var width = randomInt( 150, 400 );
-// var height = randomInt( 150, 250 );

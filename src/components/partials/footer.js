@@ -3,7 +3,6 @@ import SocialIcons from './socialIcons';
 
 export class Footer extends Component {
   render() {
-    // const authenticated = this.props.auth.authenticated;
     return (
       <div className="g-row">
         <div className="g-col footer">

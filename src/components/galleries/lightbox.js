@@ -87,5 +87,3 @@ export default class Lightbox extends Component {
 export default connect(state => ({
   lightbox: state.lightbox
 }), Object.assign({}, lightboxActions))(Lightbox);
-
-// TODO: <span className="lbx-controls-share fa fa-share"></span>

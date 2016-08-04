@@ -53,7 +53,3 @@ export default opts => {
   const categories = getCategories(opts);
   return categories;
 };
-
-// {authenticated ? <div className="select-style"><select name="categoryOrderby" className="pricing_category_orderby" value={category.orderBy} onChange={opts.scope.onChangePricingCategoryOrder}>
-//               {sortedOrderByCategories}
-//           </select></div> : null}

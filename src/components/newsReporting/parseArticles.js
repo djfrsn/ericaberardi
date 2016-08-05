@@ -48,4 +48,4 @@ export default opts => {
   });
 
   return { equal, newArticles };
-}
+};

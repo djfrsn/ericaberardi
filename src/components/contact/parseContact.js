@@ -29,4 +29,4 @@ export default opts => {
   });
 
   return { equal, newContact };
-}
+};

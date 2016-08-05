@@ -6,7 +6,7 @@ export default opts => {
   const prevPkgsCategory = opts.prevPkgsCategory;
   let newPkgsCategory = { ...prevPkgsCategory };
   let newPkgs = {};
-  // TODO: update details & pkgs with orderBy
+
   // loop  through packages & compare with data returned by textEdit to determine if any packages are pending
   forIn(prevPkgsCategory.packages, pkg => {
     let newPkg = { ...pkg };
@@ -40,4 +40,4 @@ export default opts => {
   newPkgsCategory.packages = newPkgs;
 
   return { equal, newPkgsCategory };
-}
+};

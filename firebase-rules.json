@@ -1,6 +1,10 @@
 {
     "rules": {
         ".write": "auth !== null",
+        "contact": {
+            ".read": true,
+            ".write": "auth !== null"
+        },
         "about": {
             ".read": true,
             ".write": "auth !== null"

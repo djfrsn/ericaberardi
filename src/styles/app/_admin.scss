@@ -131,33 +131,6 @@
   list-style: none;
 }
 
-// News Reporting
-.article.textEditActiveParent {
-  position: relative;
-  margin-bottom: 140px;
-}
-.article__content + div, .articles__dropzone {
-  position: absolute;
-  bottom: -55px;
-  right: 0;
-}
-.article__content + div {
-  label {
-    font-size: 1em;
-  }
-  input {
-    width: 100%;
-    position: relative;
-    top: -10px;
-  }
-}
-.articles__dropzone {
-  bottom: -90px;
-  background: $ericaYellow;
-  button {
-    padding-bottom: 12px;
-  }
-}
 .textEdit-input-li {
   input {
     font-family: $alt-font-family;
@@ -184,6 +157,102 @@
     }
   }
 }
+
+// News Reporting
+.article.textEditActiveParent {
+  position: relative;
+  margin-bottom: 140px;
+}
+.article__content + div, .articles__dropzone {
+  position: absolute;
+  bottom: -55px;
+  right: 0;
+}
+.article__content + div {
+  label {
+    font-size: 1em;
+  }
+  input {
+    width: 100%;
+    position: relative;
+    top: -10px;
+  }
+}
+
+.articles__dropzone {
+  bottom: -90px;
+  background: $ericaYellow;
+  button {
+    padding-bottom: 12px;
+  }
+}
+
+// About
+.about__content__p + div, .about__right_col > div {
+  margin-bottom: 20px;
+  label {
+    margin-right: 10px;
+  }
+  input {
+    @include interaction-base();
+    text-decoration: underline;
+  }
+  button {
+    @include interaction-base();
+    padding: 5px;
+    background: $ericaYellow;
+  }
+  .about__dropzone {
+    margin-left: 162px;
+  }
+}
+.about__right_col > div {
+
+  .about__dropzone {
+    margin-left: 155px;
+  }
+}
+textarea.textEdit-about {
+  font-family: $base-font-family;
+}
+
+// Contact
+.contact__container.isEditing {
+  @include flex-perfect-center();
+
+  i {
+    padding-bottom: 20%;
+  }
+}
+.contact__form.textEditActiveParent {
+  margin-top: 90px;
+  .textEdit-contact {
+    &:nth-of-type(1n) {
+      text-align: center;
+      font-weight: normal;
+      color: $contact-black;
+    }
+  }
+}
+.contact__social.textEditActiveParent {
+  .textEdit-contact {
+    &:nth-of-type(1n) {
+      text-align: center;
+      font-weight: normal;
+      color: $contact-black;
+    }
+  }
+}
+.email__greeting_label, .email__input_label {
+  font-family: $alt-font-family;
+  margin-top: 10px;
+}
+
+.socialicons__input_label {
+  text-transform: capitalize;
+  margin-right: 10px;
+}
+
 //===================================================================
 //  DASHBOARD
 //===================================================================

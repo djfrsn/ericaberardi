@@ -139,35 +139,39 @@ export class Contact extends Component {
     const contactSubjectClass = classNames({ ['contact__subject']: true, ['eb__input_error']: subjectError });
     const contactTextAreaClass = classNames({ ['contact__textarea']: true, ['eb__input_error']: textareaError });
     const recaptchaClass = classNames({ ['g-recaptcha']: true, ['hidden']: !allFieldsHaveValues });
+    const contactContainerClass = this.state.isEditing ? 'contact__container isEditing' : 'contact__container';
     let socialIconsEditingInputs = null;
     if (this.state.isEditing) {
       socialIconsEditingInputs = [];
       forIn(contact.content.socialicons, icon => {
         const iconSrc = icon.pendingsrc ? icon.pendingsrc : icon.src;
         socialIconsEditingInputs.push(<div key={icon.id}>
-          <label htmlFor={`${icon.type}icon`}>{icon.type} Link</label>
-          <input type="text" id={`${icon.type}icon`} data-type={icon.type} data-id={icon.id} placeholder={iconSrc} defaultValue={iconSrc} onChange={this.onIconSrcChange}/>
+          <label className="socialicons__input_label" htmlFor={`${icon.type}icon`}>{icon.type}</label>
+          <input className="textEdit-input" type="text" id={`${icon.type}icon`} data-type={icon.type} data-id={icon.id} placeholder={iconSrc} defaultValue={iconSrc} onChange={this.onIconSrcChange}/>
         </div>);
       });
     }
     return (
       <div className="g-row">
         <div className="g-col" >
-          <div className="contact__container">
+          <div className={contactContainerClass}>
            {authenticated && contentAvailable ? <i onClick={this.editContact} className="fa fa-pencil-square-o page_edit_icon" aria-hidden="true"></i> : null}
             {contentAvailable ? <form onSubmit={this.sendEmail} className="contact__form" data-textedittargetparent>
+              {this.state.isEditing ? <label className="email__greeting_label">Greeting Message</label> : null}
               <h2 className="contact__form_title" data-textedittarget data-texteditid={`form-${contactFormTitleId}`}>{contactFormTitle}</h2>
-              <input data-contact-type="Name" type="text" placeholder="Name" className={contactNameClass} value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
-              <input data-contact-type="Email" type="text" placeholder="Email" className={contactEmailClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
-              <input data-contact-type="Subject" type="text" placeholder="Subject" className={contactSubjectClass} value={this.state.contactSubject} onChange={this.handleChange} ref={ref => { this.contactSubject = ref; }}/>
-              <textarea data-contact-type="Message" name="message" placeholder="Message" className={contactTextAreaClass} value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
-              <div className={recaptchaClass} data-sitekey="6LeaQyQTAAAAADVFB5FGzAv-0d6Qsf_ZJoznUq1c"></div>
-              <button onClick={this.sendEmail} className="contact__send">Send</button>
+              {!this.state.isEditing ? <div><input data-contact-type="Name" type="text" placeholder="Name" className={contactNameClass} value={this.state.contactName} onChange={this.handleChange} ref={ref => { this.contactName = ref; }}/>
+                <input data-contact-type="Email" type="text" placeholder="Email" className={contactEmailClass} value={this.state.contactEmail} onChange={this.handleChange} ref={ref => { this.contactEmail = ref; }}/>
+                <input data-contact-type="Subject" type="text" placeholder="Subject" className={contactSubjectClass} value={this.state.contactSubject} onChange={this.handleChange} ref={ref => { this.contactSubject = ref; }}/>
+                <textarea data-contact-type="Message" name="message" placeholder="Message" className={contactTextAreaClass} value={this.state.contactMessage} onChange={this.handleChange} ref={ref => { this.contactMessage = ref; }} />
+                <div className={recaptchaClass} data-sitekey="6LeaQyQTAAAAADVFB5FGzAv-0d6Qsf_ZJoznUq1c"></div>
+                <button onClick={this.sendEmail} className="contact__send">Send</button></div> : null}
             </form> : null}
             <div className="contact__social" data-textedittargetparent>
               <a href={`mailto:${contactEmail}`} className="contact__email-link" data-textedittarget data-texteditid={`email-${emailId}`}>{contactEmail}</a>
-              <SocialIcons selectorName="contact__page"/>
+              {!this.state.isEditing ? <SocialIcons selectorName="contact__page"/> : null}
+              {this.state.isEditing ? <label className="socialicons__input_label">Social Icon Links</label> : null}
               {socialIconsEditingInputs}
+              {this.state.isEditing ? <label className="email__input_label">Email Link</label> : null}
             </div>
           </div>
         </div>

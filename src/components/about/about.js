@@ -154,7 +154,7 @@ export class About extends Component {
       const resumesrc = resume.pendingsrc ? resume.pendingsrc : resume.src;
       if (this.state.isEditing) {
         resumeEl.push(<div key={resume.id}>
-          <label htmlFor={`about__src_resume_input-${resume.id}`}>resume Link</label>
+          <label htmlFor={`about__src_resume_input-${resume.id}`}>Resume Link</label>
           <input type="text" className="about__src_input" data-id={resume.id} data-type="resume" placeholder={resumesrc} defaultValue={resumesrc} onChange={this.onAboutSrcChange}/>
           <Dropzone className="about__dropzone" data-id={resume.id} data-type="resume" activeClassName="active" accept="image/jpeg, image/png, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/pdf, text/plain" onDropAccept={this.onDropAccept} onDrop={this.onDrop}>
             <button>Upload New File</button>

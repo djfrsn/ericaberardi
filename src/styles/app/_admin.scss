@@ -28,7 +28,7 @@
 
 .fa-pencil-square-o {
   cursor: pointer;
-  &.isEditing {
+  &.textEditActive {
     &:after {
       content: 'Click to save';
       display: flex;

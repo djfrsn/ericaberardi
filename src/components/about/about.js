@@ -150,8 +150,6 @@ export class About extends Component {
     const { about, auth } = this.props;
     const authenticated = auth.authenticated;
     const resumeEl = [];
-    const peiClass = 'fa fa-pencil-square-o page_edit_icon';
-    const pageEditIconClass = this.state.isEditing ? `${peiClass} isEditing` : peiClass;
     forIn(about.resume, resume => {
       const resumesrc = resume.pendingsrc ? resume.pendingsrc : resume.src;
       if (this.state.isEditing) {
@@ -187,7 +185,7 @@ export class About extends Component {
         <div className="g-col" >
           <div className="about__container">
             <div className="about__left_col">
-              {authenticated && Object.keys(about.content).length > 0 ? <i onClick={this.editAbout} className={pageEditIconClass} aria-hidden="true"></i> : null}
+              {authenticated && Object.keys(about.content).length > 0 ? <i onClick={this.editAbout} className="fa fa-pencil-square-o page_edit_icon" aria-hidden="true"></i> : null}
               <div className="about__content" data-textedittargetparent>
                 {content(about.content)}
                 {resumeEl}

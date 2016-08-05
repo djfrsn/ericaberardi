@@ -135,8 +135,6 @@ export class Contact extends Component {
     }
     const { nameError, emailError, subjectError, textareaError, allFieldsHaveValues } = this.state;
     const contactContainerClass = this.state.isEditing ? 'contact__container isEditing' : 'contact__container';
-    const peiClass = 'fa fa-pencil-square-o page_edit_icon';
-    const pageEditIconClass = this.state.isEditing ? `${peiClass} isEditing` : peiClass;
     const contactNameClass = classNames({ ['contact__name']: true, ['eb__input_error']: nameError });
     const contactEmailClass = classNames({ ['contact__email']: true, ['eb__input_error']: emailError });
     const contactSubjectClass = classNames({ ['contact__subject']: true, ['eb__input_error']: subjectError });
@@ -157,7 +155,7 @@ export class Contact extends Component {
       <div className="g-row">
         <div className="g-col" >
           <div className={contactContainerClass}>
-           {authenticated && contentAvailable ? <i onClick={this.editContact} className={pageEditIconClass} aria-hidden="true"></i> : null}
+           {authenticated && contentAvailable ? <i onClick={this.editContact} className="fa fa-pencil-square-o page_edit_icon" aria-hidden="true"></i> : null}
             {contentAvailable ? <form onSubmit={this.sendEmail} className="contact__form" data-textedittargetparent>
               {this.state.isEditing ? <label className="email__greeting_label">Greeting Message</label> : null}
               <h2 className="contact__form_title" data-textedittarget data-texteditid={`form-${contactFormTitleId}`}>{contactFormTitle}</h2>

@@ -2,7 +2,7 @@
 
 .textEdit-input {
   border: none;
-  border-bottom: 1px solid $colors-black;
+  border-bottom: 1px solid lighten($colors-alt-black, 30%);
 
   &:focus {
     outline: none;

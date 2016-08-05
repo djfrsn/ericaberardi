@@ -1,8 +1,7 @@
-[![Build Status](https://travis-ci.org/r-park/todo-react-redux.svg?branch=master)](https://travis-ci.org/r-park/todo-react-redux)
 
 
-# Todo app with React, Redux, and Firebase
-A simple Todo app example with `undelete` capability — built with React, Redux, and Firebase. Try the demo at <a href="https://todo-react-redux.firebaseapp.com" target="_blank">todo-react-redux.firebaseapp.com</a>.
+# Erica Berardi Photography
+A minimalist photography website with site wide content editing and gallery upload. View the site at <a href="https://ericaberardi.com" target="_blank">ericaberardi.com</a>.
 
 - React
 - React-Redux
@@ -61,22 +60,9 @@ $ npm start
 - Watches for changes to the source files and process changes
 - Live-reloads the browser
 
-
-### Testing
-```bash
-$ gulp test.watch
-```
-Executing `gulp test.watch` will:
-- Run the test suites
-- Watch for changes to the source files
-- Re-run the tests whenever the sources are modified
-
-For a single test run without auto-watch, execute `gulp test` instead.
-
-
 ### Release Builds
 ```bash
-$ gulp dist
+$ npm run build
 ```
 - Generate bundled and minified artifacts and deposit into `/target` directory
 - Inject style and script tags into index.html

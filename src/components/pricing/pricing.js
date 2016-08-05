@@ -58,6 +58,8 @@ export class Pricing extends Component {
   }
   render() {
     // const authenticated = this.props.auth.authenticated;
+    // const peiClass = 'fa fa-pencil-square-o pricing__categories_edit';
+    // const pageEditIconClass = this.state.isEditing ? `${peiClass} isEditing` : peiClass;
     return (
       <div className="g-row">
         <div className="g-col" >

@@ -26,6 +26,22 @@
   margin-bottom: 15px;
 }
 
+.fa-pencil-square-o {
+  cursor: pointer;
+  &.isEditing {
+    &:after {
+      content: 'Click to save';
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      color: #1ab61a;
+      font-family: $alt-font-family;
+      font-size: 0.8em;
+      margin-left: 5px;
+    }
+  }
+}
+
 .eb-button__container {
   width: 50%;
   margin: 0 auto;

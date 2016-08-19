@@ -34,7 +34,7 @@ function getCategories(opts) {
     if (category) {
       categories.push(
         <li key={key} id={category.id} className="pricing_link_li" orderBy={category.orderBy}>
-          {authenticated ? <i onClick={opts.scope.editPricingCategory} className="fa fa-pencil-square-o pricing__categories_edit" aria-hidden="true"></i> : null}
+          {authenticated ? <i onClick={opts.scope.editPricingCategory} className="fa fa-pencil-square-o hide-msg pricing__categories_edit" aria-hidden="true"></i> : null}
           <Link to={`/pricing/${category.id}`} data-textedittarget className={className}>{category.pendingCategory && authenticated ? category.pendingCategory : category.category}</Link>
         </li>
       );

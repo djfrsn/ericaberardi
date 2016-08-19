@@ -38,6 +38,12 @@
       font-family: $alt-font-family;
       font-size: 0.8em;
       margin-left: 5px;
+
+    }
+  }
+  &.hide-msg {
+    &:after {
+      display: none;
     }
   }
 }

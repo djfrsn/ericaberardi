@@ -19,8 +19,8 @@
 }
 
 .home__link {
-  @include flex-perfect-center(flex-start);
-  flex: 0;
+  @include flex-perfect-center();
+  flex: 1;
   flex-direction: column;
   color: inherit;
   text-decoration: none;
@@ -119,9 +119,33 @@
   }
 }
 
+@media (max-width: 1420px) {
+
+  .home__link {
+    font-size: 0.9em;
+  }
+
+}
+
+@media (max-width: 1280px) {
+
+  .home__link {
+    font-size: 0.8em;
+  }
+
+}
+
+@media (max-width: 1145px) {
+
+  .home__link {
+    font-size: 0.7em;
+  }
+
+}
+
 @media (max-width: 1080px) {
   .header__wrapper {
-    display: block;
+    flex-direction: column;
   }
   .header__links {
     flex: initial;
@@ -135,7 +159,6 @@
 
   .home__link {
     flex: 0;
-    font-size: 0.7em;
-    @include flex-perfect-center();
+    font-size: 0.9em;
   }
 }

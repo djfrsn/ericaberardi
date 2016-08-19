@@ -74,4 +74,4 @@ export default function(opts) {
   checkFiles({ aboutProps, type: 'profilepicture' });
 
   return { equal, newAbout };
-};
+}

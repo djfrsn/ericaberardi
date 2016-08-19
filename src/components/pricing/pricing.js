@@ -62,7 +62,8 @@ export class Pricing extends Component {
       <div className="g-row">
         <div className="g-col" >
           <div style={{textAlign: 'center', marginTop: '60px'}}>
-            <div className="pricing__container">
+            [ Under Construction ]
+            <div className="pricing__container hidden">
               <div className="pricing__categories">
 
                 <ul>

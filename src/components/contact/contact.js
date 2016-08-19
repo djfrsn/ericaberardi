@@ -133,13 +133,13 @@ export class Contact extends Component {
       contactFormTitle = contact.content.form[contactFormTitleId].pendingtext ? contact.content.form[contactFormTitleId].pendingtext : contactFormTitle;
       contactEmail = contact.content.email[emailId].pendingtext ? contact.content.email[emailId].pendingtext : contactEmail;
     }
-    const { nameError, emailError, subjectError, textareaError, allFieldsHaveValues } = this.state;
+    const { nameError, emailError, subjectError, textareaError } = this.state; // , allFieldsHaveValues
     const contactContainerClass = this.state.isEditing ? 'contact__container isEditing' : 'contact__container';
     const contactNameClass = classNames({ ['contact__name']: true, ['eb__input_error']: nameError });
     const contactEmailClass = classNames({ ['contact__email']: true, ['eb__input_error']: emailError });
     const contactSubjectClass = classNames({ ['contact__subject']: true, ['eb__input_error']: subjectError });
     const contactTextAreaClass = classNames({ ['contact__textarea']: true, ['eb__input_error']: textareaError });
-    const recaptchaClass = classNames({ ['g-recaptcha']: true, ['hidden']: !allFieldsHaveValues });
+    const recaptchaClass = classNames({ ['g-recaptcha']: true, ['hidden']: true }); // normal value for hidden: !allFieldsHaveValues
     let socialIconsEditingInputs = null;
     if (this.state.isEditing) {
       socialIconsEditingInputs = [];
